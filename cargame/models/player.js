@@ -1,10 +1,21 @@
-function Player(relativeSize, streetWidth, velocityX, velocityZ, gltfModel, scene) {
+var PLAYER_STATES_LEFT = "LEFT";
+var PLAYER_STATES_RIGHT = "RIGHT";
+var PLAYER_STATES_FORWARD = "FORWARD";
+var PLAYER_MAX_ANGLE = Math.PI / 2;
+
+//velocityX - relativ: Strecke pro Sekunde in %
+//velocityY - pixel per second
+//velocityCurve Winkel pro Sekunde (rad)
+function Player(relativeSize, streetWidth, velocityX, velocityZ, velocityCurve, gltfModel, scene, onLoadCB) {
     this.relativeSize = relativeSize;
     this.streetWidth = streetWidth;
     this.velocityX = velocityX;
     this.velocityZ = velocityZ;
+    this.velocityCurve = velocityCurve;
     this.gltfModel = gltfModel;
     this.globalScene = scene;
+    this.state = PLAYER_STATES_FORWARD;
+    this.onLoadCB = onLoadCB;
     this.create();
 }
 
@@ -19,7 +30,10 @@ Player.prototype.updateSize = function() {
     this.height = this.boundingBox.max.y - this.boundingBox.min.y;
     this.depth = this.boundingBox.max.z - this.boundingBox.min.z;
 
-    //this.scene.position.y += this.height;
+    if(this.onLoadCB) {
+        this.onLoadCB();
+    }
+    
     var cubeGeometry = new THREE.BoxGeometry(
         this.width, this.height, this.depth
     );
@@ -55,15 +69,34 @@ Player.prototype.create = function() {
 }
 
 Player.prototype.moveLeft = function() {
-    this.scene.position.x -= this.velocityX;
-    this.scene.rotation.y = Math.cos(Math.PI / 4);
+    this.state = PLAYER_STATES_LEFT;
 }
 
 Player.prototype.moveRight = function() {
-    this.scene.position.x += this.velocityX;
-    this.scene.rotation.y = -Math.cos(Math.PI / 4);
+    this.state = PLAYER_STATES_RIGHT;
 }
 
-Player.prototype.update = function() {
+Player.prototype.moveForward = function() {
+    this.state = PLAYER_STATES_FORWARD;
+}
 
+Player.prototype.update = function(deltaTime) {
+    if(this.scene == null) {
+        return;
+    }
+    if(this.state === PLAYER_STATES_LEFT) {
+        if(this.scene.rotation.y <= PLAYER_MAX_ANGLE) {
+            this.scene.rotation.y += this.velocityCurve * deltaTime;
+        }
+        this.scene.position.x -= this.streetWidth * this.velocityX * deltaTime;
+    } else if (this.state === PLAYER_STATES_RIGHT) {
+        if(this.scene.rotation.y >= -PLAYER_MAX_ANGLE) {
+            this.scene.rotation.y -= this.velocityCurve * deltaTime;
+        }
+        this.scene.position.x += this.streetWidth * this.velocityX * deltaTime;
+    } else {
+        this.scene.rotation.y = 0;
+    }
+
+    this.scene.position.z -= this.velocityZ * deltaTime;
 }
