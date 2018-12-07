@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tetris</title>
+    <script src="../libraries/three.min.js"></script>
+    <script src="../libraries/stats.min.js"></script>
+    <script src="../libraries/dat.gui.min.js"></script>
+    <script src="blocks/block.js"></script>
+    <script src="../libraries/helpers/utils.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<script>
+    var MAX_WIDTH = 1000;
+    var GAME_COLUMNS = 10;
+    var GAME_ROWS = 25;
+    // global variables
+    var renderer;
+    var scene;
+    var camera;
+    var stats;
+    var control;
+    var orthoCamera;
+    var orthoScene;
+
+    var updateAble = [];
+
+    function init() {
+        
+        orthoCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, 
+                                                window.innerHeight / 2, window.innerHeight / -2, -500, 1000);
+        orthoCamera.position.set(0, 0, 0);
+
+        orthoScene = new THREE.Scene();
+
+        var geometry = new THREE.BoxGeometry(1000, 200, 1);
+        var material = new THREE.MeshBasicMaterial({color: 0xffaaff});
+        var c = new THREE.Mesh(geometry, material);
+        c.position.set(0, 0, -499);
+        orthoScene.add(c);
+
+        // create a cube and add to scene
+
+        // position and point the camera to the center of the scene
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        scene = new THREE.Scene();
+        camera.position.set(0, 0, 20);
+        camera.lookAt(scene.position);
+
+        var maxWidth = getWidthFromDistance(20, camera, MAX_WIDTH / window.innerHeight);
+        var maxHeight = getWidthFromDistance(20, camera);
+        var block = new Block(maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
+        updateAble.push(block.generate(scene));
+
+        // create the stats
+        stats = createStats();
+        document.body.appendChild(stats.domElement);
+
+        control = new function () {
+            this.rotationSpeed = 0.005;
+            this.scale = 1;
+        };
+        addControls(control);
+
+        // create a render, sets the background color and the size
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0xAFAFAF, 1.0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.autoClear = false;
+
+        // add the output of the renderer to the html element
+        document.body.appendChild(renderer.domElement);
+        // call the render function
+        setupKeyControls();
+        render();
+    }
+
+    function createStats() {
+        var stats = new Stats();
+        stats.setMode(0);
+
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+
+        return stats;
+    }
+
+    var now = Date.now();
+    function render() {
+        var diff = Date.now() - now;
+        requestAnimationFrame(render);
+        renderer.clear();
+        renderer.render(orthoScene, orthoCamera);
+        renderer.clearDepth();
+        renderer.render(scene, camera);
+        updateAble.map(function(u) {
+            u.update(diff / 1000);
+        });
+        stats.update();
+        now = Date.now();
+    }
+
+    function addControls(controlObject) {
+        var gui = new dat.GUI();
+        gui.add(controlObject, 'rotationSpeed', -0.1, 0.1);
+        gui.add(controlObject, 'scale', 0.01, 2);
+    }
+
+    // calls the init function when the window is done loading.
+    window.onload = init;
+    function setupKeyControls() {
+        document.onkeydown = function(e) {
+            switch(e.keyCode) {
+                case 37: updateAble[0].moveLeft();
+                break;
+                case 39: updateAble[0].moveRight();
+                break;
+                case 38: 
+                break;
+            }
+        }
+    }
+
+</script>
+<body>
+</body>
+</html>

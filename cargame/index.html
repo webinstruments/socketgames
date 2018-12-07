@@ -14,7 +14,7 @@
     <script src="models/boundary.js"></script>
     <script src="models/player.js"></script>
     <script src="models/camera.js"></script>
-    <script src="helpers/utils.js"></script>
+    <script src="../libraries/helpers/utils.js"></script>
     <style>
         body {
             margin: 0;
@@ -61,7 +61,7 @@
         scene.add(bounds[1]);
         
 
-        player = new Player(1/15, width, 1/10, 5, Math.PI / 4, 'assets/car2.gltf', scene, onLoadCB);
+        player = new Player(1/15, width, 1/5, 10, Math.PI / 4, 'assets/car2.gltf', scene, onLoadCB);
         /*var geometry = new THREE.Geometry();
         geometry.vertices.push(new THREE.Vector3(-width / 2, camera.position.y, camera.position.z - 20)); //x, y, z
         geometry.vertices.push(new THREE.Vector3(width / 2, camera.position.y, camera.position.z - 20));

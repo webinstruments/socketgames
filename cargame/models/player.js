@@ -98,5 +98,5 @@ Player.prototype.update = function(deltaTime) {
         this.scene.rotation.y = 0;
     }
 
-    this.scene.position.z -= this.velocityZ * deltaTime;
+    //this.scene.position.z -= Math.abs(Math.cos(this.scene.rotation.y)) * this.velocityZ * deltaTime;
 }
