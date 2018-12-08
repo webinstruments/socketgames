@@ -1,6 +1,5 @@
 function getWidthFromDistance(distance, camera, aspect) {
-    var vFOV = THREE.Math.degToRad(camera.fov);
-    var height = 2 * Math.tan(vFOV / 2) * distance;
+    var height = getHeightFromDistance(distance, camera);
     if(aspect) {
         return height * aspect;
     } else {
@@ -10,5 +9,5 @@ function getWidthFromDistance(distance, camera, aspect) {
 
 function getHeightFromDistance(distance, camera) {
     var vFOV = THREE.Math.degToRad(camera.fov);
-    return height = 2 * Math.tan(vFOV / 2) * distance;
+    return 2 * Math.tan(vFOV / 2) * distance;
 }

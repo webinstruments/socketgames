@@ -5,6 +5,7 @@
     <script src="../libraries/three.min.js"></script>
     <script src="../libraries/stats.min.js"></script>
     <script src="../libraries/dat.gui.min.js"></script>
+    <script src="blocks/blockFactory.js"></script>
     <script src="blocks/quadBlock.js"></script>
     <script src="blocks/cube.js"></script>
     <script src="../libraries/helpers/utils.js"></script>
@@ -28,8 +29,7 @@
     var control;
     var orthoCamera;
     var orthoScene;
-
-    var updateAble = [];
+    var blockFactory;
 
     function init() {
         
@@ -39,7 +39,7 @@
 
         orthoScene = new THREE.Scene();
 
-        var geometry = new THREE.BoxGeometry(1000, 200, 1);
+        var geometry = new THREE.BoxGeometry(430, 200, 1);
         var material = new THREE.MeshBasicMaterial({color: 0xffaaff});
         var c = new THREE.Mesh(geometry, material);
         c.position.set(0, 0, -499);
@@ -52,9 +52,9 @@
         camera.lookAt(scene.position);
 
         var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
-        var maxHeight = getWidthFromDistance(CAM_DISTANCE, camera);
-        var block = new QuadBlock(maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
-        updateAble.push(block.generate(scene));
+        var maxHeight = getHeightFromDistance(CAM_DISTANCE, camera);
+        blockFactory = new BlockFactory(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
+        blockFactory.generateBlock();
 
         // create the stats
         stats = createStats();
@@ -76,7 +76,14 @@
         document.body.appendChild(renderer.domElement);
 
         //origin to left top
-        scene.position.set(-maxWidth / 2, maxHeight / 4, 0);
+        var fieldWidth = blockFactory.getFieldWidth();
+        var fieldHeight = blockFactory.getFieldHeight();
+        scene.position.set(-fieldWidth / 2, 0, 0);
+
+        for(var i = 0; i < GAME_COLUMNS; ++i) {
+            var c = new Cube(i * blockFactory.tileSize, 0, 0.1, 0xaaaaaa);
+            scene.add(c.cube);
+        }
         
         // call the render function
         setupKeyControls();
@@ -94,6 +101,14 @@
         return stats;
     }
 
+    function resize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
+        var maxHeight = getWidthFromDistance(CAM_DISTANCE, camera);
+        blockFactory.resize(maxWidth, maxHeight);
+    }
+
     var now = Date.now();
     function render() {
         var diff = Date.now() - now;
@@ -102,9 +117,7 @@
         renderer.render(orthoScene, orthoCamera);
         renderer.clearDepth();
         renderer.render(scene, camera);
-        updateAble.map(function(u) {
-            u.update(diff / 1000);
-        });
+        blockFactory.update(diff / 1000);
         stats.update();
         now = Date.now();
     }
@@ -120,11 +133,11 @@
     function setupKeyControls() {
         document.onkeydown = function(e) {
             switch(e.keyCode) {
-                case 37: updateAble[0].moveLeft();
+                case 37: blockFactory.moveLeft();
                 break;
-                case 39: updateAble[0].moveRight();
+                case 39: blockFactory.moveRight();
                 break;
-                case 38: updateAble[0].rotate();
+                case 38: blockFactory.rotate();
                 break;
             }
         }
