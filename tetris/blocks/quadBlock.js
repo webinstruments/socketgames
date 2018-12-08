@@ -1,6 +1,7 @@
 function QuadBlock(cubeLength) {
     this.length = cubeLength;
     this.cubes = [];
+    this.bottomCubes = [];
     console.log('blockSize', this.length);
 }
 
@@ -22,10 +23,10 @@ QuadBlock.prototype.generate = function(scene) {
     scene.add(this.movePoint); //anchor FIRST!
     this.movePoint.add(this.pivot);
 
-    this.cubes.push(new Cube(-this.length, 0, this.length, 0xffaa00));
-    this.cubes.push(new Cube(0, 0, this.length, 0xffaa00));
-    this.cubes.push(new Cube(0, -this.length, this.length, 0xffaa00));
-    this.cubes.push(new Cube(-this.length, -this.length, this.length, 0xffaa00));
+    this.cubes.push(new Cube(-this.length, 0, this.length, 0xffaa00, 0x000000));
+    this.cubes.push(new Cube(0, 0, this.length, 0xffaa00, 0x000000));
+    this.cubes.push(new Cube(-this.length, -this.length, this.length, 0xffaa00, 0x000000));
+    this.cubes.push(new Cube(0, -this.length, this.length, 0xffaa00, 0x000000));
 
     this.cubes.map(function(c) {
         self.group.add(c.cube);
@@ -42,15 +43,30 @@ QuadBlock.prototype.generate = function(scene) {
     this.group.position.x = this.length / 2;
     this.group.position.y = this.length / 2;
 
+    this.bottomCubes.push(this.cubes[2]); //leftBottom
+    this.bottomCubes.push(this.cubes[3]); //rightBottom
+
     return this;
+}
+
+QuadBlock.prototype.getLeftBlock = function() {
+    return this.bottomCubes[0];
+}
+
+QuadBlock.prototype.getRightBlock = function() {
+    return this.bottomCubes[1];
 }
 
 QuadBlock.prototype.setPosition = function(x, y) {
     this.movePoint.position.set(x, y, this.length);
 }
 
-QuadBlock.prototype.update = function(deltaTime) {
-    //this.pivot.rotation.z += deltaTime;
+QuadBlock.prototype.getPosition = function() {
+    return this.movePoint.position;
+}
+
+QuadBlock.prototype.moveDown = function(deltaTime, checkCB, worldScene) {
+    this.movePoint.position.y -= deltaTime * 4;
 }
 
 QuadBlock.prototype.moveLeft = function() {

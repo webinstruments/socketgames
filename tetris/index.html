@@ -5,7 +5,7 @@
     <script src="../libraries/three.min.js"></script>
     <script src="../libraries/stats.min.js"></script>
     <script src="../libraries/dat.gui.min.js"></script>
-    <script src="blocks/blockFactory.js"></script>
+    <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
     <script src="blocks/cube.js"></script>
     <script src="../libraries/helpers/utils.js"></script>
@@ -21,6 +21,7 @@
     var GAME_COLUMNS = 10;
     var GAME_ROWS = 25;
     var CAM_DISTANCE = 20;
+    var THETA = 1e-6;
     // global variables
     var renderer;
     var scene;
@@ -29,7 +30,7 @@
     var control;
     var orthoCamera;
     var orthoScene;
-    var blockFactory;
+    var blockController;
 
     function init() {
         
@@ -53,8 +54,8 @@
 
         var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
         var maxHeight = getHeightFromDistance(CAM_DISTANCE, camera);
-        blockFactory = new BlockFactory(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
-        blockFactory.generateBlock();
+        blockController = new BlockController(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
+        blockController.generateBlock();
 
         // create the stats
         stats = createStats();
@@ -76,14 +77,20 @@
         document.body.appendChild(renderer.domElement);
 
         //origin to left top
-        var fieldWidth = blockFactory.getFieldWidth();
-        var fieldHeight = blockFactory.getFieldHeight();
-        scene.position.set(-fieldWidth / 2, 0, 0);
+        var fieldWidth = blockController.getFieldWidth();
+        var fieldHeight = blockController.getFieldHeight();
+        scene.position.set(-fieldWidth / 2, -(fieldHeight - blockController.tileSize) / 2, 0);
 
-        for(var i = 0; i < GAME_COLUMNS; ++i) {
-            var c = new Cube(i * blockFactory.tileSize, 0, 0.1, 0xaaaaaa);
-            scene.add(c.cube);
+        //debug
+        var debugGroup = new THREE.Object3D();
+        for(var x = 0; x < GAME_COLUMNS; ++x) {
+            for(var y = 0; y < GAME_ROWS; ++y) {
+                var c = new Cube(x * blockController.tileSize, y * blockController.tileSize, 0.1, 0xaaaaaa, 0x000000);
+                debugGroup.add(c.cube);
+            }
         }
+        debugGroup.name = 'debug';
+        scene.add(debugGroup);
         
         // call the render function
         setupKeyControls();
@@ -106,7 +113,7 @@
         camera.updateProjectionMatrix();
         var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
         var maxHeight = getWidthFromDistance(CAM_DISTANCE, camera);
-        blockFactory.resize(maxWidth, maxHeight);
+        blockController.resize(maxWidth, maxHeight);
     }
 
     var now = Date.now();
@@ -117,7 +124,7 @@
         renderer.render(orthoScene, orthoCamera);
         renderer.clearDepth();
         renderer.render(scene, camera);
-        blockFactory.update(diff / 1000);
+        blockController.update(diff / 1000);
         stats.update();
         now = Date.now();
     }
@@ -133,11 +140,11 @@
     function setupKeyControls() {
         document.onkeydown = function(e) {
             switch(e.keyCode) {
-                case 37: blockFactory.moveLeft();
+                case 37: blockController.moveLeft();
                 break;
-                case 39: blockFactory.moveRight();
+                case 39: blockController.moveRight();
                 break;
-                case 38: blockFactory.rotate();
+                case 38: blockController.rotate();
                 break;
             }
         }
