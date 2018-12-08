@@ -5,7 +5,8 @@
     <script src="../libraries/three.min.js"></script>
     <script src="../libraries/stats.min.js"></script>
     <script src="../libraries/dat.gui.min.js"></script>
-    <script src="blocks/block.js"></script>
+    <script src="blocks/quadBlock.js"></script>
+    <script src="blocks/cube.js"></script>
     <script src="../libraries/helpers/utils.js"></script>
     <style>
         body {
@@ -18,6 +19,7 @@
     var MAX_WIDTH = 1000;
     var GAME_COLUMNS = 10;
     var GAME_ROWS = 25;
+    var CAM_DISTANCE = 20;
     // global variables
     var renderer;
     var scene;
@@ -43,17 +45,15 @@
         c.position.set(0, 0, -499);
         orthoScene.add(c);
 
-        // create a cube and add to scene
-
         // position and point the camera to the center of the scene
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         scene = new THREE.Scene();
-        camera.position.set(0, 0, 20);
+        camera.position.set(0, 0, CAM_DISTANCE);
         camera.lookAt(scene.position);
 
-        var maxWidth = getWidthFromDistance(20, camera, MAX_WIDTH / window.innerHeight);
-        var maxHeight = getWidthFromDistance(20, camera);
-        var block = new Block(maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
+        var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
+        var maxHeight = getWidthFromDistance(CAM_DISTANCE, camera);
+        var block = new QuadBlock(maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
         updateAble.push(block.generate(scene));
 
         // create the stats
@@ -74,6 +74,10 @@
 
         // add the output of the renderer to the html element
         document.body.appendChild(renderer.domElement);
+
+        //origin to left top
+        scene.position.set(-maxWidth / 2, maxHeight / 4, 0);
+        
         // call the render function
         setupKeyControls();
         render();
@@ -120,7 +124,7 @@
                 break;
                 case 39: updateAble[0].moveRight();
                 break;
-                case 38: 
+                case 38: updateAble[0].rotate();
                 break;
             }
         }
