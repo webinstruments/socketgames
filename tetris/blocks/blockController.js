@@ -123,6 +123,7 @@ BlockController.prototype.resize = function(width, height) {
         this.tileSize = width / this.columns;
     }
     this.tileSizeHalf = this.tileSize / 2;
+    this.tileSizeTolerance = this.tileSize * 1 / 100; //Toleranz wird benötigt zum verschieben der Blöcke
     this.height = this.getFieldHeight();
     this.width = this.getFieldWidth();
     console.log('tilesize', this.tileSize);
@@ -174,15 +175,27 @@ BlockController.prototype.moveRight = function() {
 
 //Auf Basis von Links unten!
 BlockController.prototype.checkCollision = function(cubes, offsetX, offsetY) {
+    var self = this;
+    var validate = function(colIndex, rowIndex) {
+        if(self.tiles[rowIndex][colIndex] != false) {
+            return false;
+        }
+        return true;
+    }
     for(var i = 0; i < cubes.length; ++i) {
         var position = cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + offsetY);
         
-        if(this.tiles[tile.rowIndex][tile.colIndex] != false) {
+        if(!validate(tile.colIndex, tile.rowIndex)) {
             return false;
-        } else if(offsetX != 0) { // Bewegung nach links oder rechts - ungenauigkeit bei genau mitte
-            tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + this.tileSize - THETA);
-            if(this.tiles[tile.rowIndex][tile.colIndex] != false) {
+        } else if(offsetX != 0) { // Bewegung nach links oder rechts - Ungenauigkeit bei oberen Block
+            tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + this.tileSizeTolerance);
+            if(!validate(tile.colIndex, tile.rowIndex)) {
+                return false;
+            }
+        } else if(offsetY != 0) { //Bewegung nach unten - Problem mit rechten Block
+            tile = this.getTileFromPosition(position.leftX + this.tileSizeTolerance, position.bottomY + offsetY);
+            if(!validate(tile.colIndex, tile.rowIndex)) {
                 return false;
             }
         }
