@@ -1,9 +1,12 @@
-function Cube(x, y, length, color, lineColor) {
+var cube_id = 0;
+function Cube(x, y, length, color, lineColor, parent) {
     this.x = x;
     this.y = y;
     this.length = length;
     this.color = color;
     this.lineColor = lineColor;
+    this.parent = parent;
+    this.id = ++cube_id;
     this.resize(this.length);
 }
 
@@ -35,5 +38,5 @@ Cube.prototype.getPosition = function(world) {
 }
 
 Cube.prototype.remove = function() {
-    this.cube.parent.remove(this.cube);
+    return this.parent.removeCube(this);
 }

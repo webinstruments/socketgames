@@ -22,6 +22,7 @@
     var GAME_ROWS = 25;
     var CAM_DISTANCE = 20;
     var THETA = 1e-6;
+    var BLOCK_THRESHOLDTIME = 0.7;
     // global variables
     var renderer;
     var scene;
@@ -118,12 +119,15 @@
 
     var now = Date.now();
     function render() {
-        var diff = Date.now() - now;
         requestAnimationFrame(render);
         renderer.clear();
         renderer.render(orthoScene, orthoCamera);
         renderer.clearDepth();
         renderer.render(scene, camera);
+        if(blockController.isGameOver) {
+            return;
+        }
+        var diff = Date.now() - now;
         blockController.update(diff / 1000);
         stats.update();
         now = Date.now();
@@ -145,6 +149,8 @@
                 case 39: blockController.moveRight();
                 break;
                 case 38: blockController.rotate();
+                break;
+                case 40: blockController.moveFast();
                 break;
             }
         }

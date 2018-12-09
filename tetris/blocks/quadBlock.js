@@ -2,7 +2,7 @@ function QuadBlock(cubeLength) {
     this.length = cubeLength;
     this.cubes = [];
     this.bottomCubes = [];
-    console.log('blockSize', this.length);
+    this.velocity = 1;
 }
 
 QuadBlock.prototype.generate = function(scene) {
@@ -23,10 +23,10 @@ QuadBlock.prototype.generate = function(scene) {
     scene.add(this.movePoint); //anchor FIRST!
     this.movePoint.add(this.pivot);
 
-    this.cubes.push(new Cube(-this.length, 0, this.length, 0xffaa00, 0x000000));
-    this.cubes.push(new Cube(0, 0, this.length, 0xffaa00, 0x000000));
-    this.cubes.push(new Cube(-this.length, -this.length, this.length, 0xffaa00, 0x000000));
-    this.cubes.push(new Cube(0, -this.length, this.length, 0xffaa00, 0x000000));
+    this.cubes.push(new Cube(-this.length, 0, this.length, 0xffaa00, 0x000000, this));
+    this.cubes.push(new Cube(0, 0, this.length, 0xffaa00, 0x000000, this));
+    this.cubes.push(new Cube(-this.length, -this.length, this.length, 0xffaa00, 0x000000, this));
+    this.cubes.push(new Cube(0, -this.length, this.length, 0xffaa00, 0x000000, this));
 
     this.cubes.map(function(c) {
         self.group.add(c.cube);
@@ -65,16 +65,41 @@ QuadBlock.prototype.getPosition = function() {
     return this.movePoint.position;
 }
 
+QuadBlock.prototype.isEmpty = function() {
+    return this.cubes.length == 0;
+}
+
 QuadBlock.prototype.moveDown = function(deltaTime, checkCB, worldScene) {
-    this.movePoint.position.y -= deltaTime * 4;
+    this.movePoint.position.y -= deltaTime * 4 * this.velocity;
 }
 
 QuadBlock.prototype.moveLeft = function() {
     this.movePoint.position.x -= this.length;
 }
 
+QuadBlock.prototype.moveFast = function() {
+    this.velocity = 5;
+}
+
 QuadBlock.prototype.moveRight = function() {
     this.movePoint.position.x += this.length;
+}
+
+QuadBlock.prototype.removeCube = function(cube) {
+    var foundIndex = -1;
+    for(var i = 0; i < this.cubes.length; ++i) {
+        if(this.cubes[i].id == cube.id) {
+            foundIndex = i;
+            this.group.remove(this.cubes[i].cube);
+            break;
+        }
+    }
+    this.cubes.splice(foundIndex, 1);
+    if(this.cubes.length == 0) {
+        this.remove();
+        return true;
+    }
+    return false;
 }
 
 QuadBlock.prototype.rotate = function() {
@@ -84,7 +109,6 @@ QuadBlock.prototype.rotate = function() {
 QuadBlock.prototype.remove = function() {
     while(this.cubes.length) {
         var c = this.cubes.pop();
-        c.remove();
     }
     this.movePoint.parent.remove(this.movePoint);
 }

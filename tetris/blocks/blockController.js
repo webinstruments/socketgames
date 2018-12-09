@@ -3,20 +3,20 @@ function BlockController(globalScene, width, height, columns, rows) {
     this.width = width;
     this.height = height;
     this.columns = columns;
-    this.gameOver = false;
+    this.isGameOver = false;
     this.rows = rows;
     this.tiles = [];
     this.blocks = [];
     this.init();
     this.resize(this.width, this.height);
-    console.log('blockSize', this.tileSize);
 }
 
 BlockController.prototype.init = function() {
-    for(var i = 0; i < this.rows; ++i) {
+    for(var i = 0; i < this.rows + 1; ++i) {
         this.tiles[i] = [];
         for(var j = 0; j < this.columns; ++j) {
-            this.tiles[i][j] = i + "," + j;
+            //one more - so no fill array needed if rows are removed
+            this.tiles[i][j] = false;
         }
     }
     this.heights = [];
@@ -24,6 +24,7 @@ BlockController.prototype.init = function() {
         this.heights[i] = { x: 0, y:0 };
     }
     this.heighestValue = 0;
+    this.thresholdTime = 0;
 }
 
 BlockController.prototype.generateBlock = function() {
@@ -75,7 +76,40 @@ BlockController.prototype.setTile = function(obj) {
         if(this.heights[tile.colIndex].y < pos.topY) {
             this.heights[tile.colIndex] = { x: tile.colIndex * this.tileSize, y: (tile.rowIndex + 1) * this.tileSize };
         }
-    } 
+        if(this.tiles[tile.rowIndex].filter(function(obj) {
+            return obj != false;
+        }).length == this.columns) {
+            this.removeRows(tile.rowIndex);
+            i = -1;
+        }
+    }
+}
+
+BlockController.prototype.removeRows = function(rowIndex) {
+    var self = this;
+    this.tiles[rowIndex].map(function(cube) {
+        cube.remove();
+    });
+    this.heights.map(function(h) {
+        if(h.y > 0) {
+            h.y -= self.tileSize;
+        }
+    });
+    for(var i = rowIndex; i < this.rows; ++i) {
+        this.tiles[i] = this.tiles[i + 1];
+    }
+    for(var i = 0; i < this.blocks.length; ++i) {
+        var block = this.blocks[i];
+        if(block.isEmpty()) {
+            this.blocks.splice(i, 1);
+            --i;
+        } else {
+            var blockPosition = block.getPosition();
+            block.setPosition(blockPosition.x, blockPosition.y - this.tileSize);
+        }
+    }
+    console.log('heights', this.heights);
+    console.log('blocks', this.blocks);
 }
 
 BlockController.prototype.resize = function(width, height) {
@@ -85,6 +119,7 @@ BlockController.prototype.resize = function(width, height) {
     }
     this.height = this.getFieldHeight();
     this.width = this.getFieldWidth();
+    console.log('tilesize', this.tileSize);
 }
 
 BlockController.prototype.getFieldWidth = function() {
@@ -103,13 +138,19 @@ BlockController.prototype.moveLeft = function() {
     var block = this.getActiveBlock();
     if(block.getLeftBlock().getPosition(this.globalScene).leftX > THETA) {
         this.getActiveBlock().moveLeft();
+        this.coarseDetectionY(this.getActiveBlock());
     }
+}
+
+BlockController.prototype.moveFast = function() {
+    var block = this.getActiveBlock().moveFast();
 }
 
 BlockController.prototype.moveRight = function() {
     var block = this.getActiveBlock();
     if(block.getRightBlock().getPosition(this.globalScene).rightX - this.width + this.tileSize < THETA) {
         this.getActiveBlock().moveRight();
+        this.coarseDetectionY(this.getActiveBlock());
     }
 }
 
@@ -126,23 +167,29 @@ BlockController.prototype.currentObstaclesY = function(block) {
 
 BlockController.prototype.coarseDetectionY = function(block) {
     var obstacles = this.currentObstaclesY(block);
-    this.heighestValue = getMaxOfArray(obstacles, function(o)  {
-        return o.y;
-    });
+    if(obstacles.length) {
+        this.heighestValue = getMaxOfArray(obstacles, function(o)  {
+            return o.y;
+        });
+    } else {
+        this.heighestValue = 0;
+    }
 }
+
 
 BlockController.prototype.update = function(deltaTime) {
     var block = this.getActiveBlock();
     //coarse detection
     if(block.getPosition().y > this.heighestValue + THETA) {
         block.moveDown(deltaTime);
+    } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
+        block.setPosition(block.getPosition().x, this.heighestValue, 0);
+        this.thresholdTime += deltaTime;
     } else {
-        //block.setPosition(block.getPosition().x, this.heighestValue, 0);
-        //this.setTile(block);
-        //var obstacles = this.currentObstaclesY(this.getActiveBlock());
-        //this.coarseDetectionY(block);
-        //this.generateBlock();
-        //this.coarseDetectionY(this.getActiveBlock());
+        this.setTile(block);
+        this.generateBlock();
+        this.coarseDetectionY(this.getActiveBlock());
+        this.thresholdTime = 0;
     }
     /*if(!this.getActiveBlock().active) {
         this.generateBlock();
@@ -150,8 +197,8 @@ BlockController.prototype.update = function(deltaTime) {
 }
 
 BlockController.prototype.gameOver = function() {
-    this.gameOver = true;
-    while(this.blocks) {
+    this.isGameOver = true;
+    while(this.blocks.length) {
         var block = this.blocks.pop();
         block.remove();
     }
