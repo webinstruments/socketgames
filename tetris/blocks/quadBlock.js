@@ -80,3 +80,11 @@ QuadBlock.prototype.moveRight = function() {
 QuadBlock.prototype.rotate = function() {
     //this.pivot.rotation.z += Math.PI / 2;
 }
+
+QuadBlock.prototype.remove = function() {
+    while(this.cubes.length) {
+        var c = this.cubes.pop();
+        c.remove();
+    }
+    this.movePoint.parent.remove(this.movePoint);
+}

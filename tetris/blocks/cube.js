@@ -33,3 +33,7 @@ Cube.prototype.getPosition = function(world) {
         x: cubePosition.x, y: cubePosition.y
      };
 }
+
+Cube.prototype.remove = function() {
+    this.cube.parent.remove(this.cube);
+}
