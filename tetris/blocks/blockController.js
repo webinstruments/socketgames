@@ -3,10 +3,10 @@ function BlockController(globalScene, width, height, columns, rows) {
     this.width = width;
     this.height = height;
     this.columns = columns;
-    this.isGameOver = false;
     this.rows = rows;
     this.tiles = [];
     this.blocks = [];
+    this.isGameOver = false;
     this.init();
     this.resize(this.width, this.height);
 }
@@ -25,6 +25,7 @@ BlockController.prototype.init = function() {
     }
     this.heighestValue = 0;
     this.thresholdTime = 0;
+    this.moveFastPressed = false;
 }
 
 BlockController.prototype.generateBlock = function() {
@@ -93,6 +94,9 @@ BlockController.prototype.removeRows = function(rowIndex) {
     this.heights.map(function(h) {
         if(h.y > 0) {
             h.y -= self.tileSize;
+            if(h.y < self.tileSize / 2 + THETA) {
+                h.y = 0;
+            }
         }
     });
     for(var i = rowIndex; i < this.rows; ++i) {
@@ -136,14 +140,35 @@ BlockController.prototype.getActiveBlock = function() {
 
 BlockController.prototype.moveLeft = function() {
     var block = this.getActiveBlock();
-    if(block.getLeftBlock().getPosition(this.globalScene).leftX > THETA) {
-        this.getActiveBlock().moveLeft();
-        this.coarseDetectionY(this.getActiveBlock());
+    var position = block.getPosition();
+    //coarse
+    if(position.x > 0) {
+        if(this.checkLeftCollision(block)) {
+            this.getActiveBlock().moveLeft();
+            this.coarseDetectionY(this.getActiveBlock());
+        }
     }
 }
 
-BlockController.prototype.moveFast = function() {
-    var block = this.getActiveBlock().moveFast();
+BlockController.prototype.checkLeftCollision = function(block) {
+    var self = this;
+    var position = block.getPosition();
+    var heightLeft = this.heights.filter(function(obj) {
+        return obj.x + THETA > position.x - self.tileSize && obj.y > THETA
+    });
+    if(heightLeft.length == 0) {
+        return true
+    } else if(heightLeft[0].y + THETA >= position.y) {
+        var cubes = block.getLeftBlocks();
+        for(var i = 0; i < cubes.length; ++i) {
+            position = cubes[i].getPosition(this.globalScene);
+            var tile = this.getTileFromPosition(position.x, position.y);
+            if(this.tiles[tile.rowIndex][tile.colIndex] == false) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 BlockController.prototype.moveRight = function() {
@@ -151,6 +176,13 @@ BlockController.prototype.moveRight = function() {
     if(block.getRightBlock().getPosition(this.globalScene).rightX - this.width + this.tileSize < THETA) {
         this.getActiveBlock().moveRight();
         this.coarseDetectionY(this.getActiveBlock());
+    }
+}
+
+BlockController.prototype.moveFast = function() {
+    var block = this.getActiveBlock().moveFast();
+    if(!this.moveFastPressed) {
+        this.thresholdTime += BLOCK_THRESHOLDTIME / 2;
     }
 }
 
@@ -176,7 +208,6 @@ BlockController.prototype.coarseDetectionY = function(block) {
     }
 }
 
-
 BlockController.prototype.update = function(deltaTime) {
     var block = this.getActiveBlock();
     //coarse detection
@@ -186,10 +217,12 @@ BlockController.prototype.update = function(deltaTime) {
         block.setPosition(block.getPosition().x, this.heighestValue, 0);
         this.thresholdTime += deltaTime;
     } else {
+        block.setPosition(block.getPosition().x, this.heighestValue, 0);
         this.setTile(block);
         this.generateBlock();
         this.coarseDetectionY(this.getActiveBlock());
         this.thresholdTime = 0;
+        this.moveFastPressed = false;
     }
     /*if(!this.getActiveBlock().active) {
         this.generateBlock();
