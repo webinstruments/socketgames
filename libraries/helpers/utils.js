@@ -30,3 +30,9 @@ function getMaxOfArray(arr, mapCB) {
         return mapCB(obj)
     }));
 }
+
+function getMinOfArray(arr, mapCB) {
+    return Math.min.apply(Math, arr.map(function(obj) {
+        return mapCB(obj)
+    }));
+}

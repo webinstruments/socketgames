@@ -22,8 +22,8 @@
     var GAME_ROWS = 25;
     var CAM_DISTANCE = 20;
     var THETA = 1e-6;
-    var BLOCK_THRESHOLDTIME = 0.7;
-    var GAME_VELOCITY = 4;
+    var BLOCK_THRESHOLDTIME = 20000;
+    var BLOCK_VELOCITY = 4;
     // global variables
     var renderer;
     var scene;
@@ -64,8 +64,8 @@
         document.body.appendChild(stats.domElement);
 
         control = new function () {
-            this.gameSpeed = GAME_VELOCITY;
-            this.scale = 1;
+            this.gameSpeed = BLOCK_VELOCITY;
+            this.thresholdTime = BLOCK_THRESHOLDTIME;
         };
         addControls(control);
 
@@ -120,7 +120,8 @@
 
     var now = Date.now();
     function render() {
-        GAME_VELOCITY = control.gameSpeed;
+        BLOCK_VELOCITY = control.gameSpeed;
+        BLOCK_THRESHOLDTIME = control.thresholdTime;
         requestAnimationFrame(render);
         renderer.clear();
         renderer.render(orthoScene, orthoCamera);
@@ -138,7 +139,7 @@
     function addControls(controlObject) {
         var gui = new dat.GUI();
         gui.add(controlObject, 'gameSpeed', 0, 8);
-        gui.add(controlObject, 'scale', 0.01, 2);
+        gui.add(controlObject, 'thresholdTime', 0.5, 20000);
     }
 
     // calls the init function when the window is done loading.

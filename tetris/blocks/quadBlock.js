@@ -53,8 +53,12 @@ QuadBlock.prototype.getLeftBlocks = function() {
     return [ this.cubes[0], this.cubes[2] ];
 }
 
-QuadBlock.prototype.getRightBlock = function() {
-    return this.bottomCubes[1];
+QuadBlock.prototype.getRightBlocks = function() {
+    return [ this.cubes[1], this.cubes[3] ];
+}
+
+QuadBlock.prototype.getBottomBlocks = function() {
+    return this.bottomCubes;
 }
 
 QuadBlock.prototype.setPosition = function(x, y) {
@@ -69,8 +73,8 @@ QuadBlock.prototype.isEmpty = function() {
     return this.cubes.length == 0;
 }
 
-QuadBlock.prototype.moveDown = function(deltaTime, checkCB, worldScene) {
-    this.movePoint.position.y -= deltaTime * GAME_VELOCITY * this.velocity;
+QuadBlock.prototype.moveDown = function(deltaTime) {
+    this.movePoint.position.y -= deltaTime * BLOCK_VELOCITY * this.velocity;
 }
 
 QuadBlock.prototype.moveLeft = function() {

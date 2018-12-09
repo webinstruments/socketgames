@@ -7,6 +7,7 @@ function BlockController(globalScene, width, height, columns, rows) {
     this.tiles = [];
     this.blocks = [];
     this.isGameOver = false;
+    this.positionSynced = false;
     this.init();
     this.resize(this.width, this.height);
 }
@@ -52,7 +53,7 @@ BlockController.prototype.getColumnTileFromPosition = function(x) {
 
 BlockController.prototype.getRowTileFromPosition = function(y) {
     if(y <= THETA) {
-        x = 0;
+        y = 0;
     }
     var heightRelation = y / this.getFieldHeight();
     return Math.floor(this.rows * heightRelation);
@@ -60,8 +61,8 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 
 BlockController.prototype.getNearestFromColumn = function() {
     var block = this.getActiveBlock().getPosition();
-    block.x += this.tileSize / 2;
-    block.y += this.tileSize / 2;
+    block.x += this.tileSizeHalf;
+    block.y += this.tileSizeHalf;
 }
 
 BlockController.prototype.setTile = function(obj) {
@@ -94,7 +95,7 @@ BlockController.prototype.removeRows = function(rowIndex) {
     this.heights.map(function(h) {
         if(h.y > 0) {
             h.y -= self.tileSize;
-            if(h.y < self.tileSize / 2 + THETA) {
+            if(h.y < self.tileSizeHalf + THETA) {
                 h.y = 0;
             }
         }
@@ -121,6 +122,7 @@ BlockController.prototype.resize = function(width, height) {
     if(this.tileSize * this.columns > width) {
         this.tileSize = width / this.columns;
     }
+    this.tileSizeHalf = this.tileSize / 2;
     this.height = this.getFieldHeight();
     this.width = this.getFieldWidth();
     console.log('tilesize', this.tileSize);
@@ -143,40 +145,49 @@ BlockController.prototype.moveLeft = function() {
     var position = block.getPosition();
     //coarse
     if(position.x > 0) {
-        if(this.checkLeftCollision(block)) {
+        var self = this;
+        var leftObject = this.heights.find(function(obj) {
+            return position.x - obj.x - THETA <= self.tileSize && obj.y > position.y;
+        });
+        if(!leftObject || this.checkCollision(block.getLeftBlocks(), -this.tileSize / 2, 0)) {
             this.getActiveBlock().moveLeft();
             this.coarseDetectionY(this.getActiveBlock());
         }
     }
 }
 
-BlockController.prototype.checkLeftCollision = function(block) {
-    var self = this;
+BlockController.prototype.moveRight = function() {
+    var block = this.getActiveBlock();
     var position = block.getPosition();
-    var heightLeft = this.heights.filter(function(obj) {
-        return obj.x + THETA > position.x - self.tileSize && obj.y > THETA
-    });
-    if(heightLeft.length == 0) {
-        return true
-    } else if(heightLeft[0].y + THETA >= position.y) {
-        var cubes = block.getLeftBlocks();
-        for(var i = 0; i < cubes.length; ++i) {
-            position = cubes[i].getPosition(this.globalScene);
-            var tile = this.getTileFromPosition(position.x, position.y);
-            if(this.tiles[tile.rowIndex][tile.colIndex] == false) {
+    if(position.x + block.width - this.width + this.tileSize < THETA) {
+        var self = this;
+        var rightObject = this.heights.find(function(obj) {
+            return obj.x - position.x - THETA >= self.tileSize && obj.y > position.y;
+        });
+        //Linke Ecke vom Rechteck zählt!
+        if(!rightObject || this.checkCollision(block.getRightBlocks(), this.tileSize + this.tileSizeHalf, 0)) {
+            this.getActiveBlock().moveRight();
+            this.coarseDetectionY(this.getActiveBlock());
+        }
+    }
+}
+
+//Auf Basis von Links unten!
+BlockController.prototype.checkCollision = function(cubes, offsetX, offsetY) {
+    for(var i = 0; i < cubes.length; ++i) {
+        var position = cubes[i].getPosition(this.globalScene);
+        var tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + offsetY);
+        
+        if(this.tiles[tile.rowIndex][tile.colIndex] != false) {
+            return false;
+        } else if(offsetX != 0) { // Bewegung nach links oder rechts - ungenauigkeit bei genau mitte
+            tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + this.tileSize - THETA);
+            if(this.tiles[tile.rowIndex][tile.colIndex] != false) {
                 return false;
             }
         }
     }
     return true;
-}
-
-BlockController.prototype.moveRight = function() {
-    var block = this.getActiveBlock();
-    if(block.getRightBlock().getPosition(this.globalScene).rightX - this.width + this.tileSize < THETA) {
-        this.getActiveBlock().moveRight();
-        this.coarseDetectionY(this.getActiveBlock());
-    }
 }
 
 BlockController.prototype.moveFast = function() {
@@ -198,6 +209,7 @@ BlockController.prototype.currentObstaclesY = function(block) {
 }
 
 BlockController.prototype.coarseDetectionY = function(block) {
+    //Objekt fällt nur nach unten, es muss nur höchstes Objekt in Reichweite gefunden werden.
     var obstacles = this.currentObstaclesY(block);
     if(obstacles.length) {
         this.heighestValue = getMaxOfArray(obstacles, function(o)  {
@@ -208,25 +220,41 @@ BlockController.prototype.coarseDetectionY = function(block) {
     }
 }
 
+BlockController.prototype.syncPosition = function(block) {
+    var position = block.getPosition();
+    var tile = this.getTileFromPosition(position.x + this.tileSizeHalf, position.y + this.tileSizeHalf);
+    block.setPosition(tile.colIndex * this.tileSize, tile.rowIndex * this.tileSize, 0);
+    this.positionSynced = true;
+}
+
 BlockController.prototype.update = function(deltaTime) {
     var block = this.getActiveBlock();
+    var position = block.getPosition();
+    if(position.y < 0) {
+        position.y = 0;
+    }
     //coarse detection
-    if(block.getPosition().y > this.heighestValue + THETA) {
+    if(position.y > this.heighestValue + THETA) {
         block.moveDown(deltaTime);
+    } else if(position.y > 0 
+        && this.checkCollision(block.getBottomBlocks(), 0, -this.tileSize / 2)) {
+            block.moveDown(deltaTime);
     } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
-        block.setPosition(block.getPosition().x, this.heighestValue, 0);
+        if(!this.positionSynced) {
+            this.syncPosition(block);
+        }
+        //block.setPosition(block.getPosition().x, this.heighestValue, 0);
         this.thresholdTime += deltaTime;
     } else {
-        block.setPosition(block.getPosition().x, this.heighestValue, 0);
+        //align with tiles
         this.setTile(block);
+        this.syncPosition(block);
         this.generateBlock();
         this.coarseDetectionY(this.getActiveBlock());
         this.thresholdTime = 0;
         this.moveFastPressed = false;
+        this.positionSynced = false;
     }
-    /*if(!this.getActiveBlock().active) {
-        this.generateBlock();
-    }*/
 }
 
 BlockController.prototype.gameOver = function() {
