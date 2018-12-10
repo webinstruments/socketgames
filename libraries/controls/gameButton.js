@@ -17,11 +17,15 @@ function GameButton(classes, style, clickColor, listener) {
 }
 
 GameButton.prototype.clicked = function() {
-    if(this.clickColor) {
-        this.setStyle('border-color:' + this.clickColor);
-    }
+    this.setColor();
     this.listener();
-    this.timerLeft = setTimeout(this.removeColor.bind(this), 500);
+}
+
+GameButton.prototype.setColor = function() {
+    if(this.clickColor && !this.timer) {
+        this.setStyle('border-color:' + this.clickColor);
+        this.timer = setTimeout(this.removeColor.bind(this), 500);
+    }
 }
 
 GameButton.prototype.removeColor = function() {
@@ -42,6 +46,7 @@ GameButton.prototype.removeStyle = function(val) {
     var currentAttributes = this.domElement.getAttribute('style').replace(' ', ''); //IE Workaround
     if(currentAttributes) {
         var replacedStyle = currentAttributes.replace(val + ';', '').replace(';;', '');
+        console.log(replacedStyle);
         this.domElement.setAttribute('style', replacedStyle);
     }
 }

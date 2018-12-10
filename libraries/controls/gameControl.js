@@ -7,7 +7,7 @@ var CONTROL_MODE_ALL = 4;
 function OnScreenController(mode, initObject) {
     this.domElement = document.createElement('div');
     this.domElement.setAttribute('style', 
-        'position:absolute;top:0px;left:0px;opacity:0.9;z-index:10000;width:100%;height:100%');
+        'position:absolute;top:0px;left:0px;opacity:0.9;width:100%;height:100%;z-index:1;');
     this.buttonGroup = document.createElement('div');
     this.groupStyles = [
         [ "position", "absolute" ],
@@ -36,6 +36,22 @@ function OnScreenController(mode, initObject) {
     }
     this.applyGroupStyle();
     this.domElement.appendChild(this.buttonGroup);
+}
+
+OnScreenController.prototype.leftClicked = function() {
+    this.leftButton.setColor();
+}
+
+OnScreenController.prototype.rightClicked = function() {
+    this.rightButton.setColor();
+}
+
+OnScreenController.prototype.upClicked = function() {
+    this.upButton.setColor();
+}
+
+OnScreenController.prototype.downClicked = function() {
+    this.downButton.setColor();
 }
 
 OnScreenController.prototype.applyGroupStyle = function() {

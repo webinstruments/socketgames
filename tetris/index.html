@@ -6,17 +6,14 @@
     <script src="../libraries/three.min.js"></script>
     <script src="../libraries/stats.min.js"></script>
     <script src="../libraries/dat.gui.min.js"></script>
+    <script src="../libraries/controls/gameControl.js"></script>
+    <script src="../libraries/controls/gameButton.js"></script>
     <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
     <script src="blocks/cube.js"></script>
     <script src="../libraries/helpers/utils.js"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-    </style>
-</head>
+    <link rel="stylesheet" href="../styles/style.css" />
+<head>
 <script>
     var MAX_WIDTH = 1000;
     var GAME_COLUMNS = 10;
@@ -34,6 +31,7 @@
     var orthoCamera;
     var orthoScene;
     var blockController;
+    var displayController;
 
     function init() {
         
@@ -97,6 +95,7 @@
         
         // call the render function
         setupKeyControls();
+        setupOnScreenControls();
         render();
     }
 
@@ -143,18 +142,54 @@
         gui.add(controlObject, 'thresholdTime', 0.5, 20000);
     }
 
+    function setupOnScreenControls() {
+        displayController = new OnScreenController(CONTROL_MODE_ALL, {
+            groupTop: '80%',
+            leftButtonClass: "left",
+            rightButtonClass: "right",
+            upButtonClass: "up",
+            downButtonClass: "down",
+            clickColor: "red",
+            leftPos: "left:35%;",
+            rightPos: "right:35%;",
+            upPos: "top:0%;left:47%;",
+            downPos: "bottom:10%;left:47%;",
+            leftCB: function() {
+                blockController.moveLeft();
+            },
+            rightCB: function() {
+                blockController.moveRight();
+            },
+            upCB: function() {
+                blockController.rotate();
+            },
+            downCB: function() {
+                blockController.moveFast();
+            }
+        });
+        document.body.appendChild(displayController.domElement);
+    }
+
     // calls the init function when the window is done loading.
     window.onload = init;
     function setupKeyControls() {
         document.onkeydown = function(e) {
             switch(e.keyCode) {
-                case 37: blockController.moveLeft();
+                case 37: 
+                    blockController.moveLeft();
+                    displayController.leftClicked();
                 break;
-                case 39: blockController.moveRight();
+                case 39: 
+                    blockController.moveRight();
+                    displayController.rightClicked();
                 break;
-                case 38: blockController.rotate();
+                case 38: 
+                    blockController.rotate();
+                    displayController.upClicked();
                 break;
-                case 40: blockController.moveFast();
+                case 40: 
+                    blockController.moveFast();
+                    displayController.downClicked();
                 break;
             }
         }
