@@ -59,12 +59,6 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
     return Math.floor(this.rows * heightRelation);
 }
 
-BlockController.prototype.getNearestFromColumn = function() {
-    var block = this.getActiveBlock().getPosition();
-    block.x += this.tileSizeHalf;
-    block.y += this.tileSizeHalf;
-}
-
 BlockController.prototype.setTile = function(obj) {
     for(var i = 0; i < obj.cubes.length; ++i) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
@@ -74,6 +68,7 @@ BlockController.prototype.setTile = function(obj) {
             this.gameOver();
             return;
         }
+
         this.tiles[tile.rowIndex][tile.colIndex] = obj.cubes[i];
         if(this.heights[tile.colIndex].y < pos.topY) {
             this.heights[tile.colIndex] = { x: tile.colIndex * this.tileSize, y: (tile.rowIndex + 1) * this.tileSize };
@@ -103,14 +98,18 @@ BlockController.prototype.removeRows = function(rowIndex) {
     for(var i = rowIndex; i < this.rows; ++i) {
         this.tiles[i] = this.tiles[i + 1];
     }
+    var filteredBlocks = this.blocks.filter(function(block) {
+        return block.getPosition().y > rowIndex * self.tileSize - THETA
+    });
+    for(var i = 0; i < filteredBlocks.length; ++i) {
+        var pos = filteredBlocks[i].getPosition();
+        filteredBlocks[i].setPosition(pos.x, pos.y - this.tileSize, 0);
+    }
     for(var i = 0; i < this.blocks.length; ++i) {
         var block = this.blocks[i];
         if(block.isEmpty()) {
             this.blocks.splice(i, 1);
             --i;
-        } else {
-            var blockPosition = block.getPosition();
-            block.setPosition(blockPosition.x, blockPosition.y - this.tileSize);
         }
     }
     console.log('heights', this.heights);
@@ -147,7 +146,7 @@ BlockController.prototype.moveLeft = function() {
     //coarse
     if(position.x > 0) {
         var self = this;
-        var leftObject = this.heights.find(function(obj) {
+        var leftObject = findFromArray(this.heights, function(obj) {
             return position.x - obj.x - THETA <= self.tileSize && obj.y > position.y;
         });
         if(!leftObject || this.checkCollision(block.getLeftBlocks(), -this.tileSize / 2, 0)) {
@@ -162,7 +161,7 @@ BlockController.prototype.moveRight = function() {
     var position = block.getPosition();
     if(position.x + block.width - this.width + this.tileSize < THETA) {
         var self = this;
-        var rightObject = this.heights.find(function(obj) {
+        var rightObject = findFromArray(this.heights, function(obj) {
             return obj.x - position.x - THETA >= self.tileSize && obj.y > position.y;
         });
         //Linke Ecke vom Rechteck zählt!
@@ -195,6 +194,9 @@ BlockController.prototype.checkCollision = function(cubes, offsetX, offsetY) {
             }
         } else if(offsetY != 0) { //Bewegung nach unten - Problem mit rechten Block
             tile = this.getTileFromPosition(position.leftX + this.tileSizeTolerance, position.bottomY + offsetY);
+            if(tile.colIndex >= this.columns) {
+                tile.colIndex = this.columns - 1;
+            } 
             if(!validate(tile.colIndex, tile.rowIndex)) {
                 return false;
             }
@@ -234,9 +236,21 @@ BlockController.prototype.coarseDetectionY = function(block) {
 }
 
 BlockController.prototype.syncPosition = function(block) {
+    var offset = 0;
     var position = block.getPosition();
+    for(var i = 0; i < block.cubes.length; ++i) {
+        var cube = block.cubes[i].getPosition(this.globalScene);
+        var tile = this.getTileFromPosition(cube.x, cube.y);
+        if(this.tiles[tile.rowIndex][tile.colIndex] != false && offset == 0) {
+            console.log('error'); //Wenn Frame-Rate zu niedrig verschwinden Bloecke in andere
+            while(this.tiles[tile.rowIndex + ++offset][tile.colIndex]) {
+                //offset so lange hochzaehlen bis naechster freier Block da.
+            }
+        }
+    }
+    //offset wird zur endposition dazugezählt
     var tile = this.getTileFromPosition(position.x + this.tileSizeHalf, position.y + this.tileSizeHalf);
-    block.setPosition(tile.colIndex * this.tileSize, tile.rowIndex * this.tileSize, 0);
+    block.setPosition(tile.colIndex * this.tileSize, (tile.rowIndex + offset) * this.tileSize, 0);
     this.positionSynced = true;
 }
 
@@ -250,8 +264,9 @@ BlockController.prototype.update = function(deltaTime) {
     if(position.y > this.heighestValue + THETA) {
         block.moveDown(deltaTime);
     } else if(position.y > 0 
-        && this.checkCollision(block.getBottomBlocks(), 0, -this.tileSize / 2)) {
+        && this.checkCollision(block.getBottomBlocks(), 0, -this.tileSizeTolerance)) {
             block.moveDown(deltaTime);
+            this.thresholdTime = 0;
     } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
         if(!this.positionSynced) {
             this.syncPosition(block);
@@ -260,8 +275,8 @@ BlockController.prototype.update = function(deltaTime) {
         this.thresholdTime += deltaTime;
     } else {
         //align with tiles
-        this.setTile(block);
         this.syncPosition(block);
+        this.setTile(block);
         this.generateBlock();
         this.coarseDetectionY(this.getActiveBlock());
         this.thresholdTime = 0;

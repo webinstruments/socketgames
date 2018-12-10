@@ -36,3 +36,12 @@ function getMinOfArray(arr, mapCB) {
         return mapCB(obj)
     }));
 }
+
+function findFromArray(arr, findCB) {
+    for(var i = 0; i < arr.length; ++i) {
+        if(findCB(arr[i])) {
+            return arr[i];
+        }
+    }
+    return null;
+}
