@@ -8,10 +8,12 @@
     <script src="../libraries/dat.gui.min.js"></script>
     <script src="../libraries/controls/gameControl.js"></script>
     <script src="../libraries/controls/gameButton.js"></script>
+    <script src="../libraries/helpers/utils.js"></script>
+    <script src="../libraries/textContainer/textContainer.js"></script>
+    <script src="../libraries/helpers/timer.js"></script>
     <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
     <script src="blocks/cube.js"></script>
-    <script src="../libraries/helpers/utils.js"></script>
     <link rel="stylesheet" href="../styles/style.css" />
 <head>
 <script>
@@ -32,6 +34,8 @@
     var orthoScene;
     var blockController;
     var displayController;
+    var textContainer;
+    var timer;
 
     function init() {
         
@@ -92,10 +96,12 @@
         }
         debugGroup.name = 'debug';
         scene.add(debugGroup);
-        
+      
         // call the render function
         setupKeyControls();
         setupOnScreenControls();
+        displayGameInfo();
+        startTimer(textContainer.getTextElement('time'));
         render();
     }
 
@@ -168,6 +174,29 @@
             }
         });
         document.body.appendChild(displayController.domElement);
+    }
+
+    function displayGameInfo() {
+        textContainer = new TextContainer('textContainer', [{
+            id: 'score',
+            label: 'Score: ',
+            value: '0'
+        }, {
+            id: 'delay',
+            label: 'Delay: ',
+            value: '0'
+        }, {
+            id: 'time',
+            label: 'Time: ',
+            value: '0'
+        }]);
+        
+        document.body.appendChild(textContainer.domElement);
+    }
+
+    function startTimer(textElement) {
+        timer = new Timer(textElement);
+        timer.start();
     }
 
     // calls the init function when the window is done loading.
