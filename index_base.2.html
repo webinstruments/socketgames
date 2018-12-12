@@ -140,14 +140,14 @@
     function addForm() {
         formDiv = new DivGroup('centered');
         var serverInput = new TextInput('server', 'ws://demos.kaazing.com/echo', 'input', 'Enter echo server', 'label', 'formgroup');
-        var selection = new Selector('chooser', [
+        var selection = new Selector('type', [
             { value: 0, name: 'value1' },
             { value: 1, name: 'value2' },
             { value: 2, name: 'value3' },
             { value: 3, name: 'value4' }
         ], 'Choose type', 'label', 'formgroup', 'select', 'selectButton');
-        var form = new Form('form', [serverInput, selection], 'start game!', 'startButton', function() {
-            alert('hallo');
+        var form = new Form('form', [serverInput, selection], 'start game!', 'startButton', function(result) {
+            alert(result.type + ", " + result.server);
         });
         formDiv.domElement.appendChild(form.domElement);
         document.body.appendChild(formDiv.domElement);

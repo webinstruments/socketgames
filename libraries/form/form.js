@@ -23,12 +23,18 @@ Form.prototype.appendChildren = function(children) {
 }
 
 Form.prototype.validate = function() {
+    var result = [];
     for(var i = 0; i < this.children.length; ++i) {
         var element = this.children[i];
         if(element.validate && !element.validate()) {
             return false;
         }
+        if(element.getValue) {
+            result.push('"' + element.name + '":"' + element.getValue() + '"');
+        }
     }
-    this.submit();
+    //build object
+    result = '{' + result.join(',') + '}';
+    this.submit(JSON.parse(result));
     return false; //no redirect
 }
