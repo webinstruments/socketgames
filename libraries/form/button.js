@@ -7,3 +7,13 @@ function Button(value, btnClass, clickCB, binder) {
         this.domElement.addEventListener('click', clickCB.bind(binder));
     }
 }
+
+Button.prototype.disable = function() {
+    if(!this.domElement.hasAttribute('disabled')) {
+        this.domElement.setAttribute('disabled', '');
+    }
+}
+
+Button.prototype.enable = function() {
+    this.domElement.removeAttribute('disabled');
+}

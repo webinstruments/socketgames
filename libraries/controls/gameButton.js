@@ -46,7 +46,6 @@ GameButton.prototype.removeStyle = function(val) {
     var currentAttributes = this.domElement.getAttribute('style').replace(' ', ''); //IE Workaround
     if(currentAttributes) {
         var replacedStyle = currentAttributes.replace(val + ';', '').replace(';;', '');
-        console.log(replacedStyle);
         this.domElement.setAttribute('style', replacedStyle);
     }
 }

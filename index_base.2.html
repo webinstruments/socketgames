@@ -14,8 +14,9 @@
     <script src="libraries/form/divGroup.js"></script>
     <script src="libraries/form/form.js"></script>
     <script src="libraries/form/label.js"></script>
-    <script src="libraries/form/selection.js"></script>
+    <script src="libraries/form/selector.js"></script>
     <script src="libraries/form/textInput.js"></script>
+    <script src="libraries/socketConnection.js"></script>
     <link rel="stylesheet" href="styles/style.css">
     <style>
         body {
@@ -36,6 +37,8 @@
     var time = 0;
     var timer;
     var formDiv;
+    var socketConnection;
+    var form;
 
     function init() {
 
@@ -76,39 +79,7 @@
         };
         addControls(control);
 
-        var displayControls = new OnScreenController(CONTROL_MODE_LEFTRIGHT, {
-            groupTop: '80%',
-            leftButtonClass: "left",
-            rightButtonClass: "right",
-            clickColor: "red",
-            leftPos: "left:35%;",
-            rightPos: "right:35%;",
-            leftCB: function() {
-                //alert("left");
-            },
-            rightCB: function() {
-                //alert("right");
-            }
-        });
-        document.body.appendChild(displayControls.domElement);
-
-        textContainer = new TextContainer('textContainer', [{
-            id: 'score',
-            label: 'Score:',
-            value: '0'
-        }, {
-            id: 'time',
-            label: 'Time:',
-            value: '0'
-        }]);
-        document.body.appendChild(textContainer.domElement);
-        timer = new Timer(textContainer.getTextElement('time'));
-        timer.start();
-
-
         addForm();
-        // call the render function
-        render();
     }
 
     function createStats() {
@@ -139,18 +110,107 @@
 
     function addForm() {
         formDiv = new DivGroup('centered');
-        var serverInput = new TextInput('server', 'ws://demos.kaazing.com/echo', 'input', 'Enter echo server', 'label', 'formgroup');
-        var selection = new Selector('type', [
-            { value: 0, name: 'value1' },
-            { value: 1, name: 'value2' },
-            { value: 2, name: 'value3' },
-            { value: 3, name: 'value4' }
-        ], 'Choose type', 'label', 'formgroup', 'select', 'selectButton');
-        var form = new Form('form', [serverInput, selection], 'start game!', 'startButton', function(result) {
-            alert(result.type + ", " + result.server);
+        var serverInput = new TextInput({
+            name: 'server', 
+            value: 'ws://demos.kaazing.com/echo', 
+            inputClass: 'input', 
+            label: 'Enter echo server', 
+            labelClass: 'label', 
+            groupClass: 'formgroup',
+            onFocusOut: checkConnection
+        });
+        var selection = new Selector({
+            name: 'type',
+            values: [
+                { value: 0, name: 'value1' },
+                { value: 1, name: 'value2' },
+                { value: 2, name: 'value3' },
+                { value: 3, name: 'value4' }
+            ],
+            label: 'Choose type',
+            labelClass: 'label',
+            groupClass: 'formgroup',
+            selectorClass: 'select',
+            btnClass: 'selectButton'
+        });
+        form = new Form({
+            formClass: 'form',
+            children: [serverInput, selection],
+            submitText: 'start game!',
+            submitClass: 'startButton',
+                onSubmit: function(result) {
+                alert(result.type + ", " + result.server);
+                // call the render function
+                formDiv.hide();
+                var displayControls = new OnScreenController(CONTROL_MODE_LEFTRIGHT, {
+                    groupTop: '80%',
+                    leftButtonClass: "left",
+                    rightButtonClass: "right",
+                    clickColor: "red",
+                    leftPos: "left:35%;",
+                    rightPos: "right:35%;",
+                    leftCB: function() {
+                        //alert("left");
+                    },
+                    rightCB: function() {
+                        //alert("right");
+                    }
+                });
+                document.body.appendChild(displayControls.domElement);
+
+                textContainer = new TextContainer('textContainer', [{
+                    id: 'score',
+                    label: 'Score:',
+                    value: '0'
+                }, {
+                    id: 'time',
+                    label: 'Time:',
+                    value: '0'
+                }]);
+                document.body.appendChild(textContainer.domElement);
+                timer = new Timer(textContainer.getTextElement('time'));
+                timer.start();
+                render();
+            }
         });
         formDiv.domElement.appendChild(form.domElement);
         document.body.appendChild(formDiv.domElement);
+        form.disable();
+    }
+
+    function checkConnection(url, element) {
+        if(!socketConnection) {
+            socketConnection = new SocketConnection(url, {
+                onOpen: socketOnOpen,
+                onMessage: socketOnMessage,
+                onError: socketOnError,
+                onClose: socketOnClose
+            });
+        } else if(socketConnection.getUrl() != url) {
+            socketConnection.connect(url);
+        }
+    }
+
+    function socketOnOpen() {
+        form.setInfoText("Connection Successfull");
+        form.enable();
+    }
+
+    function socketOnMessage(msg) {
+    }
+
+    function socketOnError(err) {
+        var errorMsg = 'Error: ';
+        if(err) {
+            errorMsg += err;
+        } else {
+            errorMsg += 'The provided Url is not valid';
+        }
+        form.setInfoText(errorMsg);
+    }
+    
+    function socketOnClose() {
+        form.setInfoText("Connection Closed");
     }
 
     // calls the init function when the window is done loading.

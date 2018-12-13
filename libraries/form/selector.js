@@ -1,19 +1,26 @@
-function Selector(name, values, label, labelClass, groupClass, selectorClass, btnClass) {
-    this.selector = new TextInput(name, values[0].name, selectorClass, label, labelClass, groupClass);
+function Selector(options) {
+    this.selector = new TextInput({
+        name: options.name, 
+        value: options.values[0].name,
+        inputClass: options.selectorClass,
+        label: options.label,
+        labelClass: options.labelClass,
+        groupClass: options.groupClass
+    });
     this.selector.input.setAttribute('readonly', '');
     this.selector.input.setAttribute('style', 'display:relative');
     this.index = 0;
-    this.leftButton = new Button('<', btnClass, function() {
+    this.leftButton = new Button('<', options.btnClass, function() {
         this.scroll(--this.index);
     }, this);
-    this.rightButton = new Button('>', btnClass, function() {
+    this.rightButton = new Button('>', options.btnClass, function() {
         this.scroll(++this.index);
     }, this);
     this.domElement = this.selector.domElement;
     this.domElement.appendChild(this.leftButton.domElement);
     this.domElement.appendChild(this.rightButton.domElement);
-    this.values = values;
-    this.name = name;
+    this.values = options.values;
+    this.name = options.name;
 }
 
 Selector.prototype.scroll = function() {
