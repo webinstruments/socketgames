@@ -1,4 +1,4 @@
-function BlockController(globalScene, width, height, columns, rows) {
+function BlockController(globalScene, width, height, columns, rows, scoreChangedCB, scoreBinder) {
     this.globalScene = globalScene;
     this.width = width;
     this.height = height;
@@ -8,6 +8,8 @@ function BlockController(globalScene, width, height, columns, rows) {
     this.blocks = [];
     this.isGameOver = false;
     this.positionSynced = false;
+    this.scoreChangedCB = scoreChangedCB;
+    this.scoreBinder = scoreBinder;
     this.init();
     this.resize(this.width, this.height);
 }
@@ -22,7 +24,7 @@ BlockController.prototype.init = function() {
     }
     this.heights = [];
     for(var i = 0; i < this.columns; ++i) {
-        this.heights[i] = { x: 0, y:0 };
+        this.heights[i] = { x: 0, y: 0 };
     }
     this.heighestValue = 0;
     this.thresholdTime = 0;
@@ -60,6 +62,7 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 }
 
 BlockController.prototype.setTile = function(obj) {
+    var removedRows = 0;
     for(var i = 0; i < obj.cubes.length; ++i) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(pos.x, pos.y);
@@ -77,8 +80,12 @@ BlockController.prototype.setTile = function(obj) {
             return obj != false;
         }).length == this.columns) {
             this.removeRows(tile.rowIndex);
+            ++removedRows;
             i = -1;
         }
+    }
+    if(this.scoreChangedCB && removedRows) {
+        this.scoreChangedCB.call(this.scoreBinder, removedRows);
     }
 }
 
@@ -241,6 +248,10 @@ BlockController.prototype.syncPosition = function(block) {
     for(var i = 0; i < block.cubes.length; ++i) {
         var cube = block.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(cube.x, cube.y);
+        if(tile.rowIndex >= this.rows) {
+            this.gameOver();
+            return;
+        }
         if(this.tiles[tile.rowIndex][tile.colIndex] != false && offset == 0) {
             console.log('error'); //Wenn Frame-Rate zu niedrig verschwinden Bloecke in andere
             while(this.tiles[tile.rowIndex + ++offset][tile.colIndex]) {

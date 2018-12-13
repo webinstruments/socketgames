@@ -47,10 +47,10 @@ i {
 .textContainer {
   position: absolute;
   font-family: 'press_startregular';
-  left: 10%; 
-  top: 10%; 
+  left: 5%; 
+  top: 5%; 
   color: white;  
-  font-size: 30px;
+  font-size: 20px;
   opacity: 0.9;
 }
 
@@ -85,18 +85,11 @@ form input[type=text] {
   background: none;
   color: orange;
   border: 1px solid orange;
+  width: 80%;
 }
 
 input:disabled {
   text-decoration: line-through;
-}
-
-.input {
-  width: 80%;
-}
-
-.select {
-  width: 60%;
 }
 
 .label {

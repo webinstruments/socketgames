@@ -11,9 +11,18 @@
     <script src="../libraries/helpers/utils.js"></script>
     <script src="../libraries/textContainer/textContainer.js"></script>
     <script src="../libraries/helpers/timer.js"></script>
+    <script src="../libraries/helpers/timer.js"></script>
+    <script src="../libraries/form/button.js"></script>
+    <script src="../libraries/form/divGroup.js"></script>
+    <script src="../libraries/form/form.js"></script>
+    <script src="../libraries/form/label.js"></script>
+    <script src="../libraries/form/selector.js"></script>
+    <script src="../libraries/form/textInput.js"></script>
+    <script src="../libraries/socketConnection.js"></script>
     <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
     <script src="blocks/cube.js"></script>
+    <script src="blocks/scoreController.js"></script>
     <link rel="stylesheet" href="../styles/style.css" />
 <head>
 <script>
@@ -22,7 +31,7 @@
     var GAME_ROWS = 25;
     var CAM_DISTANCE = 20;
     var THETA = 1e-6;
-    var BLOCK_THRESHOLDTIME = 20000;
+    var BLOCK_THRESHOLDTIME = 1;
     var BLOCK_VELOCITY = 4;
     // global variables
     var renderer;
@@ -36,6 +45,10 @@
     var displayController;
     var textContainer;
     var timer;
+    var scoreController;
+    var socketConnection;
+    var formDiv;
+    var form;
 
     function init() {
         
@@ -57,10 +70,12 @@
         camera.position.set(0, 0, CAM_DISTANCE);
         camera.lookAt(scene.position);
 
+        displayGameInfo();
+        initScoreListener();
         var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
         var maxHeight = getHeightFromDistance(CAM_DISTANCE, camera);
-        blockController = new BlockController(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS);
-        blockController.generateBlock();
+        blockController = 
+            new BlockController(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS, scoreController.scoreChanged, scoreController);
 
         // create the stats
         stats = createStats();
@@ -97,12 +112,7 @@
         debugGroup.name = 'debug';
         scene.add(debugGroup);
       
-        // call the render function
-        setupKeyControls();
-        setupOnScreenControls();
-        displayGameInfo();
-        startTimer(textContainer.getTextElement('time'));
-        render();
+        createForm();
     }
 
     function createStats() {
@@ -124,7 +134,7 @@
         blockController.resize(maxWidth, maxHeight);
     }
 
-    var now = Date.now();
+    var now = 0;
     function render() {
         BLOCK_VELOCITY = control.gameSpeed;
         BLOCK_THRESHOLDTIME = control.thresholdTime;
@@ -194,13 +204,15 @@
         document.body.appendChild(textContainer.domElement);
     }
 
+    function initScoreListener() {
+        scoreController = new ScoreController(textContainer.getTextElement('score'));
+    }
+
     function startTimer(textElement) {
         timer = new Timer(textElement);
         timer.start();
-    }
-
-    // calls the init function when the window is done loading.
-    window.onload = init;
+    }    
+    
     function setupKeyControls() {
         document.onkeydown = function(e) {
             switch(e.keyCode) {
@@ -223,6 +235,93 @@
             }
         }
     }
+
+    function startGame() {
+        setupKeyControls();
+        setupOnScreenControls();
+        startTimer(textContainer.getTextElement('time'));
+        now = Date.now();
+        blockController.generateBlock();
+        render();
+    }
+
+    function createForm() {
+        formDiv = new DivGroup('centered');
+        var serverInput = new TextInput({
+            name: 'server', 
+            value: 'ws://demos.kaazing.com/echo',
+            label: 'Enter echo server',
+            labelClass: 'label', 
+            groupClass: 'formgroup',
+            onFocusOut: checkConnection
+        });
+        var selection = new Selector({
+            name: 'type',
+            values: [
+                { value: 0, name: 'value1' },
+                { value: 1, name: 'value2' },
+                { value: 2, name: 'value3' },
+                { value: 3, name: 'value4' }
+            ],
+            label: 'Choose type',
+            labelClass: 'label',
+            groupClass: 'formgroup',
+            btnClass: 'selectButton'
+        });
+        form = new Form({
+            formClass: 'form',
+            children: [serverInput, selection],
+            submitText: 'start game!',
+            submitClass: 'startButton',
+                onSubmit: function(result) {
+                // call the render function
+                formDiv.hide();
+                startGame();
+            }
+        });
+        formDiv.domElement.appendChild(form.domElement);
+        document.body.appendChild(formDiv.domElement);
+        form.disable();
+    }
+
+    function checkConnection(url, element) {
+        if(!socketConnection) {
+            socketConnection = new SocketConnection(url, {
+                onOpen: socketOnOpen,
+                onMessage: socketOnMessage,
+                onError: socketOnError,
+                onClose: socketOnClose
+            });
+        } else if(socketConnection.getUrl() != url) {
+            socketConnection.connect(url);
+        }
+    }
+
+    function socketOnOpen() {
+        form.setInfoText("Connection Successfull");
+        form.enable();
+    }
+
+    function socketOnMessage(msg) {
+    }
+
+    function socketOnError(err) {
+        var errorMsg = 'Error: ';
+        if(err) {
+            errorMsg += err;
+        } else {
+            errorMsg += 'The provided Url is not valid';
+        }
+        form.setInfoText(errorMsg);
+    }
+    
+    function socketOnClose() {
+        form.setInfoText("Connection Closed");
+    }
+
+    // calls the init function when the window is done loading.
+    window.onload = init;
+
 
 </script>
 <body>

@@ -17,6 +17,7 @@
     <script src="libraries/form/selector.js"></script>
     <script src="libraries/form/textInput.js"></script>
     <script src="libraries/socketConnection.js"></script>
+    <script src="tetris/blocks/scoreController.js"></script>
     <link rel="stylesheet" href="styles/style.css">
     <style>
         body {
@@ -39,6 +40,7 @@
     var formDiv;
     var socketConnection;
     var form;
+    var scoreController;
 
     function init() {
 
@@ -112,9 +114,8 @@
         formDiv = new DivGroup('centered');
         var serverInput = new TextInput({
             name: 'server', 
-            value: 'ws://demos.kaazing.com/echo', 
-            inputClass: 'input', 
-            label: 'Enter echo server', 
+            value: 'ws://demos.kaazing.com/echo',
+            label: 'Enter echo server',
             labelClass: 'label', 
             groupClass: 'formgroup',
             onFocusOut: checkConnection
@@ -130,7 +131,6 @@
             label: 'Choose type',
             labelClass: 'label',
             groupClass: 'formgroup',
-            selectorClass: 'select',
             btnClass: 'selectButton'
         });
         form = new Form({
@@ -168,6 +168,9 @@
                     value: '0'
                 }]);
                 document.body.appendChild(textContainer.domElement);
+
+                scoreController = new ScoreController(textContainer.getTextElement('score'));
+
                 timer = new Timer(textContainer.getTextElement('time'));
                 timer.start();
                 render();
