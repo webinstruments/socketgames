@@ -37,14 +37,14 @@
 
         // create a cube and add to scene
         var cubeGeometry = new THREE.BoxGeometry(5,5,5);
-        var cubeMaterial = new THREE.MeshNormalMaterial();
-        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.name = 'cube';
-        scene.add(cube);
+        
+        var wireFrameGeo = new THREE.EdgesGeometry(cubeGeometry);
+        var wireFrameMat = new THREE.LineBasicMaterial({ color: this.lineColor, linewidth: 4 });
+        var wireframe = new THREE.LineSegments(wireFrameGeo, wireFrameMat);
+        wireframe.renderOrder = 1; // make sure wireframes are rendered 2nd
 
-        pivotPoint = new THREE.Object3D();
-        pivotPoint.add(cube);
-        scene.add(pivotPoint);
+        wireframe.name = 'cube';
+        scene.add(wireframe);
 
         // position and point the camera to the center of the scene
         camera.position.x = 15;
@@ -82,7 +82,6 @@
 
     function render() {
         requestAnimationFrame(render);
-        pivotPoint.rotation.x += 0.05;
         
         renderer.render(scene, camera);
         stats.update();

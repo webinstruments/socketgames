@@ -10,8 +10,9 @@ function BlockController(globalScene, width, height, columns, rows, scoreChanged
     this.positionSynced = false;
     this.scoreChangedCB = scoreChangedCB;
     this.scoreBinder = scoreBinder;
-    this.init();
+    this.timeToRemove = 1000;
     this.resize(this.width, this.height);
+    this.init();
 }
 
 BlockController.prototype.init = function() {
@@ -29,6 +30,11 @@ BlockController.prototype.init = function() {
     this.heighestValue = 0;
     this.thresholdTime = 0;
     this.moveFastPressed = false;
+    var shadowGeo = new THREE.BoxGeometry(this.tileSize, this.tileSize, this.tileSize);
+    this.shadowBlock = new WireFrame(shadowGeo, 0xAA0000, 5);
+    this.shadowBlock.hide();
+    this.globalScene.add(this.shadowBlock.wireframe);
+    this.removalTimer = null;
 }
 
 BlockController.prototype.generateBlock = function() {
@@ -63,6 +69,7 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 
 BlockController.prototype.setTile = function(obj) {
     var removedRows = 0;
+    var rowsToRemove = [];
     for(var i = 0; i < obj.cubes.length; ++i) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(pos.x, pos.y);
@@ -79,48 +86,74 @@ BlockController.prototype.setTile = function(obj) {
         if(this.tiles[tile.rowIndex].filter(function(obj) {
             return obj != false;
         }).length == this.columns) {
-            this.removeRows(tile.rowIndex);
+            //this.removeRows(tile.rowIndex);
+            rowsToRemove.push(tile.rowIndex);
             ++removedRows;
-            i = -1;
         }
     }
+    if(rowsToRemove.length) {
+        this.removeRows(rowsToRemove);
+    }
+    //console.log('tilesAfterSet', this.tiles);
     if(this.scoreChangedCB && removedRows) {
         this.scoreChangedCB.call(this.scoreBinder, removedRows);
     }
 }
 
-BlockController.prototype.removeRows = function(rowIndex) {
+BlockController.prototype.removeRows = function(rowIndexes) {
+    var rowIndexes = rowIndexes.sort(function(a, b) {
+        return b - a;
+    });
     var self = this;
-    this.tiles[rowIndex].map(function(cube) {
-        cube.remove();
-    });
-    this.heights.map(function(h) {
-        if(h.y > 0) {
-            h.y -= self.tileSize;
-            if(h.y < self.tileSizeHalf + THETA) {
-                h.y = 0;
+    for(var i = 0; i < rowIndexes.length; ++i) {
+        var rowIndex = rowIndexes[i];
+        console.log('removing row', rowIndex);
+        var self = this;
+        this.tiles[rowIndex].map(function(cube) {
+            cube.remove();
+        });
+
+        this.heights.map(function(h) { //adding height for coarse detection
+            if(h.y > 0) {
+                h.y -= self.tileSize;
+                if(h.y < self.tileSizeHalf + THETA) {
+                    h.y = 0;
+                }
             }
+        });
+
+        for(var j = rowIndex; j < this.rows; ++j) { //shifting rows
+            this.tiles[j] = this.tiles[j + 1];
         }
-    });
-    for(var i = rowIndex; i < this.rows; ++i) {
-        this.tiles[i] = this.tiles[i + 1];
     }
-    var filteredBlocks = this.blocks.filter(function(block) {
-        return block.getPosition().y > rowIndex * self.tileSize - THETA
-    });
-    for(var i = 0; i < filteredBlocks.length; ++i) {
-        var pos = filteredBlocks[i].getPosition();
-        filteredBlocks[i].setPosition(pos.x, pos.y - this.tileSize, 0);
-    }
-    for(var i = 0; i < this.blocks.length; ++i) {
+
+    for(var i = 0; i < this.blocks.length; ++i) { //removing empty blocks
         var block = this.blocks[i];
         if(block.isEmpty()) {
             this.blocks.splice(i, 1);
             --i;
         }
     }
-    console.log('heights', this.heights);
-    console.log('blocks', this.blocks);
+
+    this.removalTimer = setTimeout(this.shiftBlocks.bind(this, rowIndexes), this.timeToRemove);
+}
+
+BlockController.prototype.shiftBlocks = function(rowIndexes) {
+    var self = this;
+    while(rowIndexes.length) {
+        var rowIndex = rowIndexes.pop();
+        var filteredBlocks = this.blocks.filter(function(block) {
+            return block.getPosition().y > rowIndex * self.tileSize - THETA
+        });
+    
+        for(var i = 0; i < filteredBlocks.length; ++i) { //shifting position of blocks
+            var pos = filteredBlocks[i].getPosition();
+            filteredBlocks[i].setPosition(pos.x, pos.y - this.tileSize, 0);
+        }
+    }
+
+    clearTimeout(this.removalTimer);
+    this.removalTimer = null;
 }
 
 BlockController.prototype.resize = function(width, height) {
@@ -148,6 +181,7 @@ BlockController.prototype.getActiveBlock = function() {
 }
 
 BlockController.prototype.moveLeft = function() {
+    this.shadowBlock.hide();
     var block = this.getActiveBlock();
     var position = block.getPosition();
     //coarse
@@ -164,6 +198,7 @@ BlockController.prototype.moveLeft = function() {
 }
 
 BlockController.prototype.moveRight = function() {
+    this.shadowBlock.hide();
     var block = this.getActiveBlock();
     var position = block.getPosition();
     if(position.x + block.width - this.width + this.tileSize < THETA) {
@@ -254,8 +289,10 @@ BlockController.prototype.syncPosition = function(block) {
         }
         if(this.tiles[tile.rowIndex][tile.colIndex] != false && offset == 0) {
             console.log('error'); //Wenn Frame-Rate zu niedrig verschwinden Bloecke in andere
+            console.log(tile.rowIndex, tile.colIndex);
             while(this.tiles[tile.rowIndex + ++offset][tile.colIndex]) {
                 //offset so lange hochzaehlen bis naechster freier Block da.
+                console.log(offset);
             }
         }
     }
@@ -293,6 +330,24 @@ BlockController.prototype.update = function(deltaTime) {
         this.thresholdTime = 0;
         this.moveFastPressed = false;
         this.positionSynced = false;
+    }
+}
+
+BlockController.prototype.moveShadowLeft = function() {
+    this.moveShadow(-this.getActiveBlock().width);
+}
+
+BlockController.prototype.moveShadowRight = function() {
+    this.moveShadow(this.getActiveBlock().width);
+}
+
+BlockController.prototype.moveShadow = function(offsetX) {
+    var block = this.getActiveBlock();
+    var position = block.getPosition();
+    var newPosition = position.x + block.width / 2 + offsetX;
+    if(newPosition > -block.width && newPosition < this.width + block.width) {
+        this.shadowBlock.show();
+        this.shadowBlock.setPosition(newPosition, position.y + block.height / 2, 0);
     }
 }
 

@@ -21,6 +21,7 @@
     <script src="../libraries/socketConnection.js"></script>
     <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
+    <script src="blocks/wireframe.js"></script>
     <script src="blocks/cube.js"></script>
     <script src="blocks/scoreController.js"></script>
     <link rel="stylesheet" href="../styles/style.css" />
@@ -33,6 +34,14 @@
     var THETA = 1e-6;
     var BLOCK_THRESHOLDTIME = 1;
     var BLOCK_VELOCITY = 4;
+    var MOVE_LEFT = "left";
+    var SERVER_MOVE_LEFT = "server_left";
+    var MOVE_RIGHT = "right";
+    var SERVER_MOVE_RIGHT = "server_right";
+    var MOVE_UP = "up";
+    var SERVER_MOVE_UP = "server_up";
+    var MOVE_DOWN = "down";
+    var SERVER_MOVE_DOWN = "server_down";
     // global variables
     var renderer;
     var scene;
@@ -49,6 +58,7 @@
     var socketConnection;
     var formDiv;
     var form;
+    var cubeShadow;
 
     function init() {
         
@@ -114,6 +124,15 @@
       
         createForm();
     }
+    
+    function startGame() {
+        setupKeyControls();
+        setupOnScreenControls();
+        startTimer(textContainer.getTextElement('time'));
+        now = Date.now();
+        blockController.generateBlock();
+        render();
+    }
 
     function createStats() {
         var stats = new Stats();
@@ -158,34 +177,6 @@
         gui.add(controlObject, 'thresholdTime', 0.5, 20000);
     }
 
-    function setupOnScreenControls() {
-        displayController = new OnScreenController(CONTROL_MODE_ALL, {
-            groupTop: '80%',
-            leftButtonClass: "left",
-            rightButtonClass: "right",
-            upButtonClass: "up",
-            downButtonClass: "down",
-            clickColor: "red",
-            leftPos: "left:35%;",
-            rightPos: "right:35%;",
-            upPos: "top:0%;left:47%;",
-            downPos: "bottom:10%;left:47%;",
-            leftCB: function() {
-                blockController.moveLeft();
-            },
-            rightCB: function() {
-                blockController.moveRight();
-            },
-            upCB: function() {
-                blockController.rotate();
-            },
-            downCB: function() {
-                blockController.moveFast();
-            }
-        });
-        document.body.appendChild(displayController.domElement);
-    }
-
     function displayGameInfo() {
         textContainer = new TextContainer('textContainer', [{
             id: 'score',
@@ -211,38 +202,6 @@
     function startTimer(textElement) {
         timer = new Timer(textElement);
         timer.start();
-    }    
-    
-    function setupKeyControls() {
-        document.onkeydown = function(e) {
-            switch(e.keyCode) {
-                case 37: 
-                    blockController.moveLeft();
-                    displayController.leftClicked();
-                break;
-                case 39: 
-                    blockController.moveRight();
-                    displayController.rightClicked();
-                break;
-                case 38: 
-                    blockController.rotate();
-                    displayController.upClicked();
-                break;
-                case 40: 
-                    blockController.moveFast();
-                    displayController.downClicked();
-                break;
-            }
-        }
-    }
-
-    function startGame() {
-        setupKeyControls();
-        setupOnScreenControls();
-        startTimer(textContainer.getTextElement('time'));
-        now = Date.now();
-        blockController.generateBlock();
-        render();
     }
 
     function createForm() {
@@ -286,9 +245,10 @@
 
     function checkConnection(url, element) {
         if(!socketConnection) {
-            socketConnection = new SocketConnection(url, {
+            socketConnection = new SocketConnection(url, 
+                textContainer.getTextElement('delay'), {
                 onOpen: socketOnOpen,
-                onMessage: socketOnMessage,
+                onMessage: moveRemote,
                 onError: socketOnError,
                 onClose: socketOnClose
             });
@@ -317,12 +277,89 @@
     
     function socketOnClose() {
         form.setInfoText("Connection Closed");
+    }  
+
+    function setupOnScreenControls() {
+        displayController = new OnScreenController(CONTROL_MODE_ALL, {
+            groupTop: '80%',
+            leftButtonClass: "left",
+            rightButtonClass: "right",
+            upButtonClass: "up",
+            downButtonClass: "down",
+            clickColor: "red",
+            leftPos: "left:35%;",
+            rightPos: "right:35%;",
+            upPos: "top:0%;left:47%;",
+            downPos: "bottom:10%;left:47%;",
+            leftCB: moveLeft,
+            rightCB: moveRight,
+            upCB: moveUp,
+            downCB: moveDown
+        });
+        document.body.appendChild(displayController.domElement);
+    }
+      
+    function setupKeyControls() {
+        document.onkeydown = function(e) {
+            switch(e.keyCode) {
+                case 37: moveLeft();
+                break;
+                case 39: moveRight();
+                break;
+                case 38: moveUp();
+                break;
+                case 40: moveDown();
+                break;
+            }
+        }
+    }
+
+    function moveRemote(message) {
+        switch(message) {
+            case MOVE_LEFT:
+            case SERVER_MOVE_LEFT: blockController.moveLeft();
+            break;
+            case MOVE_RIGHT:
+            case SERVER_MOVE_RIGHT: blockController.moveRight();
+            break;
+            case MOVE_UP:
+            case SERVER_MOVE_UP: blockController.rotate();
+            break;
+            case MOVE_DOWN:
+            case SERVER_MOVE_DOWN: blockController.moveFast();
+            break;
+        }
+    }
+
+    function moveLeft() {
+        displayController.leftClicked();
+        blockController.moveShadowLeft();
+        sendToServer(MOVE_LEFT);
+    }
+
+    function moveRight() {
+        blockController.moveShadowRight();
+        displayController.rightClicked();
+        sendToServer(MOVE_RIGHT);
+
+    }
+
+    function moveUp() {
+        displayController.upClicked();
+        sendToServer(MOVE_UP);
+    }
+
+    function moveDown() {
+        displayController.downClicked();
+        sendToServer(MOVE_DOWN);
+    }
+
+    function sendToServer(message) {
+        socketConnection.send(message);
     }
 
     // calls the init function when the window is done loading.
     window.onload = init;
-
-
 </script>
 <body>
 </body>

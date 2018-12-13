@@ -70,7 +70,9 @@ QuadBlock.prototype.getPosition = function() {
 }
 
 QuadBlock.prototype.isEmpty = function() {
-    return this.cubes.length == 0;
+    return this.cubes.length == 0 || this.cubes.filter(function(cube) {
+        return cube.markedForRemoval();
+    }).length == this.cubes.length;
 }
 
 QuadBlock.prototype.moveDown = function(deltaTime) {
