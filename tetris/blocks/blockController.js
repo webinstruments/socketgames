@@ -35,14 +35,15 @@ BlockController.prototype.init = function() {
     this.shadowBlock.hide();
     this.globalScene.add(this.shadowBlock.wireframe);
     this.removalTimer = null;
+    this.activeBlock = null;
     this.isGameOver = false;
 }
 
 BlockController.prototype.generateBlock = function() {
     var newBlock = new QuadBlock(this.tileSize); 
     newBlock.generate(this.globalScene);
-    this.blocks.push(newBlock);
     newBlock.setPosition(0, this.tileSize * this.rows);
+    this.activeBlock = newBlock;
 }
 
 BlockController.prototype.getTileFromPosition = function(x, y) {
@@ -71,6 +72,7 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 BlockController.prototype.setTile = function(obj) {
     var removedRows = 0;
     var rowsToRemove = [];
+    this.blocks.push(this.getActiveBlock());
     for(var i = 0; i < obj.cubes.length; ++i) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(pos.x, pos.y);
@@ -176,7 +178,7 @@ BlockController.prototype.getFieldHeight = function() {
 }
 
 BlockController.prototype.getActiveBlock = function() {
-    return this.blocks[this.blocks.length - 1];
+    return this.activeBlock;
 }
 
 BlockController.prototype.moveLeft = function() {
