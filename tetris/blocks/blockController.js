@@ -35,6 +35,7 @@ BlockController.prototype.init = function() {
     this.shadowBlock.hide();
     this.globalScene.add(this.shadowBlock.wireframe);
     this.removalTimer = null;
+    this.isGameOver = false;
 }
 
 BlockController.prototype.generateBlock = function() {
@@ -74,7 +75,6 @@ BlockController.prototype.setTile = function(obj) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(pos.x, pos.y);
         if(tile.rowIndex >= this.rows) {
-            //gameover
             this.gameOver();
             return;
         }
@@ -86,7 +86,6 @@ BlockController.prototype.setTile = function(obj) {
         if(this.tiles[tile.rowIndex].filter(function(obj) {
             return obj != false;
         }).length == this.columns) {
-            //this.removeRows(tile.rowIndex);
             rowsToRemove.push(tile.rowIndex);
             ++removedRows;
         }
@@ -283,10 +282,6 @@ BlockController.prototype.syncPosition = function(block) {
     for(var i = 0; i < block.cubes.length; ++i) {
         var cube = block.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(cube.x, cube.y);
-        if(tile.rowIndex >= this.rows) {
-            this.gameOver();
-            return;
-        }
         if(this.tiles[tile.rowIndex][tile.colIndex] != false && offset == 0) {
             console.log('error'); //Wenn Frame-Rate zu niedrig verschwinden Bloecke in andere
             console.log(tile.rowIndex, tile.colIndex);
@@ -357,5 +352,4 @@ BlockController.prototype.gameOver = function() {
         var block = this.blocks.pop();
         block.remove();
     }
-    this.init();
 }

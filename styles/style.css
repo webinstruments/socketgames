@@ -51,22 +51,22 @@ i {
   top: 5%; 
   color: white;  
   font-size: 20px;
-  opacity: 0.9;
+  z-index: 4;
+  opacity: 0.8;
 }
 
 .centered {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 0;
   right: 0;
   bottom: 0;
-  margin: 0 0 0 -20%;
-  width: 40%;
+  margin: 0;
+  width: 100%;
   height: 100%;
-  color: #FFF;
-  border: 2px solid #FFF;
   overflow: hidden;
   color: orange;
+  background-color: black;
   z-index: 3;
 }
 
@@ -85,7 +85,7 @@ form input[type=text] {
   background: none;
   color: orange;
   border: 1px solid orange;
-  width: 80%;
+  width: 30%;
 }
 
 input:disabled {
@@ -120,4 +120,22 @@ input[type=button], input[type=submit] {
   color:orange;
   font-family: 'press_startregular';
   font-size: 30px;
+}
+
+h2 {
+  color: orangered;
+  font-family: 'press_startregular';
+  position: relative;
+  text-align: center;
+  top: 25%;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

@@ -15,6 +15,7 @@
     <script src="../libraries/form/button.js"></script>
     <script src="../libraries/form/divGroup.js"></script>
     <script src="../libraries/form/form.js"></script>
+    <script src="../libraries/form/header.js"></script>
     <script src="../libraries/form/label.js"></script>
     <script src="../libraries/form/selector.js"></script>
     <script src="../libraries/form/textInput.js"></script>
@@ -57,8 +58,10 @@
     var scoreController;
     var socketConnection;
     var formDiv;
+    var formHeadLine;
     var form;
     var cubeShadow;
+    var isGameOver = false;
 
     function init() {
         
@@ -126,6 +129,8 @@
     }
     
     function startGame() {
+        isGameOver = false;
+        formDiv.hide();
         setupKeyControls();
         setupOnScreenControls();
         startTimer(textContainer.getTextElement('time'));
@@ -157,18 +162,27 @@
     function render() {
         BLOCK_VELOCITY = control.gameSpeed;
         BLOCK_THRESHOLDTIME = control.thresholdTime;
+        if(blockController.isGameOver) {
+            gameOver();
+            return;
+        }
         requestAnimationFrame(render);
         renderer.clear();
         renderer.render(orthoScene, orthoCamera);
         renderer.clearDepth();
         renderer.render(scene, camera);
-        if(blockController.isGameOver) {
-            return;
-        }
         var diff = Date.now() - now;
         blockController.update(diff / 1000);
         stats.update();
         now = Date.now();
+    }
+
+    function gameOver() {
+        formHeadLine.setText('Game Over!');
+        isGameOver = true;
+        blockController.init();
+        timer.stop();
+        formDiv.show();
     }
 
     function addControls(controlObject) {
@@ -206,11 +220,12 @@
 
     function createForm() {
         formDiv = new DivGroup('centered');
+        formHeadLine = new Header('New Game!', 'noselect');
         var serverInput = new TextInput({
             name: 'server', 
             value: 'ws://demos.kaazing.com/echo',
             label: 'Enter echo server',
-            labelClass: 'label', 
+            labelClass: 'label noselect', 
             groupClass: 'formgroup',
             onFocusOut: checkConnection
         });
@@ -223,7 +238,7 @@
                 { value: 3, name: 'value4' }
             ],
             label: 'Choose type',
-            labelClass: 'label',
+            labelClass: 'label noselect',
             groupClass: 'formgroup',
             btnClass: 'selectButton'
         });
@@ -234,10 +249,10 @@
             submitClass: 'startButton',
                 onSubmit: function(result) {
                 // call the render function
-                formDiv.hide();
                 startGame();
             }
         });
+        formDiv.domElement.appendChild(formHeadLine.domElement);
         formDiv.domElement.appendChild(form.domElement);
         document.body.appendChild(formDiv.domElement);
         form.disable();
@@ -332,12 +347,18 @@
     }
 
     function moveLeft() {
+        if(isGameOver) {
+            return;
+        }
         displayController.leftClicked();
         blockController.moveShadowLeft();
         sendToServer(MOVE_LEFT);
     }
 
     function moveRight() {
+        if(isGameOver) {
+            return;
+        }
         blockController.moveShadowRight();
         displayController.rightClicked();
         sendToServer(MOVE_RIGHT);
@@ -345,11 +366,17 @@
     }
 
     function moveUp() {
+        if(isGameOver) {
+            return;
+        }
         displayController.upClicked();
         sendToServer(MOVE_UP);
     }
 
     function moveDown() {
+        if(isGameOver) {
+            return;
+        }
         displayController.downClicked();
         sendToServer(MOVE_DOWN);
     }

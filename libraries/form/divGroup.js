@@ -18,5 +18,10 @@ DivGroup.prototype.show = function() {
 
 DivGroup.prototype.hide = function() {
     var styles = this.domElement.getAttribute('style');
-    this.domElement.setAttribute('style', styles += ';display:none');
+    if(styles) {
+        styles += ';';
+    } else {
+        styles = '';
+    }
+    this.domElement.setAttribute('style', styles + 'display:none');
 }
