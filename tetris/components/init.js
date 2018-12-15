@@ -1,4 +1,3 @@
-
 var camera;
 var orthoCamera;
 var renderer;
