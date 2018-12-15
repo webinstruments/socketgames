@@ -42,9 +42,9 @@ BlockController.prototype.init = function() {
 BlockController.prototype.generateBlock = function() {
     var random = getRandom(1); // debug
     var block = null;
-    if(control.block1 || random == 0) {
+    if(control.block1 || (random == 0 && !control.block2)) {
         block = new QuadBlock(this.tileSize); 
-    } else if(control.block2 || random == 1) {
+    } else if(control.block2 || (random == 1 && !control.block1)) {
         block = new Block2(this.tileSize);
     }
     block.generate(this.globalScene);
@@ -103,7 +103,6 @@ BlockController.prototype.setTile = function(obj) {
     if(rowsToRemove.length) {
         this.removeRows(rowsToRemove);
     }
-    //console.log('tilesAfterSet', this.tiles);
     if(this.scoreChangedCB && removedRows) {
         this.scoreChangedCB.call(this.scoreBinder, removedRows);
     }
