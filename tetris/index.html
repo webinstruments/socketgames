@@ -20,6 +20,12 @@
     <script src="../libraries/form/selector.js"></script>
     <script src="../libraries/form/textInput.js"></script>
     <script src="../libraries/socketConnection.js"></script>
+    <script src="components/init.js"></script>
+    <script src="components/controls.js"></script>
+    <script src="components/main.js"></script>
+    <script src="components/hud.js"></script>
+    <script src="components/startscreen.js"></script>
+    <script src="components/socket.js"></script>
     <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
     <script src="blocks/wireframe.js"></script>
@@ -44,33 +50,17 @@
     var MOVE_DOWN = "down";
     var SERVER_MOVE_DOWN = "server_down";
     // global variables
-    var renderer;
     var scene;
-    var camera;
-    var stats;
-    var control;
-    var orthoCamera;
     var orthoScene;
+    var control;
     var blockController;
-    var displayController;
-    var textContainer;
-    var timer;
-    var scoreController;
-    var socketConnection;
-    var formDiv;
-    var formHeadLine;
-    var form;
-    var cubeShadow;
     var isGameOver = false;
 
     function init() {
-        
-        orthoCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, 
-                                                window.innerHeight / 2, window.innerHeight / -2, -500, 1000);
-        orthoCamera.position.set(0, 0, 0);
-
         orthoScene = new THREE.Scene();
-
+        scene = new THREE.Scene();
+        
+        addOrthoCamera(-20, 100, 0, 0, 0);
         var geometry = new THREE.BoxGeometry(430, 200, 1);
         var material = new THREE.MeshBasicMaterial({color: 0xffaaff});
         var c = new THREE.Mesh(geometry, material);
@@ -78,10 +68,7 @@
         orthoScene.add(c);
 
         // position and point the camera to the center of the scene
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        scene = new THREE.Scene();
-        camera.position.set(0, 0, CAM_DISTANCE);
-        camera.lookAt(scene.position);
+        addPerspectiveCamera(45, 0.1, 20, 0, 0, CAM_DISTANCE, scene.position);
 
         displayGameInfo();
         initScoreListener();
@@ -91,8 +78,7 @@
             new BlockController(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS, scoreController.scoreChanged, scoreController);
 
         // create the stats
-        stats = createStats();
-        document.body.appendChild(stats.domElement);
+        createStats();
 
         control = new function () {
             this.gameSpeed = BLOCK_VELOCITY;
@@ -100,14 +86,8 @@
         };
         addControls(control);
 
-        // create a render, sets the background color and the size
-        renderer = new THREE.WebGLRenderer();
-        renderer.setClearColor(0xAFAFAF, 1.0);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.autoClear = false;
-
+        initRenderer(0xAFAFAF);
         // add the output of the renderer to the html element
-        document.body.appendChild(renderer.domElement);
 
         //origin to left top
         var fieldWidth = blockController.getFieldWidth();
@@ -128,261 +108,12 @@
         createForm();
     }
     
-    function startGame() {
-        isGameOver = false;
-        formDiv.hide();
-        setupKeyControls();
-        setupOnScreenControls();
-        startTimer(textContainer.getTextElement('time'));
-        now = Date.now();
-        blockController.generateBlock();
-        render();
-    }
-
-    function createStats() {
-        var stats = new Stats();
-        stats.setMode(0);
-
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.left = '0px';
-        stats.domElement.style.top = '0px';
-
-        return stats;
-    }
-
     function resize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
         var maxHeight = getWidthFromDistance(CAM_DISTANCE, camera);
         blockController.resize(maxWidth, maxHeight);
-    }
-
-    var now = 0;
-    function render() {
-        BLOCK_VELOCITY = control.gameSpeed;
-        BLOCK_THRESHOLDTIME = control.thresholdTime;
-        if(blockController.isGameOver) {
-            gameOver();
-            return;
-        }
-        requestAnimationFrame(render);
-        renderer.clear();
-        renderer.render(orthoScene, orthoCamera);
-        renderer.clearDepth();
-        renderer.render(scene, camera);
-        var diff = Date.now() - now;
-        blockController.update(diff / 1000);
-        stats.update();
-        now = Date.now();
-    }
-
-    function gameOver() {
-        formHeadLine.setText('Game Over!');
-        isGameOver = true;
-        blockController.init();
-        timer.stop();
-        formDiv.show();
-    }
-
-    function addControls(controlObject) {
-        var gui = new dat.GUI();
-        gui.add(controlObject, 'gameSpeed', 0, 8);
-        gui.add(controlObject, 'thresholdTime', 0.5, 20000);
-    }
-
-    function displayGameInfo() {
-        textContainer = new TextContainer('textContainer', [{
-            id: 'score',
-            label: 'Score: ',
-            value: '0'
-        }, {
-            id: 'delay',
-            label: 'Delay: ',
-            value: '0'
-        }, {
-            id: 'time',
-            label: 'Time: ',
-            value: '0'
-        }]);
-        
-        document.body.appendChild(textContainer.domElement);
-    }
-
-    function initScoreListener() {
-        scoreController = new ScoreController(textContainer.getTextElement('score'));
-    }
-
-    function startTimer(textElement) {
-        timer = new Timer(textElement);
-        timer.start();
-    }
-
-    function createForm() {
-        formDiv = new DivGroup('centered');
-        formHeadLine = new Header('New Game!', 'noselect');
-        var serverInput = new TextInput({
-            name: 'server', 
-            value: 'ws://demos.kaazing.com/echo',
-            label: 'Enter echo server',
-            labelClass: 'label noselect', 
-            groupClass: 'formgroup',
-            onFocusOut: checkConnection
-        });
-        var selection = new Selector({
-            name: 'type',
-            values: [
-                { value: 0, name: 'value1' },
-                { value: 1, name: 'value2' },
-                { value: 2, name: 'value3' },
-                { value: 3, name: 'value4' }
-            ],
-            label: 'Choose type',
-            labelClass: 'label noselect',
-            groupClass: 'formgroup',
-            btnClass: 'selectButton'
-        });
-        form = new Form({
-            formClass: 'form',
-            children: [serverInput, selection],
-            submitText: 'start game!',
-            submitClass: 'startButton',
-                onSubmit: function(result) {
-                // call the render function
-                startGame();
-            }
-        });
-        formDiv.domElement.appendChild(formHeadLine.domElement);
-        formDiv.domElement.appendChild(form.domElement);
-        document.body.appendChild(formDiv.domElement);
-        form.disable();
-    }
-
-    function checkConnection(url, element) {
-        if(!socketConnection) {
-            socketConnection = new SocketConnection(url, 
-                textContainer.getTextElement('delay'), {
-                onOpen: socketOnOpen,
-                onMessage: moveRemote,
-                onError: socketOnError,
-                onClose: socketOnClose
-            });
-        } else if(socketConnection.getUrl() != url) {
-            socketConnection.connect(url);
-        }
-    }
-
-    function socketOnOpen() {
-        form.setInfoText("Connection Successfull");
-        form.enable();
-    }
-
-    function socketOnMessage(msg) {
-    }
-
-    function socketOnError(err) {
-        var errorMsg = 'Error: ';
-        if(err) {
-            errorMsg += err;
-        } else {
-            errorMsg += 'The provided Url is not valid';
-        }
-        form.setInfoText(errorMsg);
-    }
-    
-    function socketOnClose() {
-        form.setInfoText("Connection Closed");
-    }  
-
-    function setupOnScreenControls() {
-        displayController = new OnScreenController(CONTROL_MODE_ALL, {
-            groupTop: '80%',
-            leftButtonClass: "left",
-            rightButtonClass: "right",
-            upButtonClass: "up",
-            downButtonClass: "down",
-            clickColor: "red",
-            leftPos: "left:35%;",
-            rightPos: "right:35%;",
-            upPos: "top:0%;left:47%;",
-            downPos: "bottom:10%;left:47%;",
-            leftCB: moveLeft,
-            rightCB: moveRight,
-            upCB: moveUp,
-            downCB: moveDown
-        });
-        document.body.appendChild(displayController.domElement);
-    }
-      
-    function setupKeyControls() {
-        document.onkeydown = function(e) {
-            switch(e.keyCode) {
-                case 37: moveLeft();
-                break;
-                case 39: moveRight();
-                break;
-                case 38: moveUp();
-                break;
-                case 40: moveDown();
-                break;
-            }
-        }
-    }
-
-    function moveRemote(message) {
-        switch(message) {
-            case MOVE_LEFT:
-            case SERVER_MOVE_LEFT: blockController.moveLeft();
-            break;
-            case MOVE_RIGHT:
-            case SERVER_MOVE_RIGHT: blockController.moveRight();
-            break;
-            case MOVE_UP:
-            case SERVER_MOVE_UP: blockController.rotate();
-            break;
-            case MOVE_DOWN:
-            case SERVER_MOVE_DOWN: blockController.moveFast();
-            break;
-        }
-    }
-
-    function moveLeft() {
-        if(isGameOver) {
-            return;
-        }
-        displayController.leftClicked();
-        blockController.moveShadowLeft();
-        sendToServer(MOVE_LEFT);
-    }
-
-    function moveRight() {
-        if(isGameOver) {
-            return;
-        }
-        blockController.moveShadowRight();
-        displayController.rightClicked();
-        sendToServer(MOVE_RIGHT);
-
-    }
-
-    function moveUp() {
-        if(isGameOver) {
-            return;
-        }
-        displayController.upClicked();
-        sendToServer(MOVE_UP);
-    }
-
-    function moveDown() {
-        if(isGameOver) {
-            return;
-        }
-        displayController.downClicked();
-        sendToServer(MOVE_DOWN);
-    }
-
-    function sendToServer(message) {
-        socketConnection.send(message);
     }
 
     // calls the init function when the window is done loading.
