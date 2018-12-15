@@ -26,8 +26,11 @@
     <script src="components/hud.js"></script>
     <script src="components/startscreen.js"></script>
     <script src="components/socket.js"></script>
+    <script src="blocks/anchors/movePoint.js"></script>
+    <script src="blocks/anchors/pivotPoint.js"></script>
     <script src="blocks/blockController.js"></script>
     <script src="blocks/quadBlock.js"></script>
+    <script src="blocks/block2.js"></script>
     <script src="blocks/wireframe.js"></script>
     <script src="blocks/cube.js"></script>
     <script src="blocks/scoreController.js"></script>
@@ -52,7 +55,6 @@
     // global variables
     var scene;
     var orthoScene;
-    var control;
     var blockController;
     var isGameOver = false;
 
@@ -64,11 +66,10 @@
         var geometry = new THREE.BoxGeometry(430, 200, 1);
         var material = new THREE.MeshBasicMaterial({color: 0xffaaff});
         var c = new THREE.Mesh(geometry, material);
-        c.position.set(0, 0, -499);
+        c.position.set(0, 0, -80);
         orthoScene.add(c);
 
-        // position and point the camera to the center of the scene
-        addPerspectiveCamera(45, 0.1, 20, 0, 0, CAM_DISTANCE, scene.position);
+        addPerspectiveCamera(45, 0.1, 100, 0, 0, CAM_DISTANCE, scene.position);
 
         displayGameInfo();
         initScoreListener();
@@ -77,19 +78,11 @@
         blockController = 
             new BlockController(scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS, scoreController.scoreChanged, scoreController);
 
-        // create the stats
         createStats();
-
-        control = new function () {
-            this.gameSpeed = BLOCK_VELOCITY;
-            this.thresholdTime = BLOCK_THRESHOLDTIME;
-        };
-        addControls(control);
+        addControls();
 
         initRenderer(0xAFAFAF);
-        // add the output of the renderer to the html element
-
-        //origin to left top
+        
         var fieldWidth = blockController.getFieldWidth();
         var fieldHeight = blockController.getFieldHeight();
         scene.position.set(-fieldWidth / 2, -(fieldHeight - blockController.tileSize) / 2, 0);
@@ -116,7 +109,6 @@
         blockController.resize(maxWidth, maxHeight);
     }
 
-    // calls the init function when the window is done loading.
     window.onload = init;
     window.onresize = resize;
 </script>

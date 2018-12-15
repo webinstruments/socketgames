@@ -2,11 +2,20 @@ var textContainer;
 var timer;
 var scoreController;
 var stats;
+var control;
 
-function addControls(controlObject) {
+function addControls() {
     var gui = new dat.GUI();
-    gui.add(controlObject, 'gameSpeed', 0, 8);
-    gui.add(controlObject, 'thresholdTime', 0.5, 20000);
+    control = new function () {
+        this.gameSpeed = BLOCK_VELOCITY;
+        this.thresholdTime = BLOCK_THRESHOLDTIME;
+        this.block1 = false;
+        this.block2 = false;
+    };
+    gui.add(control, 'gameSpeed', 0, 8);
+    gui.add(control, 'thresholdTime', 0.5, 20000);
+    gui.add(control, 'block1');
+    gui.add(control, 'block2');
 }
 
 function displayGameInfo() {
