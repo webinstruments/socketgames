@@ -70,6 +70,8 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 }
 
 BlockController.prototype.setTile = function(obj) {
+    console.log('block_' + (this.blocks.length + 1), obj.getPosition().x + ', ' + obj.getPosition().y);
+    console.log('beforeSet', this.tiles);
     var removedRows = 0;
     var rowsToRemove = [];
     this.blocks.push(this.getActiveBlock());
@@ -99,6 +101,7 @@ BlockController.prototype.setTile = function(obj) {
     if(this.scoreChangedCB && removedRows) {
         this.scoreChangedCB.call(this.scoreBinder, removedRows);
     }
+    console.log('afterSet', this.tiles);
 }
 
 BlockController.prototype.removeRows = function(rowIndexes) {

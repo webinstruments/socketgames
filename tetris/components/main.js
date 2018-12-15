@@ -1,6 +1,7 @@
 var lastFrameTime = 0;
 var frameRate = 16.6667;
 var delta = 0;
+var requestId;
 
 function startGame() {
     isGameOver = false;
@@ -10,7 +11,7 @@ function startGame() {
     startTimer(textContainer.getTextElement('time'));
     blockController.generateBlock();
     lastFrameTime = 0;
-    requestAnimationFrame(render);
+    newFrame();
 }
 
 function gameOver() {
@@ -24,17 +25,21 @@ function gameOver() {
 function render(timestamp) {
     if(lastFrameTime == 0) {
         lastFrameTime = timestamp;
-        requestAnimationFrame(render);
+        newFrame();
     }
     BLOCK_VELOCITY = control.gameSpeed;
     BLOCK_THRESHOLDTIME = control.thresholdTime;
-    if(blockController.isGameOver) {
-        gameOver();
-        return;
-    }
     delta += timestamp - lastFrameTime;
     lastFrameTime = timestamp;
+    if(delta >= 50) {
+        console.log('delta', delta);
+    }
     while(delta >= frameRate) {
+        if(blockController.isGameOver) {
+            gameOver();
+            cancelAnimationFrame(requestId);
+            return;
+        }
         blockController.update(frameRate / 1000);
         delta -= frameRate;
     }
@@ -43,5 +48,9 @@ function render(timestamp) {
     renderer.clearDepth();
     renderer.render(scene, camera);
     stats.update();
-    requestAnimationFrame(render);
+    newFrame();
+}
+
+function newFrame() {
+    requestId = requestAnimationFrame(render);
 }
