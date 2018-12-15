@@ -59,7 +59,7 @@
     function init() {
         orthoScene = new THREE.Scene();
         scene = new THREE.Scene();
-        
+
         addOrthoCamera(-20, 100, 0, 0, 0);
         var geometry = new THREE.BoxGeometry(430, 200, 1);
         var material = new THREE.MeshBasicMaterial({color: 0xffaaff});
@@ -118,6 +118,7 @@
 
     // calls the init function when the window is done loading.
     window.onload = init;
+    window.onresize = resize;
 </script>
 <body>
 </body>

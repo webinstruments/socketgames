@@ -31,8 +31,10 @@ function render(timestamp) {
     BLOCK_THRESHOLDTIME = control.thresholdTime;
     delta += timestamp - lastFrameTime;
     lastFrameTime = timestamp;
-    if(delta >= 50) {
-        console.log('delta', delta);
+    if(delta / frameRate >= 5) {
+        //game was paused
+        console.log('synching');
+        delta = 0;
     }
     while(delta >= frameRate) {
         if(blockController.isGameOver) {

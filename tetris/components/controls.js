@@ -53,18 +53,12 @@ function moveRemote(message) {
 }
 
 function moveLeft() {
-    if(isGameOver) {
-        return;
-    }
     displayController.leftClicked();
     blockController.moveShadowLeft();
     sendToServer(MOVE_LEFT);
 }
 
 function moveRight() {
-    if(isGameOver) {
-        return;
-    }
     blockController.moveShadowRight();
     displayController.rightClicked();
     sendToServer(MOVE_RIGHT);
@@ -72,17 +66,11 @@ function moveRight() {
 }
 
 function moveUp() {
-    if(isGameOver) {
-        return;
-    }
     displayController.upClicked();
     sendToServer(MOVE_UP);
 }
 
 function moveDown() {
-    if(isGameOver) {
-        return;
-    }
     displayController.downClicked();
     sendToServer(MOVE_DOWN);
 }

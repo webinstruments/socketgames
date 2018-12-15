@@ -11,11 +11,11 @@ function BlockController(globalScene, width, height, columns, rows, scoreChanged
     this.scoreChangedCB = scoreChangedCB;
     this.scoreBinder = scoreBinder;
     this.timeToRemove = 1000;
-    this.resize(this.width, this.height);
     this.init();
 }
 
 BlockController.prototype.init = function() {
+    this.resize(this.width, this.height);
     for(var i = 0; i < this.rows + 1; ++i) {
         this.tiles[i] = [];
         for(var j = 0; j < this.columns; ++j) {
@@ -185,6 +185,7 @@ BlockController.prototype.getActiveBlock = function() {
 }
 
 BlockController.prototype.moveLeft = function() {
+    if(!this.getActiveBlock()) { return; }
     this.shadowBlock.hide();
     var block = this.getActiveBlock();
     var position = block.getPosition();
@@ -202,6 +203,7 @@ BlockController.prototype.moveLeft = function() {
 }
 
 BlockController.prototype.moveRight = function() {
+    if(!this.getActiveBlock()) { return; }
     this.shadowBlock.hide();
     var block = this.getActiveBlock();
     var position = block.getPosition();
@@ -252,13 +254,15 @@ BlockController.prototype.checkCollision = function(cubes, offsetX, offsetY) {
 }
 
 BlockController.prototype.moveFast = function() {
-    var block = this.getActiveBlock().moveFast();
+    if(!this.getActiveBlock()) { return; }
+    this.getActiveBlock().moveFast();
     if(!this.moveFastPressed) {
         this.thresholdTime += BLOCK_THRESHOLDTIME / 2;
     }
 }
 
 BlockController.prototype.rotate = function() {
+    if(!this.getActiveBlock()) { return; }
     this.getActiveBlock().rotate();
 }
 

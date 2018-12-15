@@ -86,6 +86,7 @@ form input[type=text] {
   color: orange;
   border: 1px solid orange;
   width: 30%;
+  min-width: 450px;
 }
 
 input:disabled {
