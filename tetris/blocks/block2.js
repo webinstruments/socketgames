@@ -14,7 +14,7 @@ Block2.prototype.generate = function(scene) {
     scene.add(this.movePoint.movePoint);
 
     this.group = new THREE.Object3D();
-    var color = 0xff00aa;
+    var color = getRandom(0xffffff);
     this.cubes.push(new Cube(0, 2 * this.length, this.length, color, 0x000000, this));
     this.cubes.push(new Cube(0, this.length, this.length, color, 0x000000, this));
     this.cubes.push(new Cube(0, 0, this.length, color, 0x000000, this));
@@ -40,7 +40,6 @@ Block2.prototype.updateBox = function() {
     this.width = this.boundingBox.max.x - this.boundingBox.min.x;
     this.height = this.boundingBox.max.y - this.boundingBox.min.y;
 
-    var position = this.getPosition();
     this.pivot.setPosition(this.width / 2, this.height / 2, 0);
 }
 
@@ -93,13 +92,17 @@ Block2.prototype.removeCube = function(cube) {
 
 Block2.prototype.rotate = function(space) {
     //height will be the next width
-    if(this.height <= space) {
+    if(this.height - THETA <= space) {
         this.pivot.rotation.z += Math.PI / 2;
         this.updateBox();
     }
 }
 
-Block2.prototype.rotateBack = function() {
+Block2.prototype.getRotation = function() {
+    return this.pivot.rotation.z;
+}
+
+Block2.prototype.undoRotate = function() {
     this.pivot.rotation.z -= Math.PI / 2;
     this.updateBox();
 }

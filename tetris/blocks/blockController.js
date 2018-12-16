@@ -50,6 +50,7 @@ BlockController.prototype.generateBlock = function() {
     block.generate(this.globalScene);
     block.setPosition(0, this.tileSize * this.rows);
     this.activeBlock = block;
+    this.coarseDetectionY(this.activeBlock);
 }
 
 BlockController.prototype.getTileFromPosition = function(x, y) {
@@ -77,7 +78,7 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 
 BlockController.prototype.setTile = function(obj) {
     console.log('block_' + (this.blocks.length + 1), obj.getPosition().x + ', ' + obj.getPosition().y);
-    console.log('beforeSet', this.tiles);
+    console.log('setTile', this.tiles);
     var removedRows = 0;
     var rowsToRemove = [];
     this.blocks.push(this.getActiveBlock());
@@ -106,7 +107,6 @@ BlockController.prototype.setTile = function(obj) {
     if(this.scoreChangedCB && removedRows) {
         this.scoreChangedCB.call(this.scoreBinder, removedRows);
     }
-    console.log('afterSet', this.tiles);
 }
 
 BlockController.prototype.removeRows = function(rowIndexes) {
@@ -130,10 +130,6 @@ BlockController.prototype.removeRows = function(rowIndexes) {
                 }
             }
         });
-
-        for(var j = rowIndex; j < this.rows; ++j) { //shifting rows
-            this.tiles[j] = this.tiles[j + 1];
-        }
     }
 
     for(var i = 0; i < this.blocks.length; ++i) { //removing empty blocks
@@ -149,20 +145,23 @@ BlockController.prototype.removeRows = function(rowIndexes) {
 
 BlockController.prototype.shiftBlocks = function(rowIndexes) {
     var self = this;
-    while(rowIndexes.length) {
-        var rowIndex = rowIndexes.pop();
-        var filteredBlocks = this.blocks.filter(function(block) {
-            return block.getPosition().y > rowIndex * self.tileSize - THETA
-        });
-    
-        for(var i = 0; i < filteredBlocks.length; ++i) { //shifting position of blocks
-            var pos = filteredBlocks[i].getPosition();
-            filteredBlocks[i].setPosition(pos.x, pos.y - this.tileSize, 0);
+    for(var i = 0; i < rowIndexes.length; ++i) {
+        var rowIndex = rowIndexes[i];
+        for(var j = rowIndex; j < this.rows; ++j) { //shifting rows
+            this.tiles[j] = this.tiles[j + 1];
+
+            var boxes = this.tiles[j].filter(function(rowItem) {
+                return rowItem != false;
+            });
+            boxes.map(function(cube) {
+                cube.moveDown(self.tileSize);
+            });
         }
     }
 
     clearTimeout(this.removalTimer);
     this.removalTimer = null;
+    this.generateBlock();
 }
 
 BlockController.prototype.resize = function(width, height) {
@@ -195,7 +194,7 @@ BlockController.prototype.moveLeft = function() {
     var block = this.getActiveBlock();
     var position = block.getPosition();
     //coarse
-    if(position.x > 0) {
+    if(position.x > THETA) {
         var self = this;
         var leftObject = findFromArray(this.heights, function(obj) {
             return position.x - obj.x - THETA <= self.tileSize && obj.y > position.y;
@@ -271,7 +270,19 @@ BlockController.prototype.rotate = function() {
     var block = this.getActiveBlock();
     if(!block) { return; }
     var position = block.getPosition();
-    this.getActiveBlock().rotate(this.width - position.x);
+    var tile = this.getTileFromPosition(position.x, position.y + THETA);
+    var counter = 0;
+    //Space right
+    while(tile.colIndex < this.columns && this.tiles[tile.rowIndex][tile.colIndex] == false && counter < 4) {
+        ++counter;
+        ++tile.colIndex;
+    }
+    var width = counter * this.tileSize;    
+    block.rotate(width);
+    //the offset of block will be tilesizeHalf before drawn.
+    if(!this.checkCollision(this.tileSizeHalf + THETA, this.tileSizeHalf + THETA)) {
+        block.undoRotate();
+    }
 }
 
 BlockController.prototype.currentObstaclesY = function(block) {
@@ -329,6 +340,9 @@ BlockController.prototype.syncPosition = function(block, triggerGameOver) {
 }
 
 BlockController.prototype.update = function(deltaTime) {
+    if(this.removalTimer) {
+        return; //new block must be generated first
+    }
     var block = this.getActiveBlock();
     var position = block.getPosition();
     if(position.y < 0) {
@@ -343,19 +357,22 @@ BlockController.prototype.update = function(deltaTime) {
             this.thresholdTime = 0;
     } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
         if(!this.positionSynced) {
+            console.log('sync1');
             this.syncPosition(block, false);
         }
         //block.setPosition(block.getPosition().x, this.heighestValue, 0);
         this.thresholdTime += deltaTime;
     } else {
         //align with tiles
+        console.log('sync2');
         this.syncPosition(block, true);
         if(this.isGameOver) {
             return;
         }
         this.setTile(block);
-        this.generateBlock();
-        this.coarseDetectionY(this.getActiveBlock());
+        if(!this.removalTimer) { //conflicts with removal of rows
+            this.generateBlock();
+        }
         this.thresholdTime = 0;
         this.moveFastPressed = false;
         this.positionSynced = false;

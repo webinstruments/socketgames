@@ -88,6 +88,10 @@ QuadBlock.prototype.rotate = function() {
     //this.pivot.rotation.z += Math.PI / 2;
 }
 
+QuadBlock.prototype.getRotation = function() {
+    return 0;
+}
+
 QuadBlock.prototype.remove = function() {
     while(this.cubes.length) {
         var c = this.cubes.pop();

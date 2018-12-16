@@ -2,16 +2,16 @@ var cube_id = 0;
 function Cube(x, y, length, color, lineColor, parent) {
     this.x = x;
     this.y = y;
-    this.length = length;
     this.color = color;
     this.lineColor = lineColor;
     this.parent = parent;
     this.id = ++cube_id;
-    this.resize(this.length);
+    this.resize(length);
     this.fadeOutTime = 1000;
     this.intervalTime = 20;
     this.fadeOutPercent = 1 * this.intervalTime / this.fadeOutTime;
     this.timer = null;
+    this.rotationAxis = new THREE.Vector3(0, 0, 1);
 }
 
 Cube.prototype.resize = function(size) {    
@@ -24,6 +24,7 @@ Cube.prototype.resize = function(size) {
         this.frame = new WireFrame(cubeGeo, this.lineColor, 4);
         this.cube.add(this.frame.wireframe);
     }
+    this.length = size;
 }
 
 Cube.prototype.getPosition = function(world) {
@@ -67,4 +68,17 @@ Cube.prototype.fadeOut = function() {
 
 Cube.prototype.markedForRemoval = function() {
     return this.timer != null;
+}
+
+Cube.prototype.moveDown = function(length) {
+    this.translationVector = new THREE.Vector3(0, -length, 0);
+    this.translationVector.applyAxisAngle(this.rotationAxis, this.parent.getRotation());
+    if(THETA > Math.abs(this.translationVector.x)) {
+        this.translationVector.x = 0;
+    }
+    if(THETA > Math.abs(this.translationVector.y)) {
+        this.translationVector.y = 0;
+    }
+    this.cube.position.x -= this.translationVector.x;
+    this.cube.position.y += this.translationVector.y;
 }
