@@ -1,19 +1,19 @@
 /*
-    -
-    |
-    |--
+
+    ======
+
 */
 
-function Block2(length, scene) {
+function Block3(length, scene) {
     BlockBase.call(this, length)
     if(scene) {
         this.generate(scene);
     }
 }
 
-Block2.prototype = Object.create(BlockBase.prototype);
+Block3.prototype = Object.create(BlockBase.prototype);
 
-Block2.prototype.generate = function(scene) {
+Block3.prototype.generate = function(scene) {
     var self = this;
 
     var zIndex = this.length;

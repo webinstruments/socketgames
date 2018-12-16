@@ -1,11 +1,16 @@
-function Block1(cubeLength, scene) {
-    this.length = cubeLength;
-    this.cubes = [];
-    this.velocity = 1;
+/*  
+    ---
+    | |
+    ---
+*/
+function Block1(length, scene) {
+    BlockBase.call(this, length)
     if(scene) {
         this.generate(scene);
     }
 }
+
+Block1.prototype = Object.create(BlockBase.prototype);
 
 Block1.prototype.generate = function(scene) {
     var self = this;
@@ -40,64 +45,10 @@ Block1.prototype.generate = function(scene) {
     return this;
 }
 
-Block1.prototype.setPosition = function(x, y) {
-    this.movePoint.setPosition(x, y, 0);
-}
-
-Block1.prototype.getPosition = function() {
-    return this.movePoint.getPosition();
-}
-
-Block1.prototype.isEmpty = function() {
-    return this.cubes.length == 0 || this.cubes.filter(function(cube) {
-        return cube.markedForRemoval();
-    }).length == this.cubes.length;
-}
-
-Block1.prototype.moveDown = function(deltaTime) {
-    this.movePoint.position.y -= deltaTime * BLOCK_VELOCITY * this.velocity;
-}
-
-Block1.prototype.moveLeft = function() {
-    this.movePoint.position.x -= this.length;
-}
-
-Block1.prototype.moveFast = function() {
-    this.velocity = 5;
-}
-
-Block1.prototype.moveRight = function() {
-    this.movePoint.position.x += this.length;
-}
-
-Block1.prototype.removeCube = function(cube) {
-    var foundIndex = -1;
-    for(var i = 0; i < this.cubes.length; ++i) {
-        if(this.cubes[i].id == cube.id) {
-            foundIndex = i;
-            this.group.remove(this.cubes[i].cube);
-            break;
-        }
-    }
-    this.cubes.splice(foundIndex, 1);
-    if(this.cubes.length == 0) {
-        this.remove();
-        return true;
-    }
-    return false;
-}
-
 Block1.prototype.rotate = function() {
     //this.pivot.rotation.z += Math.PI / 2;
 }
 
 Block1.prototype.getRotation = function() {
     return 0;
-}
-
-Block1.prototype.remove = function() {
-    while(this.cubes.length) {
-        var c = this.cubes.pop();
-    }
-    this.movePoint.remove();
 }

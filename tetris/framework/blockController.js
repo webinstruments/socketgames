@@ -81,8 +81,9 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
     return Math.floor(this.rows * heightRelation);
 }
 
+var BLOCKCONTROLLER_BLOCKS = 0;
 BlockController.prototype.setTile = function(obj) {
-    console.log('block_' + (this.blocks.length + 1), obj.getPosition().x + ', ' + obj.getPosition().y);
+    console.log('block_' + (++BLOCKCONTROLLER_BLOCKS), obj.getPosition().x + ', ' + obj.getPosition().y);
     console.log('setTile', this.tiles);
     var removedRows = 0;
     var rowsToRemove = [];
