@@ -13,6 +13,7 @@ function addControls() {
         this.block2 = false;
         this.block3 = false;
         this.block4 = false;
+        this.block5 = false;
     };
     gui.add(control, 'gameSpeed', 0, 8);
     gui.add(control, 'thresholdTime', 0.5, 20000);
@@ -20,6 +21,7 @@ function addControls() {
     gui.add(control, 'block2');
     gui.add(control, 'block3');
     gui.add(control, 'block4');
+    gui.add(control, 'block5');
 }
 
 function displayGameInfo() {
