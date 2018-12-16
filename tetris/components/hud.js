@@ -11,11 +11,13 @@ function addControls() {
         this.thresholdTime = BLOCK_THRESHOLDTIME;
         this.block1 = false;
         this.block2 = false;
+        this.block3 = false;
     };
     gui.add(control, 'gameSpeed', 0, 8);
     gui.add(control, 'thresholdTime', 0.5, 20000);
     gui.add(control, 'block1');
     gui.add(control, 'block2');
+    gui.add(control, 'block3');
 }
 
 function displayGameInfo() {

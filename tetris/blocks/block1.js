@@ -1,10 +1,13 @@
-function QuadBlock(cubeLength) {
+function Block1(cubeLength, scene) {
     this.length = cubeLength;
     this.cubes = [];
     this.velocity = 1;
+    if(scene) {
+        this.generate(scene);
+    }
 }
 
-QuadBlock.prototype.generate = function(scene) {
+Block1.prototype.generate = function(scene) {
     var self = this;
 
     var zIndex = this.length;
@@ -14,7 +17,7 @@ QuadBlock.prototype.generate = function(scene) {
     scene.add(this.movePoint.movePoint);
 
     this.group = new THREE.Object3D();
-    var color = 0xffaa00;
+    var color = getRandom(0xffffff);
     this.cubes.push(new Cube(-this.length, 0, this.length, color, 0x000000, this));
     this.cubes.push(new Cube(0, 0, this.length, color, 0x000000, this));
     this.cubes.push(new Cube(-this.length, -this.length, this.length, color, 0x000000, this));
@@ -37,37 +40,37 @@ QuadBlock.prototype.generate = function(scene) {
     return this;
 }
 
-QuadBlock.prototype.setPosition = function(x, y) {
+Block1.prototype.setPosition = function(x, y) {
     this.movePoint.setPosition(x, y, 0);
 }
 
-QuadBlock.prototype.getPosition = function() {
+Block1.prototype.getPosition = function() {
     return this.movePoint.getPosition();
 }
 
-QuadBlock.prototype.isEmpty = function() {
+Block1.prototype.isEmpty = function() {
     return this.cubes.length == 0 || this.cubes.filter(function(cube) {
         return cube.markedForRemoval();
     }).length == this.cubes.length;
 }
 
-QuadBlock.prototype.moveDown = function(deltaTime) {
+Block1.prototype.moveDown = function(deltaTime) {
     this.movePoint.position.y -= deltaTime * BLOCK_VELOCITY * this.velocity;
 }
 
-QuadBlock.prototype.moveLeft = function() {
+Block1.prototype.moveLeft = function() {
     this.movePoint.position.x -= this.length;
 }
 
-QuadBlock.prototype.moveFast = function() {
+Block1.prototype.moveFast = function() {
     this.velocity = 5;
 }
 
-QuadBlock.prototype.moveRight = function() {
+Block1.prototype.moveRight = function() {
     this.movePoint.position.x += this.length;
 }
 
-QuadBlock.prototype.removeCube = function(cube) {
+Block1.prototype.removeCube = function(cube) {
     var foundIndex = -1;
     for(var i = 0; i < this.cubes.length; ++i) {
         if(this.cubes[i].id == cube.id) {
@@ -84,15 +87,15 @@ QuadBlock.prototype.removeCube = function(cube) {
     return false;
 }
 
-QuadBlock.prototype.rotate = function() {
+Block1.prototype.rotate = function() {
     //this.pivot.rotation.z += Math.PI / 2;
 }
 
-QuadBlock.prototype.getRotation = function() {
+Block1.prototype.getRotation = function() {
     return 0;
 }
 
-QuadBlock.prototype.remove = function() {
+Block1.prototype.remove = function() {
     while(this.cubes.length) {
         var c = this.cubes.pop();
     }

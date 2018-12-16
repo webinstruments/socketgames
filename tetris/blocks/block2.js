@@ -1,7 +1,10 @@
-function Block2(length) {
+function Block2(length, scene) {
     this.length = length;
     this.cubes = [];
     this.velocity = 1;
+    if(scene) {
+        this.generate(scene);
+    }
 }
 
 Block2.prototype.generate = function(scene) {
@@ -35,6 +38,11 @@ Block2.prototype.generate = function(scene) {
     return this;
 }
 
+Block2.prototype.invert = function() {
+    this.pivot.rotation.y = Math.PI;
+    this.movePoint.position.z = -this.length;
+}
+
 Block2.prototype.updateBox = function() {
     this.boundingBox = new THREE.Box3().setFromObject(this.pivot.pivot);
     this.width = this.boundingBox.max.x - this.boundingBox.min.x;
@@ -44,7 +52,8 @@ Block2.prototype.updateBox = function() {
 }
 
 Block2.prototype.setPosition = function(x, y) {
-    this.movePoint.setPosition(x, y, 0);
+    this.movePoint.position.x = x;
+    this.movePoint.position.y = y;
 }
 
 Block2.prototype.getPosition = function() {

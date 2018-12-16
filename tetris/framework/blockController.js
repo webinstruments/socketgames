@@ -40,14 +40,19 @@ BlockController.prototype.init = function() {
 }
 
 BlockController.prototype.generateBlock = function() {
-    var random = getRandom(1); // debug
+    var random = getRandom(2); // debug
+    if(control.block1) { random = 0 }
+    else if(control.block2) { random = 1 }
+    else if(control.block3) { random = 2 } 
     var block = null;
-    if(control.block1 || (random == 0 && !control.block2)) {
-        block = new QuadBlock(this.tileSize); 
-    } else if(control.block2 || (random == 1 && !control.block1)) {
-        block = new Block2(this.tileSize);
+    if(random == 0) {
+        block = new Block1(this.tileSize, this.globalScene);
+    } else if(random == 1) {
+        block = new Block2(this.tileSize, this.globalScene);
+    } else if(random == 2) { 
+        block = new Block2(this.tileSize, this.globalScene);
+        block.invert();
     }
-    block.generate(this.globalScene);
     block.setPosition(0, this.tileSize * this.rows);
     this.activeBlock = block;
     this.coarseDetectionY(this.activeBlock);
@@ -335,7 +340,7 @@ BlockController.prototype.syncPosition = function(block, triggerGameOver) {
     }
     //offset wird zur endposition dazugezählt
     var tile = this.getTileFromPosition(position.x + this.tileSizeHalf, position.y + this.tileSizeHalf);
-    block.setPosition(tile.colIndex * this.tileSize, (tile.rowIndex + offset) * this.tileSize, 0);
+    block.setPosition(tile.colIndex * this.tileSize, (tile.rowIndex + offset) * this.tileSize);
     this.positionSynced = true;
 }
 
@@ -357,14 +362,11 @@ BlockController.prototype.update = function(deltaTime) {
             this.thresholdTime = 0;
     } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
         if(!this.positionSynced) {
-            console.log('sync1');
             this.syncPosition(block, false);
         }
-        //block.setPosition(block.getPosition().x, this.heighestValue, 0);
         this.thresholdTime += deltaTime;
     } else {
         //align with tiles
-        console.log('sync2');
         this.syncPosition(block, true);
         if(this.isGameOver) {
             return;

@@ -72,12 +72,14 @@ Cube.prototype.markedForRemoval = function() {
 
 Cube.prototype.moveDown = function(length) {
     this.translationVector = new THREE.Vector3(0, -length, 0);
-    this.translationVector.applyAxisAngle(this.rotationAxis, this.parent.getRotation());
-    if(THETA > Math.abs(this.translationVector.x)) {
-        this.translationVector.x = 0;
-    }
-    if(THETA > Math.abs(this.translationVector.y)) {
-        this.translationVector.y = 0;
+    if(this.parent.getRotation() != 0) {
+        this.translationVector.applyAxisAngle(this.rotationAxis, this.parent.getRotation());
+        if(THETA > Math.abs(this.translationVector.x)) {
+            this.translationVector.x = 0;
+        }
+        if(THETA > Math.abs(this.translationVector.y)) {
+            this.translationVector.y = 0;
+        }
     }
     this.cube.position.x -= this.translationVector.x;
     this.cube.position.y += this.translationVector.y;
