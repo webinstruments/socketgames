@@ -43,3 +43,7 @@ Block3.prototype.generate = function(scene) {
   
     return this;
 }
+
+Block3.prototype.invert = function() {
+    //empty
+}

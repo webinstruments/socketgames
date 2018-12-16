@@ -52,3 +52,7 @@ Block1.prototype.rotate = function() {
 Block1.prototype.getRotation = function() {
     return 0;
 }
+
+Block1.prototype.invert = function() {
+    //empty
+}

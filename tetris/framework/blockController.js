@@ -40,12 +40,14 @@ BlockController.prototype.init = function() {
 }
 
 BlockController.prototype.generateBlock = function() {
-    var random = getRandom(4); // debug
+    var random = getRandom(6); // debug
     if(control.block1) { random = 0 }
     else if(control.block2) { random = 1 }
     else if(control.block3) { random = 2 }
     else if(control.block4) { random = 3 }
     else if(control.block5) { random = 4 }
+    else if(control.block6) { random = 5 }
+    else if(control.block7) { random = 6 }
     var block = null;
     if(random == 0) {
         block = new Block1(this.tileSize, this.globalScene);
@@ -58,6 +60,11 @@ BlockController.prototype.generateBlock = function() {
         block = new Block3(this.tileSize, this.globalScene);
     } else if(random == 4) {
         block = new Block4(this.tileSize, this.globalScene);
+    } else if(random == 5) {
+        block = new Block5(this.tileSize, this.globalScene);
+    } else if(random == 6) {
+        block = new Block5(this.tileSize, this.globalScene);
+        block.invert();
     }
     block.setPosition(0, this.tileSize * this.rows);
     this.activeBlock = block;
