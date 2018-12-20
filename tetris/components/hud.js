@@ -38,6 +38,10 @@ function displayGameInfo() {
         label: 'Delay: ',
         value: '0'
     }, {
+        id: 'rows',
+        label: 'rows: ',
+        value: '0'
+    }, {
         id: 'time',
         label: 'Time: ',
         value: '0'
@@ -47,7 +51,8 @@ function displayGameInfo() {
 }
 
 function initScoreListener() {
-    scoreController = new ScoreController(textContainer.getTextElement('score'));
+    scoreController = new ScoreController(
+        textContainer.getTextElement('rows'), textContainer.getTextElement('score'));
 }
 
 function startTimer(textElement) {

@@ -169,7 +169,9 @@
                 }]);
                 document.body.appendChild(textContainer.domElement);
 
-                scoreController = new ScoreController(textContainer.getTextElement('score'));
+                scoreController = new ScoreController(
+                    textContainer.getTextElement('score'),
+                    textContainer.getTextElement('rows'));
 
                 timer = new Timer(textContainer.getTextElement('time'));
                 timer.start();

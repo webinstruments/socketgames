@@ -1,4 +1,5 @@
 var displayController;
+var released = true;
 
 function setupOnScreenControls() {
     displayController = new OnScreenController(CONTROL_MODE_ALL, {
@@ -22,16 +23,22 @@ function setupOnScreenControls() {
   
 function setupKeyControls() {
     document.onkeydown = function(e) {
-        switch(e.keyCode) {
-            case 37: moveLeft();
-            break;
-            case 39: moveRight();
-            break;
-            case 38: moveUp();
-            break;
-            case 40: moveDown();
-            break;
+        if(released) {
+            switch(e.keyCode) {
+                case 37: moveLeft();
+                break;
+                case 39: moveRight();
+                break;
+                case 38: moveUp();
+                break;
+                case 40: moveDown();
+                break;
+            }
+            released = false;
         }
+    }
+    document.onkeyup = function() {
+        released = true;
     }
 }
 
