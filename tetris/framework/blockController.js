@@ -218,7 +218,7 @@ BlockController.prototype.moveLeft = function() {
         var leftObject = findFromArray(this.heights, function(obj) {
             return position.x - obj.x - THETA <= self.tileSize && obj.y > position.y;
         });
-        if(!leftObject || this.checkCollision(-this.tileSize / 2, 0)) {
+        if(!leftObject || this.checkCollision(-this.tileSize / 2, this.tileSizeHalf - this.tileSizeTolerance)) {
             this.getActiveBlock().moveLeft();
             this.coarseDetectionY(this.getActiveBlock());
         }
@@ -236,7 +236,7 @@ BlockController.prototype.moveRight = function() {
             return obj.x - position.x - THETA >= self.tileSize && obj.y > position.y;
         });
         //Linke Ecke vom Rechteck zählt!
-        if(!rightObject || this.checkCollision(this.tileSize + this.tileSizeHalf, 0)) {
+        if(!rightObject || this.checkCollision(this.tileSize + this.tileSizeHalf, this.tileSize - this.tileSizeTolerance)) {
             this.getActiveBlock().moveRight();
             this.coarseDetectionY(this.getActiveBlock());
         }
@@ -259,12 +259,17 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
         
         if(!validate(tile.colIndex, tile.rowIndex)) {
             return false;
-        } else if(offsetX != 0) { // Bewegung nach links oder rechts - Ungenauigkeit bei oberen Block
+        }
+        if(this.positionSynced) {
+            continue; //Toleranzen werden nicht beruecksichtigt, wenn die Position bereits genau
+        }
+        if(offsetX != 0) { // Bewegung nach links oder rechts - Ungenauigkeit bei oberen Block
             tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + this.tileSizeTolerance);
             if(!validate(tile.colIndex, tile.rowIndex)) {
                 return false;
             }
-        } else if(offsetY != 0) { //Bewegung nach unten - Problem mit rechten Block
+        } 
+        if(offsetY != 0) { //Bewegung nach unten - Problem mit rechten Block
             tile = this.getTileFromPosition(position.leftX + this.tileSizeTolerance, position.bottomY + offsetY);
             if(tile.colIndex >= this.columns) {
                 tile.colIndex = this.columns - 1;
@@ -298,8 +303,8 @@ BlockController.prototype.rotate = function() {
     }
     var width = counter * this.tileSize;    
     block.rotate(width);
-    //the offset of block will be tilesizeHalf before drawn.
-    if(!this.checkCollision(this.tileSizeHalf + THETA, this.tileSizeHalf + THETA)) {
+    //the offset of block will be tilesizeHalf before drawn. Left part = Middle
+    if(!this.checkCollision(0, 0)) {
         block.undoRotate();
     }
 }
@@ -323,12 +328,14 @@ BlockController.prototype.coarseDetectionY = function(block) {
     }
 }
 
-BlockController.prototype.syncPosition = function(block, triggerGameOver) {
+BlockController.prototype.syncPosition = function(triggerGameOver) {
+    var block = this.getActiveBlock();
     var offset = 0;
     var position = block.getPosition();
     for(var i = 0; i < block.cubes.length; ++i) {
         var cube = block.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(cube.x, cube.y);
+        console.log('cube_' + i + '| ', tile, cube);
         if(tile.rowIndex >= this.rows) {
             if(triggerGameOver) {
                 console.log('gameover3');
@@ -372,16 +379,20 @@ BlockController.prototype.update = function(deltaTime) {
         block.moveDown(deltaTime);
     } else if(position.y > 0 
         && this.checkCollision(0, -this.tileSizeTolerance)) {
+            console.log("moveDown2");
             block.moveDown(deltaTime);
             this.thresholdTime = 0;
+            this.positionSynced = false;
     } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
         if(!this.positionSynced) {
-            this.syncPosition(block, false);
+            console.log('update - !position.synced');
+            this.syncPosition(false);
         }
         this.thresholdTime += deltaTime;
     } else {
         //align with tiles
-        this.syncPosition(block, true);
+        console.log('else');
+        this.syncPosition(true);
         if(this.isGameOver) {
             return;
         }

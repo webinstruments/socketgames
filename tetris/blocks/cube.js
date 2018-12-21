@@ -28,6 +28,8 @@ Cube.prototype.resize = function(size) {
 }
 
 Cube.prototype.getPosition = function(world) {
+    this.cube.updateWorldMatrix(true); //after rotation it would need a frame to update the world.
+    
     //results in position of the left top edge
     var cubePosition = new THREE.Vector3();
     cubePosition.setFromMatrixPosition(this.cube.matrixWorld);

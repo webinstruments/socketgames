@@ -1,6 +1,6 @@
 function BlockBase(length) {
     this.cubes = [];
-    this.velocity = 1;
+    this.velocity = length;
     this.length = length;
 }
 
