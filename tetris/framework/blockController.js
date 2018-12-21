@@ -218,7 +218,10 @@ BlockController.prototype.moveLeft = function() {
         var leftObject = findFromArray(this.heights, function(obj) {
             return position.x - obj.x - THETA <= self.tileSize && obj.y > position.y;
         });
-        if(!leftObject || this.checkCollision(-this.tileSize / 2, this.tileSizeHalf - this.tileSizeTolerance)) {
+        var left = -this.tileSize / 2;
+        var bottom = this.tileSizeTolerance;
+        var top = this.tileSize - bottom * 10;
+        if(!leftObject || (this.checkCollision(left, bottom) && this.checkCollision(left, top))) {
             this.getActiveBlock().moveLeft();
             this.coarseDetectionY(this.getActiveBlock());
         }
@@ -235,8 +238,11 @@ BlockController.prototype.moveRight = function() {
         var rightObject = findFromArray(this.heights, function(obj) {
             return obj.x - position.x - THETA >= self.tileSize && obj.y > position.y;
         });
+        var right = this.tileSize + this.tileSizeHalf;
+        var bottom = this.tileSizeTolerance;
+        var top = this.tileSize - bottom * 10;
         //Linke Ecke vom Rechteck zählt!
-        if(!rightObject || this.checkCollision(this.tileSize + this.tileSizeHalf, this.tileSize - this.tileSizeTolerance)) {
+        if(!rightObject || (this.checkCollision(right, bottom) && this.checkCollision(right, top))) {
             this.getActiveBlock().moveRight();
             this.coarseDetectionY(this.getActiveBlock());
         }
@@ -266,6 +272,7 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
         if(offsetX != 0) { // Bewegung nach links oder rechts - Ungenauigkeit bei oberen Block
             tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + this.tileSizeTolerance);
             if(!validate(tile.colIndex, tile.rowIndex)) {
+                console.warn('imprecisionX');
                 return false;
             }
         } 
@@ -275,6 +282,7 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
                 tile.colIndex = this.columns - 1;
             } 
             if(!validate(tile.colIndex, tile.rowIndex)) {
+                console.warn('imprecisionY');
                 return false;
             }
         }
