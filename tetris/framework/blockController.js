@@ -220,7 +220,7 @@ BlockController.prototype.moveLeft = function() {
         });
         var left = -this.tileSize / 2;
         var bottom = this.tileSizeTolerance;
-        var top = this.tileSize - bottom * 10;
+        var top = this.tileSize - bottom * 15;
         if(!leftObject || (this.checkCollision(left, bottom) && this.checkCollision(left, top))) {
             this.getActiveBlock().moveLeft();
             this.coarseDetectionY(this.getActiveBlock());
@@ -240,7 +240,7 @@ BlockController.prototype.moveRight = function() {
         });
         var right = this.tileSize + this.tileSizeHalf;
         var bottom = this.tileSizeTolerance;
-        var top = this.tileSize - bottom * 10;
+        var top = this.tileSize - bottom * 15;
         //Linke Ecke vom Rechteck zählt!
         if(!rightObject || (this.checkCollision(right, bottom) && this.checkCollision(right, top))) {
             this.getActiveBlock().moveRight();
