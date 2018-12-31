@@ -80,8 +80,12 @@ SocketConnection.prototype.connect = function(url) {
     }
 }
 
-SocketConnection.prototype.send = function(message) {
+SocketConnection.prototype.send = function(message, measurement) {
     //Daten werden im internen Format gesendet (richtung~id~)
-    this.delays['id_' + this.delayId + ''] = Date.now();
-    this.socket.send(message + '~' + (this.delayId++) + '~');
+    if(measurement) {
+        this.delays['id_' + this.delayId + ''] = Date.now();
+        this.socket.send(message + '~' + (this.delayId++) + '~');
+    } else {
+        this.socket.send(message);
+    }
 }

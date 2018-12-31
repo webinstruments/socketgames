@@ -83,5 +83,5 @@ function moveDown() {
 }
 
 function sendToServer(message) {
-    socketConnection.send(message);
+    socketConnection.send(message, true);
 }

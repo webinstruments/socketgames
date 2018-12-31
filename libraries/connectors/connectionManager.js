@@ -37,6 +37,6 @@ ConnectionManager.prototype.connect = function(url) {
     this.connection = new SocketConnection(url, this.callbacks, this.output);
 }
 
-ConnectionManager.prototype.send = function(msg) {
-    this.connection.send(msg);
+ConnectionManager.prototype.send = function(msg, measurement) {
+    this.connection.send(msg, measurement);
 }

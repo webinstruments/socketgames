@@ -1,4 +1,5 @@
 var socketConnection;
+var GAME_NAME = 'game_Tetris';
 
 function checkConnection(url) {
     if(!socketConnection) {
@@ -15,6 +16,7 @@ function checkConnection(url) {
 
 function socketOnOpen() {
     form.setInfoText("Connection Successfull");
+    socketConnection.send(GAME_NAME, false);
     form.enable();
 }
 
@@ -31,8 +33,10 @@ function socketOnError(err) {
         errorMsg += 'The provided Url is not valid';
     }
     form.setInfoText(errorMsg);
+    form.disable();
 }
 
 function socketOnClose() {
     form.setInfoText("Connection Closed");
+    form.disable();
 }
