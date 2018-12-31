@@ -204,7 +204,7 @@ BlockController.prototype.getFieldHeight = function() {
 }
 
 BlockController.prototype.getActiveBlock = function() {
-    return this.activeBlock;
+    return !this.removalTimer ? this.activeBlock : null;
 }
 
 BlockController.prototype.moveLeft = function() {
