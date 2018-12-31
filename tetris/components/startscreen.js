@@ -7,7 +7,9 @@ function createForm() {
     formHeadLine = new Header('New Game!', 'noselect');
     var serverInput = new TextInput({
         name: 'server', 
-        value: 'ws://demos.kaazing.com/echo',
+        //value: 'ws://demos.kaazing.com/echo',
+        //value: 'ws://193.171.127.8:8081',
+        value: 'ws://193.171.127.8:8080/ws',
         label: 'Enter echo server',
         labelClass: 'label noselect', 
         groupClass: 'formgroup',

@@ -2,13 +2,12 @@ var socketConnection;
 
 function checkConnection(url) {
     if(!socketConnection) {
-        socketConnection = new SocketConnection(url, 
-            textContainer.getTextElement('delay'), {
+        socketConnection = new ConnectionManager(url, {
             onOpen: socketOnOpen,
-            onMessage: moveRemote,
+            onMessage: socketOnMessage,
             onError: socketOnError,
             onClose: socketOnClose
-        });
+        }, textContainer.getTextElement('delay'));
     } else if(socketConnection.getUrl() != url) {
         socketConnection.connect(url);
     }
@@ -20,6 +19,8 @@ function socketOnOpen() {
 }
 
 function socketOnMessage(msg) {
+    console.log(msg);
+    moveRemote(msg);
 }
 
 function socketOnError(err) {

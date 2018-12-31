@@ -83,7 +83,13 @@ BlockController.prototype.getColumnTileFromPosition = function(x) {
         x = 0;
     }
     var widthRelation = x / this.getFieldWidth();
-    return Math.floor(this.columns * widthRelation);
+    var col = Math.floor(this.columns * widthRelation);
+    var nextCol = col + 1;
+    if(this.tileSize * nextCol - x <= THETA) {
+        //Überprüfung ob eigentlich nächste Column gemeint ist, da es zu ungenauigkeiten kommen kann.
+        return nextCol; //ungenauigkeit bei Berechnungen
+    }
+    return col;
 }
 
 BlockController.prototype.getRowTileFromPosition = function(y) {
@@ -266,7 +272,7 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
         if(!validate(tile.colIndex, tile.rowIndex)) {
             return false;
         }
-        if(this.positionSynced) {
+        /*if(this.positionSynced) {
             continue; //Toleranzen werden nicht beruecksichtigt, wenn die Position bereits genau
         }
         if(offsetX != 0) { // Bewegung nach links oder rechts - Ungenauigkeit bei oberen Block
@@ -285,7 +291,7 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
                 console.warn('imprecisionY');
                 return false;
             }
-        }
+        }*/
     }
     return true;
 }

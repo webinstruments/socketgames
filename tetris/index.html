@@ -19,7 +19,10 @@
     <script src="../libraries/form/label.js"></script>
     <script src="../libraries/form/selector.js"></script>
     <script src="../libraries/form/textInput.js"></script>
-    <script src="../libraries/socketConnection.js"></script>
+    <script src="../libraries/socket.io_2.0.3.js"></script>
+    <script src="../libraries/connectors/connectionManager.js"></script>
+    <script src="../libraries/connectors/socketConnection.js"></script>
+    <script src="../libraries/connectors/socketIOConnection.js"></script>
     <script src="components/init.js"></script>
     <script src="components/controls.js"></script>
     <script src="components/main.js"></script>
@@ -49,13 +52,13 @@
     var BLOCK_THRESHOLDTIME = 1;
     var BLOCK_VELOCITY = 4;
     var MOVE_LEFT = "left";
-    var SERVER_MOVE_LEFT = "server_left";
+    var SERVER_MOVE_LEFT = "server_l";
     var MOVE_RIGHT = "right";
-    var SERVER_MOVE_RIGHT = "server_right";
+    var SERVER_MOVE_RIGHT = "server_r";
     var MOVE_UP = "up";
-    var SERVER_MOVE_UP = "server_up";
+    var SERVER_MOVE_UP = "server_u";
     var MOVE_DOWN = "down";
-    var SERVER_MOVE_DOWN = "server_down";
+    var SERVER_MOVE_DOWN = "server_d";
     // global variables
     var scene;
     var orthoScene;
