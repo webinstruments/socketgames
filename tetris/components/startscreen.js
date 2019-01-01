@@ -18,10 +18,11 @@ function createForm() {
     var selection = new Selector({
         name: 'type',
         values: [
-            { value: 0, name: 'value1' },
-            { value: 1, name: 'value2' },
-            { value: 2, name: 'value3' },
-            { value: 3, name: 'value4' }
+            { value: 0, name: 'WLAN' },
+            { value: 1, name: 'LAN' },
+            { value: 2, name: '2G' },
+            { value: 3, name: '3G' },
+            { value: 4, name: '4G' },
         ],
         label: 'Choose type',
         labelClass: 'label noselect',
