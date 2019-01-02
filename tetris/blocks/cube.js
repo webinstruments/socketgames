@@ -86,3 +86,15 @@ Cube.prototype.moveDown = function(length) {
     this.cube.position.x -= this.translationVector.x;
     this.cube.position.y += this.translationVector.y;
 }
+
+Cube.prototype.setColor = function(color) {
+    this.cube.material.color.setHex(color);
+}
+
+Cube.prototype.getColor = function() {
+    return this.cube.material.color.getHex();
+}
+
+Cube.prototype.invertColor = function() {
+    this.setColor(0xffffff - this.getColor());
+}

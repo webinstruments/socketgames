@@ -21,7 +21,7 @@ function socketOnOpen() {
 }
 
 function socketOnMessage(msg) {
-    console.log(msg);
+    //console.log(msg);
     moveRemote(msg);
 }
 

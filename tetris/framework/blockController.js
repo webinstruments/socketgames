@@ -1,3 +1,7 @@
+var BLOCK_THRESHOLDTIME = 1;
+var BLOCK_VELOCITY = 4;
+var BLOCK_MULTIPLICATOR = 3;
+
 function BlockController(globalScene, width, height, columns, rows, scoreChangedCB, scoreBinder) {
     this.globalScene = globalScene;
     this.width = width;
@@ -17,11 +21,7 @@ function BlockController(globalScene, width, height, columns, rows, scoreChanged
 BlockController.prototype.init = function() {
     this.resize(this.width, this.height);
     for(var i = 0; i < this.rows + 1; ++i) {
-        this.tiles[i] = [];
-        for(var j = 0; j < this.columns; ++j) {
-            //one more - so no fill array needed if rows are removed
-            this.tiles[i][j] = false;
-        }
+        this.tiles[i] = this.newRow();
     }
     this.heights = [];
     for(var i = 0; i < this.columns; ++i) {
@@ -29,6 +29,7 @@ BlockController.prototype.init = function() {
     }
     this.heighestValue = 0;
     this.thresholdTime = 0;
+    this.velocity = this.tileSize;
     this.moveFastPressed = false;
     var shadowGeo = new THREE.BoxGeometry(this.tileSize, this.tileSize, this.tileSize);
     this.shadowBlock = new WireFrame(shadowGeo, 0xAA0000, 5);
@@ -37,6 +38,15 @@ BlockController.prototype.init = function() {
     this.removalTimer = null;
     this.activeBlock = null;
     this.isGameOver = false;
+}
+
+BlockController.prototype.newRow = function() {
+    var result = [];
+    for(var i = 0; i < this.columns; ++i) {
+        result[i] = false;
+    }
+
+    return result;
 }
 
 BlockController.prototype.generateBlock = function() {
@@ -48,6 +58,7 @@ BlockController.prototype.generateBlock = function() {
     else if(control.block5) { random = 4 }
     else if(control.block6) { random = 5 }
     else if(control.block7) { random = 6 }
+    console.log('random', random);
     var block = null;
     if(random == 0) {
         block = new Block1(this.tileSize, this.globalScene);
@@ -92,6 +103,22 @@ BlockController.prototype.getColumnTileFromPosition = function(x) {
     return col;
 }
 
+function debug(tiles) {
+    console.log("======================================================");
+    for(var i = 0; i < tiles.length; ++i) {
+        var a = 'row ' + i + ':';
+        for(var j = 0; j < tiles[i].length; ++j) {
+            if(tiles[i][j] == false) {
+                a += ' o';
+            } else {
+                a += ' x';
+            }
+        }
+        console.log(a);
+    }
+    console.log("====================================================");
+}
+
 BlockController.prototype.getRowTileFromPosition = function(y) {
     if(y <= THETA) {
         y = 0;
@@ -103,9 +130,10 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 var BLOCKCONTROLLER_BLOCKS = 0;
 BlockController.prototype.setTile = function(obj) {
     console.log('block_' + (++BLOCKCONTROLLER_BLOCKS), obj.getPosition().x + ', ' + obj.getPosition().y);
-    console.log('setTile', this.tiles);
     var removedRows = 0;
     var rowsToRemove = [];
+    console.log('before_set');
+    debug(this.tiles);
     this.blocks.push(this.getActiveBlock());
     for(var i = 0; i < obj.cubes.length; ++i) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
@@ -126,6 +154,8 @@ BlockController.prototype.setTile = function(obj) {
             ++removedRows;
         }
     }
+    console.log('after_set');
+    debug(this.tiles);
     if(rowsToRemove.length) {
         this.removeRows(rowsToRemove);
     }
@@ -136,12 +166,11 @@ BlockController.prototype.setTile = function(obj) {
 
 BlockController.prototype.removeRows = function(rowIndexes) {
     var rowIndexes = rowIndexes.sort(function(a, b) {
-        return b - a;
+        return b - a; //descending
     });
     var self = this;
     for(var i = 0; i < rowIndexes.length; ++i) {
         var rowIndex = rowIndexes[i];
-        console.log('removing row', rowIndex);
         var self = this;
         this.tiles[rowIndex].map(function(cube) {
             cube.remove();
@@ -172,6 +201,7 @@ BlockController.prototype.shiftBlocks = function(rowIndexes) {
     var self = this;
     for(var i = 0; i < rowIndexes.length; ++i) {
         var rowIndex = rowIndexes[i];
+        this.tiles[this.rows] = this.newRow(); //array will be treated as reference!
         for(var j = rowIndex; j < this.rows; ++j) { //shifting rows
             this.tiles[j] = this.tiles[j + 1];
 
@@ -187,6 +217,8 @@ BlockController.prototype.shiftBlocks = function(rowIndexes) {
     clearTimeout(this.removalTimer);
     this.removalTimer = null;
     this.generateBlock();
+    console.log('after_remove');
+    debug(this.tiles);
 }
 
 BlockController.prototype.resize = function(width, height) {
@@ -298,8 +330,9 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
 
 BlockController.prototype.moveFast = function() {
     if(!this.getActiveBlock()) { return; }
-    this.getActiveBlock().moveFast();
     if(!this.moveFastPressed) {
+        this.moveFastPressed = true;
+        this.velocity *= BLOCK_MULTIPLICATOR;
         this.thresholdTime += BLOCK_THRESHOLDTIME / 2;
     }
 }
@@ -349,7 +382,6 @@ BlockController.prototype.syncPosition = function(triggerGameOver) {
     for(var i = 0; i < block.cubes.length; ++i) {
         var cube = block.cubes[i].getPosition(this.globalScene);
         var tile = this.getTileFromPosition(cube.x, cube.y);
-        console.log('cube_' + i + '| ', tile, cube);
         if(tile.rowIndex >= this.rows) {
             if(triggerGameOver) {
                 console.log('gameover3');
@@ -359,6 +391,7 @@ BlockController.prototype.syncPosition = function(triggerGameOver) {
         }
         //Fallback Mechanik, falls Spiel haengen bleibt
         if(this.tiles[tile.rowIndex][tile.colIndex] != false && offset == 0) {
+            this.velocity = 0;
             console.log('error'); //Wenn Frame-Rate zu niedrig verschwinden Bloecke in andere
             console.log(tile.rowIndex, tile.colIndex);
             while(this.tiles[tile.rowIndex + ++offset][tile.colIndex]) {
@@ -385,27 +418,26 @@ BlockController.prototype.update = function(deltaTime) {
     }
     var block = this.getActiveBlock();
     var position = block.getPosition();
+    var offsetY = deltaTime * BLOCK_VELOCITY * this.velocity;
     if(position.y < 0) {
         position.y = 0;
     }
     //coarse detection
-    if(position.y > this.heighestValue + THETA) {
-        block.moveDown(deltaTime);
+    if(position.y - offsetY > this.heighestValue + THETA) {
+        block.moveDown(offsetY);
+        this.positionSynced = false;
     } else if(position.y > 0 
-        && this.checkCollision(0, -this.tileSizeTolerance)) {
-            console.log("moveDown2");
-            block.moveDown(deltaTime);
+        && this.checkCollision(0, -offsetY)) {
+            block.moveDown(offsetY);
             this.thresholdTime = 0;
             this.positionSynced = false;
     } else if(this.thresholdTime < BLOCK_THRESHOLDTIME) {
         if(!this.positionSynced) {
-            console.log('update - !position.synced');
             this.syncPosition(false);
         }
         this.thresholdTime += deltaTime;
     } else {
         //align with tiles
-        console.log('else');
         this.syncPosition(true);
         if(this.isGameOver) {
             return;
@@ -414,21 +446,31 @@ BlockController.prototype.update = function(deltaTime) {
         if(!this.removalTimer) { //conflicts with removal of rows
             this.generateBlock();
         }
-        this.thresholdTime = 0;
-        this.moveFastPressed = false;
-        this.positionSynced = false;
+        this.resetState();
     }
 }
 
+BlockController.prototype.resetState = function() {
+    this.thresholdTime = 0;
+    if(this.moveFastPressed) {
+        this.moveFastPressed = false;
+        this.velocity /= BLOCK_MULTIPLICATOR;
+    }
+    this.positionSynced = false;
+}
+
 BlockController.prototype.moveShadowLeft = function() {
+    if(!this.getActiveBlock()) { return; }
     this.moveShadow(-this.getActiveBlock().width);
 }
 
 BlockController.prototype.moveShadowRight = function() {
+    if(!this.getActiveBlock()) { return; }
     this.moveShadow(this.getActiveBlock().width);
 }
 
 BlockController.prototype.moveShadow = function(offsetX) {
+    if(!this.getActiveBlock()) { return; }
     var block = this.getActiveBlock();
     var position = block.getPosition();
     var newPosition = position.x + block.width / 2 + offsetX;

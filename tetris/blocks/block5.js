@@ -23,7 +23,7 @@ Block5.prototype.generate = function(scene) {
     scene.add(this.movePoint.movePoint);
 
     this.group = new THREE.Object3D();
-    var color = getRandom(0xffffff);
+    var color = 0x051fff;
     this.cubes.push(new Cube(0, 0, this.length, color, 0x000000, this));
     this.cubes.push(new Cube(0, this.length, this.length, color, 0x000000, this));
     this.cubes.push(new Cube(this.length, this.length, this.length, color, 0x000000, this));

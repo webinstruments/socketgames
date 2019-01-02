@@ -1,12 +1,14 @@
 function BlockBase(length) {
     this.cubes = [];
-    this.velocity = length;
     this.length = length;
 }
 
 BlockBase.prototype.invert = function() {
     this.pivot.rotation.y = Math.PI;
     this.movePoint.position.z = -this.length;
+    for(var i = 0; i < this.cubes.length; ++i) {
+        this.cubes[i].invertColor();
+    }
 }
 
 BlockBase.prototype.updateBox = function() {
@@ -32,16 +34,12 @@ BlockBase.prototype.isEmpty = function() {
     }).length == this.cubes.length;
 }
 
-BlockBase.prototype.moveDown = function(deltaTime) {
-    this.movePoint.position.y -= deltaTime * BLOCK_VELOCITY * this.velocity;
+BlockBase.prototype.moveDown = function(offset) {
+    this.movePoint.position.y -= offset;
 }
 
 BlockBase.prototype.moveLeft = function() {
     this.movePoint.position.x -= this.length;
-}
-
-BlockBase.prototype.moveFast = function() {
-    this.velocity = 5;
 }
 
 BlockBase.prototype.moveRight = function() {
