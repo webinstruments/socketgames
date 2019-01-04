@@ -90,19 +90,10 @@
         
         var fieldWidth = blockController.getFieldWidth();
         var fieldHeight = blockController.getFieldHeight();
-        scene.position.set(-fieldWidth / 2, -(fieldHeight - blockController.tileSize) / 2, 0);
+        scene.position.set(-fieldWidth / 2, -(fieldHeight) / 2, 0);
 
-        //debug
-        var debugGroup = new THREE.Object3D();
-        for(var x = 0; x < GAME_COLUMNS; ++x) {
-            for(var y = 0; y < GAME_ROWS; ++y) {
-                var c = new Cube(x * blockController.tileSize, y * blockController.tileSize, 0.1, 0xaaaaaa, 0x000000);
-                debugGroup.add(c.cube);
-            }
-        }
-        debugGroup.name = 'debug';
-        scene.add(debugGroup);
-      
+        addGrid(scene, fieldHeight, fieldWidth, blockController.tileSize);
+        
         createForm();
     }
     

@@ -23,10 +23,6 @@ BlockController.prototype.init = function() {
     for(var i = 0; i < this.rows + 1; ++i) {
         this.tiles[i] = this.newRow();
     }
-    this.heights = [];
-    for(var i = 0; i < this.columns; ++i) {
-        this.heights[i] = { x: 0, y: 0 };
-    }
     this.heighestValue = 0;
     this.thresholdTime = 0;
     this.velocity = this.tileSize;
@@ -145,7 +141,7 @@ BlockController.prototype.setTile = function(obj) {
 
         this.tiles[tile.rowIndex][tile.colIndex] = obj.cubes[i];
         if(this.heights[tile.colIndex].y < pos.topY) {
-            this.heights[tile.colIndex] = { x: tile.colIndex * this.tileSize, y: (tile.rowIndex + 1) * this.tileSize };
+            this.heights[tile.colIndex].y = (tile.rowIndex + 1) * this.tileSize;
         }
         if(this.tiles[tile.rowIndex].filter(function(obj) {
             return obj != false;
@@ -230,6 +226,10 @@ BlockController.prototype.resize = function(width, height) {
     this.tileSizeTolerance = this.tileSize * 1 / 100; //Toleranz wird benötigt zum verschieben der Blöcke
     this.height = this.getFieldHeight();
     this.width = this.getFieldWidth();
+    this.heights = [];
+    for(var i = 0; i < this.columns; ++i) {
+        this.heights[i] = { x: this.tileSize * i, y: 0 };
+    }
     console.log('tilesize', this.tileSize);
 }
 
@@ -359,7 +359,7 @@ BlockController.prototype.rotate = function() {
 BlockController.prototype.currentObstaclesY = function(block) {
     var pos = block.getPosition();
     return possibleObstaces = this.heights.filter(function(obj) {
-        return obj.x + THETA >= pos.x && obj.x - THETA <= pos.x + block.length;
+        return obj.x + THETA >= pos.x && obj.x <= pos.x + block.width - THETA;
     });
 }
 
@@ -391,7 +391,7 @@ BlockController.prototype.syncPosition = function(triggerGameOver) {
         }
         //Fallback Mechanik, falls Spiel haengen bleibt
         if(this.tiles[tile.rowIndex][tile.colIndex] != false && offset == 0) {
-            this.velocity = 0;
+            //this.velocity = 0;
             console.log('error'); //Wenn Frame-Rate zu niedrig verschwinden Bloecke in andere
             console.log(tile.rowIndex, tile.colIndex);
             while(this.tiles[tile.rowIndex + ++offset][tile.colIndex]) {
