@@ -6,11 +6,11 @@ function MovingPoint(zIndex, color) {
 }
 
 MovingPoint.prototype.hide = function() {
-    this.movePoint.visible = false;
+    this.movePoint.movePoint.material.opacity = 0;
 }
 
 MovingPoint.prototype.show = function() {
-    this.movePoint.visible = true;
+    this.movePoint.movePoint.material.opacity = 1;
 }
 
 MovingPoint.prototype.add = function(children) {

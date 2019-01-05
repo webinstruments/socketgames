@@ -223,7 +223,7 @@ BlockController.prototype.resize = function(width, height) {
         this.tileSize = width / this.columns;
     }
     this.tileSizeHalf = this.tileSize / 2;
-    this.tileSizeTolerance = this.tileSize * 1 / 100; //Toleranz wird benötigt zum verschieben der Blöcke
+    this.tileSizeTolerance = this.tileSize * 20 / 100; //Toleranz wird benötigt zum verschieben der Blöcke
     this.height = this.getFieldHeight();
     this.width = this.getFieldWidth();
     this.heights = [];
@@ -258,7 +258,7 @@ BlockController.prototype.moveLeft = function() {
         });
         var left = -this.tileSize / 2;
         var bottom = this.tileSizeTolerance;
-        var top = this.tileSize - bottom * 15;
+        var top = this.tileSize - this.tileSizeTolerance;
         if(!leftObject || (this.checkCollision(left, bottom) && this.checkCollision(left, top))) {
             this.getActiveBlock().moveLeft();
             this.coarseDetectionY(this.getActiveBlock());
@@ -278,7 +278,7 @@ BlockController.prototype.moveRight = function() {
         });
         var right = this.tileSize + this.tileSizeHalf;
         var bottom = this.tileSizeTolerance;
-        var top = this.tileSize - bottom * 15;
+        var top = this.tileSize - this.tileSizeTolerance;
         //Linke Ecke vom Rechteck zählt!
         if(!rightObject || (this.checkCollision(right, bottom) && this.checkCollision(right, top))) {
             this.getActiveBlock().moveRight();
@@ -304,26 +304,6 @@ BlockController.prototype.checkCollision = function(offsetX, offsetY) {
         if(!validate(tile.colIndex, tile.rowIndex)) {
             return false;
         }
-        /*if(this.positionSynced) {
-            continue; //Toleranzen werden nicht beruecksichtigt, wenn die Position bereits genau
-        }
-        if(offsetX != 0) { // Bewegung nach links oder rechts - Ungenauigkeit bei oberen Block
-            tile = this.getTileFromPosition(position.leftX + offsetX, position.bottomY + this.tileSizeTolerance);
-            if(!validate(tile.colIndex, tile.rowIndex)) {
-                console.warn('imprecisionX');
-                return false;
-            }
-        } 
-        if(offsetY != 0) { //Bewegung nach unten - Problem mit rechten Block
-            tile = this.getTileFromPosition(position.leftX + this.tileSizeTolerance, position.bottomY + offsetY);
-            if(tile.colIndex >= this.columns) {
-                tile.colIndex = this.columns - 1;
-            } 
-            if(!validate(tile.colIndex, tile.rowIndex)) {
-                console.warn('imprecisionY');
-                return false;
-            }
-        }*/
     }
     return true;
 }

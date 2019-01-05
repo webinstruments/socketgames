@@ -22,6 +22,7 @@ function gameOver() {
     formDiv.show();
 }
 
+var stepValue = frameRate / 1000;
 function render(timestamp) {
     if(lastFrameTime == 0) {
         lastFrameTime = timestamp;
@@ -31,7 +32,7 @@ function render(timestamp) {
     BLOCK_THRESHOLDTIME = control.thresholdTime;
     delta += timestamp - lastFrameTime;
     lastFrameTime = timestamp;
-    if(delta / frameRate >= 5) {
+    if(delta / frameRate >= 60) {
         //game was paused
         console.log('synching');
         delta = 0;
@@ -42,7 +43,7 @@ function render(timestamp) {
             cancelAnimationFrame(requestId);
             return;
         }
-        blockController.update(frameRate / 1000);
+        blockController.update(stepValue);
         delta -= frameRate;
     }
     renderer.clear();

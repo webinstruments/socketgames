@@ -11,11 +11,11 @@ PivotPoint.prototype.rotateZ = function(angle) {
 }
 
 PivotPoint.prototype.hide = function() {
-    this.pivot.visible = false;
+    this.pivot.pivot.material.opacity = 0;
 }
 
 PivotPoint.prototype.show = function() {
-    this.pivot.visible = true;
+    this.pivot.pivot.material.opacity = 1;
 }
 
 PivotPoint.prototype.add = function(children) {
