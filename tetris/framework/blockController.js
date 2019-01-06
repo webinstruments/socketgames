@@ -29,8 +29,8 @@ BlockController.prototype.init = function() {
     this.moveFastPressed = false;
     var shadowGeo = new THREE.BoxGeometry(this.tileSize, this.tileSize, this.tileSize);
     this.shadowBlock = new WireFrame(shadowGeo, 0xAA0000, 5);
-    this.shadowBlock.hide();
     this.globalScene.add(this.shadowBlock.wireframe);
+    this.hideShadow();
     this.removalTimer = null;
     this.activeBlock = null;
     this.isGameOver = false;
@@ -247,7 +247,7 @@ BlockController.prototype.getActiveBlock = function() {
 
 BlockController.prototype.moveLeft = function() {
     if(!this.getActiveBlock()) { return; }
-    this.shadowBlock.hide();
+    this.hideShadow();
     var block = this.getActiveBlock();
     var position = block.getPosition();
     //coarse
@@ -268,7 +268,7 @@ BlockController.prototype.moveLeft = function() {
 
 BlockController.prototype.moveRight = function() {
     if(!this.getActiveBlock()) { return; }
-    this.shadowBlock.hide();
+    this.hideShadow();
     var block = this.getActiveBlock();
     var position = block.getPosition();
     if(position.x + block.width - this.width + this.tileSize < THETA) {
@@ -455,9 +455,17 @@ BlockController.prototype.moveShadow = function(offsetX) {
     var position = block.getPosition();
     var newPosition = position.x + block.width / 2 + offsetX;
     if(newPosition > -block.width && newPosition < this.width + block.width) {
-        this.shadowBlock.show();
+        this.showShadow();
         this.shadowBlock.setPosition(newPosition, position.y + block.height / 2, 0);
     }
+}
+
+BlockController.prototype.hideShadow = function() {
+    this.shadowBlock.hide();
+}
+
+BlockController.prototype.showShadow = function() {
+    this.shadowBlock.show();
 }
 
 BlockController.prototype.gameOver = function() {
