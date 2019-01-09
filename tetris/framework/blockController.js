@@ -334,6 +334,7 @@ BlockController.prototype.rotate = function() {
     if(!this.checkCollision(0, 0)) {
         block.undoRotate();
     }
+    this.coarseDetectionY(block);
 }
 
 BlockController.prototype.currentObstaclesY = function(block) {
