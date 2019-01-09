@@ -12,6 +12,7 @@
     <script src="tetris/blocks/cube.js"></script>
     <script src="tetris/blocks/wireframe.js"></script>
     <script src="libraries/helpers/utils.js"></script>
+    <script src="libraries/jquery-3.3.1.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -43,6 +44,41 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setClearColor(0x000000, 1.0);
         renderer.setSize(window.innerWidth, window.innerHeight);
+
+        var gamedata = [{ game_id: null, roundtrip_time: 12 }, { game_id: null, roundtrip_time: 13 }, { game_id: null, roundtrip_time: 14 }]
+
+        $.ajax({ //start new game
+            type: "POST",
+            url: "http://213.47.38.104:8080/api/game",
+            data: {
+                con_type: 1,
+                username: "Test aus Lieboch9"
+            }
+        }).done(function(response) {
+            console.log(response);
+            gamedata.map(function(a) {
+                a.game_id = response[0].game_id;
+            });
+            console.log(gamedata);
+            $.ajax({ //post delays
+            type: "POST",
+            url: "http://213.47.38.104:8080/api/gamedata",
+            data: { gamedata }
+            });
+            /*$.ajax({ //end game
+            type: "PUT",
+            url: "http://213.47.38.104:8080/api/game",
+            data: {
+                game_id: response.game_id,
+                con_type: 1,
+                username: "Test aus Lieboch5"
+            }
+            }).done(function(response) {
+                console.log(response);
+            });*/
+        });
+
+
 
         // create a cube and add to scene
         /*var cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
