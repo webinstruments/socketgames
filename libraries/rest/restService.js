@@ -1,10 +1,7 @@
 var REST_NEWGAME_URL = "http://213.47.38.104:8080/api/game";
-
 var REST_GAMEDATA_URL = "http://213.47.38.104:8080/api/gamedata";
-
 var REST_ENDGAME_URL = "http://213.47.38.104:8080/api/game";
-
-var REST_CONNECTIONTYPE_URL = "http://213.47.38.104:8080/api/connectiontypes"
+var REST_CONNECTIONTYPE_URL = "http://213.47.38.104:8080/api/connectiontypes";
 
 function RestService(username, connectionType) {
     this.game = null;
