@@ -29,6 +29,7 @@ Form.prototype.validate = function() {
     for(var i = 0; i < this.children.length; ++i) {
         var element = this.children[i];
         if(element.validate && !element.validate()) {
+            showError('One or more informations are missing!');
             return false;
         }
         if(element.getValue) {

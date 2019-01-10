@@ -34,3 +34,9 @@ Selector.prototype.scroll = function() {
 Selector.prototype.getValue = function() {
     return this.values[this.index].value;
 }
+
+Selector.prototype.setValues = function(options) {
+    this.values = options;
+    this.index = 0;
+    this.scroll();
+}

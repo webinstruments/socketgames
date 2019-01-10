@@ -1,4 +1,5 @@
 var socketConnection;
+var connectionTypes = [];
 var GAME_NAME = 'game_Tetris';
 
 function checkConnection(url) {
@@ -20,9 +21,12 @@ function socketOnOpen() {
     form.enable();
 }
 
-function socketOnMessage(msg) {
+function socketOnMessage(msg, delay) {
     //console.log(msg);
     moveRemote(msg);
+    if(delay) {
+        restService.addDelay(delay);
+    }
 }
 
 function socketOnError(err) {

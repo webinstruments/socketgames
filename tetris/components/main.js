@@ -19,6 +19,7 @@ function gameOver() {
     isGameOver = true;
     blockController.init();
     timer.stop();
+    restService.end();
     formDiv.show();
 }
 

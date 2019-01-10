@@ -140,3 +140,8 @@ h2 {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+
+
+#toast-container {
+  opacity: 1 !important;
+}

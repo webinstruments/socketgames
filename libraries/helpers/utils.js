@@ -50,3 +50,34 @@ function findFromArray(arr, findCB) {
 function getRandom(max) {
     return Math.floor(Math.random() * (max + 1));
 }
+
+function initToast() {
+    if(!Object.keys(toastr.options).length) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "1000",
+            "hideDuration": "100",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    }
+}             
+function showInfo(message) {
+    initToast();
+    toastr["info"](message);
+}
+
+function showError(message) {
+    initToast();
+    toastr["error"](message);
+}

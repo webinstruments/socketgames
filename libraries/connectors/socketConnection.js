@@ -21,6 +21,7 @@ SocketConnection.prototype.onOpen = function() {
 }
 
 SocketConnection.prototype.onMessage = function(msg) {
+    var delay = null;
     if(msg.indexOf(SOCKET_CONNECTION_SERVER_PREFIX) == 0) {
         msg = msg.slice(0, SOCKET_CONNECTION_SERVER_PREFIX.length + 1);
     } else {
@@ -31,13 +32,13 @@ SocketConnection.prototype.onMessage = function(msg) {
         });
         if(id) {
             var index = 'id_' + id;
-            var delay = Date.now() - this.delays[index];
+            delay = Date.now() - this.delays[index];
             delete this.delays[index];
             this.output.innerHTML = delay + 'ms';
         }
     }
     if(this.callbacks.onMessage) {
-        this.callbacks.onMessage.call(this.callbacks.binder, msg);
+        this.callbacks.onMessage.call(this.callbacks.binder, msg, delay);
     }
 }
 

@@ -13,6 +13,9 @@
     <script src="tetris/blocks/wireframe.js"></script>
     <script src="libraries/helpers/utils.js"></script>
     <script src="libraries/jquery-3.3.1.min.js"></script>
+    <script src="libraries/toastr.min.js"></script>
+    <script src="libraries/rest/restService.js"></script>
+    <link rel="stylesheet" href="libraries/toastr.min.css" />
     <style>
         body {
             margin: 0;
@@ -31,6 +34,7 @@
     var cube;
     var THETA = 1e-6;
     var output = false;
+    var restService = null;
 
     function init() {
 
@@ -48,7 +52,16 @@
         var gamedata = [{ game_id: null, roundtrip_time: 12 }, { game_id: null, roundtrip_time: 13 }, { game_id: null, roundtrip_time: 14 }]
             console.log(JSON.stringify(gamedata));
 
-        $.ajax({ //start new game
+        showInfo("Info");
+        showError("Error");
+
+        RestService.getConnections(function(data){
+            console.log(data);
+        });
+
+        restService = new RestService("Das ist ein Test", 1);
+
+        /*$.ajax({ //start new game
             type: "POST",
             url: "http://213.47.38.104:8080/api/game",
             data: {
@@ -81,7 +94,7 @@
             }).done(function(response) {
                 console.log(response);
             });
-        });
+        });*/
 
         // create a cube and add to scene
         /*var cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
