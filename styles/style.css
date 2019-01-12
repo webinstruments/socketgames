@@ -33,6 +33,7 @@ i.pause {
   color: black;
   z-index: 100;
   opacity: 1;
+  cursor: pointer;
 }
 
 .right {
