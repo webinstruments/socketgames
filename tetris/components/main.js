@@ -26,6 +26,7 @@ function gameOver() {
 
 var stepValue = frameRate / 1000;
 function render(timestamp) {
+    if(paused) { return; }
     if(lastFrameTime == 0) {
         lastFrameTime = timestamp;
         newFrame();

@@ -1,7 +1,15 @@
 var displayController;
 var released = true;
+var paused = false;
 
 function setupOnScreenControls() {
+    pauseButton = new GameButton({ 
+        classes: "pause",
+        clickColor: "blue", 
+        onClick: pauseGame,
+        text: "▌▌"
+    });
+    document.body.appendChild(pauseButton.domElement);
     displayController = new OnScreenController(CONTROL_MODE_ALL, {
         groupTop: '80%',
         leftButtonClass: "left",
@@ -69,7 +77,6 @@ function moveRight() {
     blockController.moveShadowRight();
     displayController.rightClicked();
     sendToServer(MOVE_RIGHT);
-
 }
 
 function moveUp() {
@@ -84,4 +91,10 @@ function moveDown() {
 
 function sendToServer(message) {
     socketConnection.send(message, true);
+}
+
+function pauseGame() {
+    paused = !paused;
+    newFrame();
+    lastFrameTime = 0;
 }

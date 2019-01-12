@@ -26,6 +26,7 @@ function addControls() {
     gui.add(control, 'block5');
     gui.add(control, 'block6');
     gui.add(control, 'block7');
+    gui.close();
 }
 
 function displayGameInfo() {

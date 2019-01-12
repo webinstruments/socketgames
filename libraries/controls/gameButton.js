@@ -8,6 +8,9 @@ function GameButton(options) {
     if(this.classes) {
         this.domElement.setAttribute('class', this.classes);
     }
+    if(options.text) {
+        this.domElement.innerHTML = options.text;
+    }
     if(this.style) {
         this.domElement.setAttribute('style', this.style);
     }
@@ -115,5 +118,5 @@ GameButton.prototype.getPosition = function() {
     var centerY = (rect.bottom - rect.top) / 2;
     var y = rect.top + centerY;
 
-    return { x, y };
+    return { x: x, y: y };
 }
