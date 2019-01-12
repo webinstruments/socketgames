@@ -68,23 +68,27 @@ function moveRemote(message) {
 }
 
 function moveLeft() {
+    if(paused) { return; }
     displayController.leftClicked();
     blockController.moveShadowLeft();
     sendToServer(MOVE_LEFT);
 }
 
 function moveRight() {
+    if(paused) { return; }
     blockController.moveShadowRight();
     displayController.rightClicked();
     sendToServer(MOVE_RIGHT);
 }
 
 function moveUp() {
+    if(paused) { return; }
     displayController.upClicked();
     sendToServer(MOVE_UP);
 }
 
 function moveDown() {
+    if(paused) { return; }
     displayController.downClicked();
     sendToServer(MOVE_DOWN);
 }
