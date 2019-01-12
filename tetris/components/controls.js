@@ -4,7 +4,7 @@ var paused = false;
 
 function setupOnScreenControls() {
     pauseButton = new GameButton({ 
-        classes: "pause",
+        classes: "pause noselect",
         clickColor: "blue", 
         onClick: pauseGame,
         text: "▌▌"
