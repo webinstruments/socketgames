@@ -15,10 +15,34 @@ function OnScreenController(mode, initObject) {
         [ "width", "100%" ],
         [ "height", "20%" ],
     ];
-    this.leftButton = new GameButton(initObject.leftButtonClass, initObject.leftPos, initObject.clickColor, initObject.leftCB);
-    this.rightButton = new GameButton(initObject.rightButtonClass, initObject.rightPos, initObject.clickColor, initObject.rightCB);
-    this.upButton = new GameButton(initObject.upButtonClass, initObject.upPos, initObject.clickColor, initObject.upCB);
-    this.downButton = new GameButton(initObject.downButtonClass, initObject.downPos, initObject.clickColor, initObject.downCB);
+    this.leftButton = new GameButton({ 
+        classes: initObject.leftButtonClass, 
+        style: initObject.leftPos, 
+        clickColor: initObject.clickColor, 
+        onClick: initObject.leftCB,
+        rotation: 135
+    });
+    this.rightButton = new GameButton({ 
+        classes: initObject.rightButtonClass, 
+        style: initObject.rightPos, 
+        clickColor: initObject.clickColor, 
+        onClick: initObject.rightCB,
+        rotation: -45
+    });
+    this.upButton = new GameButton({ 
+        classes: initObject.upButtonClass, 
+        style: initObject.upPos, 
+        clickColor: initObject.clickColor, 
+        onClick: initObject.upCB,
+        rotation: -135
+    });
+    this.downButton = new GameButton({ 
+        classes: initObject.downButtonClass, 
+        style: initObject.downPos, 
+        clickColor: initObject.clickColor, 
+        onClick: initObject.downCB,
+        rotation: 45
+    });
     switch(mode) {
         case CONTROL_MODE_ALL:
             this.buttonGroup.appendChild(this.upButton.domElement);

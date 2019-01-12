@@ -6,6 +6,7 @@ var requestId;
 function startGame() {
     isGameOver = false;
     formDiv.hide();
+    scoreController.reset();
     setupKeyControls();
     setupOnScreenControls();
     startTimer(textContainer.getTextElement('time'));

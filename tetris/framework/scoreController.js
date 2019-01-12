@@ -3,13 +3,13 @@ var BASIC_POINTS = 100;
 function ScoreController(rowCountElement, scoreElement) {
     this.rowCount = rowCountElement
     this.scoreCount = scoreElement;
-    this.rows = 0;
     this.init();
 }
 
 ScoreController.prototype.init = function() {
     this.score = 0;
     this.scoreToAdd = 0;
+    this.rows = 0;
     if(this.timer) {
         clearInterval(this.timer);
     }
@@ -35,4 +35,10 @@ ScoreController.prototype.addScore = function() {
         clearInterval(this.timer);
         this.timer = null;
     }
+}
+
+ScoreController.prototype.reset = function() {
+    this.init();
+    this.scoreCount.innerHTML = 0;
+    this.rowCount.innerHTML = 0;
 }
