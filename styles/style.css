@@ -69,6 +69,7 @@ i.pause {
   font-size: 20px;
   z-index: 4;
   opacity: 0.8;
+  text-shadow: -1px 0 whitesmoke, 0 1px whitesmoke, 1px 0 whitesmoke, 0 -1px whitesmoke;
 }
 
 .centered {
@@ -175,4 +176,12 @@ i.pause.dragging {
   {
     opacity: 1;
   }
+}
+
+.paused {
+  -webkit-filter: grayscale(70%);
+  -moz-filter: grayscale(70%);
+  -ms-filter: grayscale(70%);
+  -o-filter: grayscale(70%);
+  filter: grayscale(70%);
 }

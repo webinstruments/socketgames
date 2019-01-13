@@ -101,4 +101,13 @@ function pauseGame() {
     paused = !paused;
     newFrame();
     lastFrameTime = 0;
+    if(paused) {
+        document.body.classList.add("paused");
+        showInfo("Game paused");
+        timer.pause();
+    } else {
+        document.body.classList.remove("paused");
+        showInfo("Game resumed");
+        timer.resume();
+    }
 }

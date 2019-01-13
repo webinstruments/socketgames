@@ -1,11 +1,22 @@
 function Timer(htmlText) {
     this.text = htmlText;
-    this.timer;
+    this.timer = null;
+    this.paused = false;
     this.reset();
 }
 
 Timer.prototype.counter = function() {
-    this.text.innerText = ++this.seconds;
+    if(!this.paused) {
+        this.text.innerText = ++this.seconds;
+    }
+}
+
+Timer.prototype.pause = function() {
+    this.paused = true;
+}
+
+Timer.prototype.resume = function() {
+    this.paused = false;
 }
 
 Timer.prototype.start = function() {
@@ -17,5 +28,6 @@ Timer.prototype.stop = function() {
 }
 
 Timer.prototype.reset = function () {
+    this.stop();
     this.seconds = 0;
 }
