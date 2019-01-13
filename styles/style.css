@@ -152,7 +152,7 @@ h2 {
   opacity: 1 !important;
 }
 
-.noselect, .dg.ac, .textContainer {
+.noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */

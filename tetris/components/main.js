@@ -4,6 +4,7 @@ var delta = 0;
 var requestId;
 
 function startGame() {
+    document.body.classList.add("noselect");
     isGameOver = false;
     formDiv.hide();
     scoreController.reset();
@@ -14,6 +15,7 @@ function startGame() {
 }
 
 function gameOver() {
+    document.body.classList.remove("noselect");
     formHeadLine.setText('Game Over!');
     isGameOver = true;
     blockController.init();
