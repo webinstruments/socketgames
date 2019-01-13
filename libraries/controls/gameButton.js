@@ -33,6 +33,8 @@ function GameButton(options) {
     }
     this.startX = this.startY = this.clickedOn = null;
     this.dragged = false;
+    this.dragAble = false;
+    this.dragTimer = null;
 }
 
 GameButton.prototype.clicked = function() {
@@ -57,19 +59,29 @@ GameButton.prototype.removeColor = function() {
     this.timer = null;
 }
 
+GameButton.prototype.addClass = function(val) {
+    this.domElement.classList.add(val);
+}
+
+GameButton.prototype.removeClass = function(val) {
+    this.domElement.classList.remove(val);
+}
+
 GameButton.prototype.setStyle = function(val) {
     var currentAttributes = this.domElement.getAttribute('style');
     if(!currentAttributes) {
         currentAttributes = '';
     }
-    if(!currentAttributes.endsWith(';')) {
+    if(currentAttributes != '' && !currentAttributes.endsWith(';')) {
         currentAttributes += ';';
     }
     this.domElement.setAttribute('style', currentAttributes + val + ';')
 }
 
 GameButton.prototype.removeStyle = function(val, fuzzy) {
-    var currentAttributes = this.domElement.getAttribute('style').replace(' ', ''); //IE Workaround
+    var style = this.domElement.getAttribute('style');
+    if(!style || style == '') { return; }
+    var currentAttributes = style.replace(' ', ''); //IE Workaround
     var replacedStyle = '';
     if(fuzzy) {
         var regex = new RegExp(val + ".*(;)?$", "g");
@@ -80,22 +92,38 @@ GameButton.prototype.removeStyle = function(val, fuzzy) {
     this.domElement.setAttribute('style', replacedStyle);
 }
 
-GameButton.prototype.dragStart = function(event) {
+GameButton.prototype.isDragging = function() {
+    if(this.dragAble) {
+        this.addClass("dragging");
+        this.dragged = true;
+    }
+    clearTimeout(this.dragTimer);
+    this.dragTimer = null;
+}
+
+GameButton.prototype.dragStart = function() {
     this.clickedOn = Date.now();
     if(!this.startX) {
         var pos = this.getPosition();
         this.startX = pos.x;
         this.startY = pos.y;
     }
+    this.dragAble = true;
+    if(!this.dragTimer) {
+        this.dragTimer = setTimeout(this.isDragging.bind(this), 1500);
+    }
 }
 
 GameButton.prototype.dragEnd = function(event) {
     this.clickedOn = null;
+    this.dragAble = false;
+    if(this.dragged) {
+        this.removeClass("dragging");
+    }
 }
 
 GameButton.prototype.drag = function(event) {
-    if(this.clickedOn && Date.now() - this.clickedOn >= 2000) {
-        //console.log('ddrag', event);
+    if(this.dragAble && this.clickedOn && Date.now() - this.clickedOn >= 1500) {
         var newX = newY = null;
         if(event.type == "touchmove") {
             newX = event.touches[0].clientX - this.startX;
@@ -107,7 +135,6 @@ GameButton.prototype.drag = function(event) {
         this.removeStyle("transform", true);
         var style = "transform:translate3d(" + newX.toFixed(0) + "px," + newY.toFixed(0) + "px,0px) " + this.rotation;
         this.setStyle(style);
-        this.dragged = true;
     }
 }
 

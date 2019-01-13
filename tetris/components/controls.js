@@ -12,10 +12,10 @@ function setupOnScreenControls() {
     document.body.appendChild(pauseButton.domElement);
     displayController = new OnScreenController(CONTROL_MODE_ALL, {
         groupTop: '80%',
-        leftButtonClass: "left",
-        rightButtonClass: "right",
-        upButtonClass: "up",
-        downButtonClass: "down",
+        leftButtonClass: "left noselect",
+        rightButtonClass: "right noselect",
+        upButtonClass: "up noselect",
+        downButtonClass: "down noselect",
         clickColor: "red",
         leftPos: "left:10%;",
         rightPos: "right:10%;",

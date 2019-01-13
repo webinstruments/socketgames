@@ -98,6 +98,9 @@
         scene.position.set(-fieldWidth / 2, -(fieldHeight) / 2, 0);
 
         addGrid(scene, fieldHeight, fieldWidth, blockController.tileSize);
+
+        setupKeyControls();
+        setupOnScreenControls();
         
         createForm();
     }

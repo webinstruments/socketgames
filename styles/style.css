@@ -31,7 +31,7 @@ i.pause {
   font-size: xx-large;
   border: none;
   color: black;
-  z-index: 100;
+  z-index: 3;
   opacity: 1;
   cursor: pointer;
 }
@@ -159,4 +159,20 @@ h2 {
       -ms-user-select: none; /* Internet Explorer/Edge */
           user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome and Opera */
+}
+
+.dragging {
+  opacity: 0;
+  animation: blinking 1s linear infinite;
+}
+
+i.pause.dragging {
+  opacity: 0;
+}
+
+@keyframes blinking {
+  50%
+  {
+    opacity: 1;
+  }
 }
