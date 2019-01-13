@@ -75,7 +75,7 @@ RestService.prototype.end = function() {
     this.saveData();
     $.ajax({
         type: "PUT",
-        url: "http://213.47.38.104:8080/api/game",
+        url: REST_ENDGAME_URL,
         data: self.game,
         success: function(data) {
             showInfo("Game successfully saved");
