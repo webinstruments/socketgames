@@ -5,11 +5,15 @@ var connectionTypes = [];
 var username = null;
 var restService;
 var socketUrl = null;
+var socketServers = [
+    'ws://193.171.127.8:8080/ws',
+    'ws://193.171.127.8:8081'
+];
 
 function createForm() {
     formDiv = new DivGroup('centered');
     formHeadLine = new Header('New Game!', 'noselect');
-    socketUrl = socketUrl || 'ws://193.171.127.8:8080/ws';
+    socketUrl = socketServers[getRandom(1)];
 
     var userInput = new TextInput({
         name: 'username',
@@ -26,6 +30,7 @@ function createForm() {
         label: 'Enter echo server',
         labelClass: 'label noselect', 
         groupClass: 'formgroup',
+        readOnly: true,
         onFocusOut: checkConnection
     });
     var selection = new Selector({
@@ -42,14 +47,18 @@ function createForm() {
         submitText: 'start game!',
         submitClass: 'startButton',
             onSubmit: function(result) {
+                if(result.type == 0) {
+                    showError("Please select a connection type");
+                    return;
+                }
                 username = result.username;
-                socketUrl = result.server;
                 console.log(result);
-                restService = new RestService(username, result.type);
+                restService = new RestService(username, result.type, result.server);
                 startGame();
         }
     });
     if(!connectionTypes.length) {
+        connectionTypes.push({ value: 0, name: "plase choose" })
         RestService.getConnections(function(data) {
             data.forEach(function(d) {
                 connectionTypes.push({ value: d.id, name: d.type });

@@ -3,10 +3,10 @@ var REST_GAMEDATA_URL = "http://213.47.38.104:8080/api/gamedata";
 var REST_ENDGAME_URL = "http://213.47.38.104:8080/api/game";
 var REST_CONNECTIONTYPE_URL = "http://213.47.38.104:8080/api/connectiontypes";
 
-function RestService(username, connectionType) {
+function RestService(username, connectionType, socketServer) {
     this.game = null;
-    if(username && connectionType) {
-        this.start(username, connectionType);
+    if(username && connectionType && socketServer) {
+        this.start(username, connectionType, socketServer);
     }
     this.delays = [];
     this.delaysToRemove = 0;
@@ -78,7 +78,7 @@ RestService.prototype.end = function(score) {
         type: "PUT",
         url: REST_ENDGAME_URL,
         data: { 
-            game_id: this.game.game_id, score: score 
+            game_id: self.game.game_id, score: score 
         },
         success: function(data) {
             showInfo("Game successfully saved");

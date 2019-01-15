@@ -12,6 +12,9 @@ function TextInput(options) {
     if(options.name) {
         this.input.setAttribute('name', options.name);
     }
+    if(options.readOnly) {
+        this.input.setAttribute('readonly', '');
+    }
     this.group.appendChild(this.label.domElement);
     this.group.appendChild(this.input);
     this.domElement = this.group.domElement;
