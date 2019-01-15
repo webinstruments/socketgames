@@ -1,16 +1,19 @@
-function MovingPoint(zIndex, color) {
+function MovingPoint(zIndex, color, visible) {
     var geometry = new THREE.BoxGeometry(0.1, 0.1, zIndex);
     var material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1, color: color });
     this.movePoint = new THREE.Mesh(geometry, material);
     this.position = this.movePoint.position;
+    if(!visible) {
+        this.hide();
+    }
 }
 
 MovingPoint.prototype.hide = function() {
-    this.movePoint.movePoint.material.opacity = 0;
+    this.movePoint.material.opacity = 0;
 }
 
 MovingPoint.prototype.show = function() {
-    this.movePoint.movePoint.material.opacity = 1;
+    this.movePoint.material.opacity = 1;
 }
 
 MovingPoint.prototype.add = function(children) {
