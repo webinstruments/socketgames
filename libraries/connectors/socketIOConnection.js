@@ -5,7 +5,7 @@ function SocketIOConnection(url, callbacks, output) {
 SocketIOConnection.prototype = Object.create(SocketConnection.prototype);
 
 SocketIOConnection.prototype.connect = function(url) {
-    this.socket = io(url, { transports: ['websocket'] });
+    this.socket = io(url);
     if(!this.socket) {
         return;
     }
