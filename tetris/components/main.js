@@ -20,7 +20,7 @@ function gameOver() {
     isGameOver = true;
     blockController.init();
     timer.stop();
-    restService.end();
+    restService.end(scoreController.getScore());
     formDiv.show();
 }
 

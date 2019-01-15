@@ -24,14 +24,15 @@ RestService.getConnections = function(dataCallback) {
     });
 }
 
-RestService.prototype.start = function(username, connectionType) {
+RestService.prototype.start = function(username, connectionType, socketServer) {
     var self = this;
     $.ajax({
         type: "POST",
         url: REST_NEWGAME_URL,
         data: {
             username: username,
-            con_type: connectionType
+            con_type: connectionType,
+            socket_server: socketServer
         },
         success: function(data) {
             showInfo("Connection to information server successfull");
@@ -69,14 +70,16 @@ RestService.prototype.saveData = function() {
     });
 }
 
-RestService.prototype.end = function() {
+RestService.prototype.end = function(score) {
     if(!this.game) { return; }
     var self = this;
     this.saveData();
     $.ajax({
         type: "PUT",
         url: REST_ENDGAME_URL,
-        data: self.game,
+        data: { 
+            game_id: this.game.game_id, score: score 
+        },
         success: function(data) {
             showInfo("Game successfully saved");
         },

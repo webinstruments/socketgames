@@ -42,3 +42,7 @@ ScoreController.prototype.reset = function() {
     this.scoreCount.innerHTML = 0;
     this.rowCount.innerHTML = 0;
 }
+
+ScoreController.prototype.getScore = function() {
+    return this.scoreCount;
+}
