@@ -1,16 +1,11 @@
-var lastFrameTime = 0;
-var frameRate = 16.6667;
-var delta = 0;
-var requestId;
-
 function startGame() {
     document.body.classList.add("noselect");
     isGameOver = false;
     formDiv.hide();
     scoreController.reset();
     startTimer(textContainer.getTextElement('time'));
-    blockController.generateBlock();
-    lastFrameTime = 0;
+    gameGlobals.blockController.generateBlock();
+    gameGlobals.lastFrameTime = 0;
     newFrame();
 }
 
@@ -18,45 +13,45 @@ function gameOver() {
     document.body.classList.remove("noselect");
     formHeadLine.setText('Game Over!');
     isGameOver = true;
-    blockController.init();
+    gameGlobals.blockController.init();
     timer.stop();
     restService.end(scoreController.getScore());
     formDiv.show();
 }
 
-var stepValue = frameRate / 1000;
+var stepValue = gameGlobals.frameRate / 1000;
 function render(timestamp) {
-    if(paused) { return; }
-    if(lastFrameTime == 0) {
-        lastFrameTime = timestamp;
+    if(gameGlobals.paused) { return; }
+    if(gameGlobals.lastFrameTime == 0) {
+        gameGlobals.lastFrameTime = timestamp;
         newFrame();
     }
     BLOCK_VELOCITY = control.gameSpeed;
     BLOCK_THRESHOLDTIME = control.thresholdTime;
-    delta += timestamp - lastFrameTime;
-    lastFrameTime = timestamp;
-    if(delta / frameRate >= 60) {
+    gameGlobals.delta += timestamp - gameGlobals.lastFrameTime;
+    gameGlobals.lastFrameTime = timestamp;
+    if(gameGlobals.delta / gameGlobals.frameRate >= 60) {
         //game was paused
         console.log('synching');
-        delta = 0;
+        gameGlobals.delta = 0;
     }
-    while(delta >= frameRate) {
-        if(blockController.isGameOver) {
+    while(gameGlobals.delta >= gameGlobals.frameRate) {
+        if(gameGlobals.blockController.isGameOver) {
             gameOver();
-            cancelAnimationFrame(requestId);
+            cancelAnimationFrame(gameGlobals.requestId);
             return;
         }
-        blockController.update(stepValue);
-        delta -= frameRate;
+        gameGlobals.blockController.update(stepValue);
+        gameGlobals.delta -= gameGlobals.frameRate;
     }
     renderer.clear();
-    renderer.render(orthoScene, orthoCamera);
+    renderer.render(gameGlobals.orthoScene, orthoCamera);
     renderer.clearDepth();
-    renderer.render(scene, camera);
+    renderer.render(gameGlobals.scene, camera);
     stats.update();
     newFrame();
 }
 
 function newFrame() {
-    requestId = requestAnimationFrame(render);
+    gameGlobals.requestId = requestAnimationFrame(render);
 }

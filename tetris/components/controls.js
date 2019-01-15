@@ -1,7 +1,3 @@
-var displayController;
-var released = true;
-var paused = false;
-
 function setupOnScreenControls() {
     pauseButton = new GameButton({ 
         classes: "pause noselect",
@@ -10,7 +6,7 @@ function setupOnScreenControls() {
         text: "▌▌"
     });
     document.body.appendChild(pauseButton.domElement);
-    displayController = new OnScreenController(CONTROL_MODE_ALL, {
+    gameGlobals.displayController = new OnScreenController(CONTROL_MODE_ALL, {
         groupTop: '80%',
         leftButtonClass: "left noselect",
         rightButtonClass: "right noselect",
@@ -26,12 +22,12 @@ function setupOnScreenControls() {
         upCB: moveUp,
         downCB: moveDown
     });
-    document.body.appendChild(displayController.domElement);
+    document.body.appendChild(gameGlobals.displayController.domElement);
 }
   
 function setupKeyControls() {
     document.onkeydown = function(e) {
-        if(released) {
+        if(gameGlobals.released) {
             switch(e.keyCode) {
                 case 37: moveLeft();
                 break;
@@ -42,54 +38,54 @@ function setupKeyControls() {
                 case 40: moveDown();
                 break;
             }
-            released = false;
+            gameGlobals.released = false;
         }
     }
     document.onkeyup = function() {
-        released = true;
+        gameGlobals.released = true;
     }
 }
 
 function moveRemote(message) {
     switch(message) {
         case MOVE_LEFT:
-        case SERVER_MOVE_LEFT: blockController.moveLeft();
+        case SERVER_MOVE_LEFT: gameGlobals.blockController.moveLeft();
         break;
         case MOVE_RIGHT:
-        case SERVER_MOVE_RIGHT: blockController.moveRight();
+        case SERVER_MOVE_RIGHT: gameGlobals.blockController.moveRight();
         break;
         case MOVE_UP:
-        case SERVER_MOVE_UP: blockController.rotate();
+        case SERVER_MOVE_UP: gameGlobals.blockController.rotate();
         break;
         case MOVE_DOWN:
-        case SERVER_MOVE_DOWN: blockController.moveFast();
+        case SERVER_MOVE_DOWN: gameGlobals.blockController.moveFast();
         break;
     }
 }
 
 function moveLeft() {
-    if(paused) { return; }
-    displayController.leftClicked();
-    blockController.moveShadowLeft();
+    if(gameGlobals.paused) { return; }
+    gameGlobals.displayController.leftClicked();
+    gameGlobals.blockController.moveShadowLeft();
     sendToServer(MOVE_LEFT);
 }
 
 function moveRight() {
-    if(paused) { return; }
-    blockController.moveShadowRight();
-    displayController.rightClicked();
+    if(gameGlobals.paused) { return; }
+    gameGlobals.blockController.moveShadowRight();
+    gameGlobals.displayController.rightClicked();
     sendToServer(MOVE_RIGHT);
 }
 
 function moveUp() {
-    if(paused) { return; }
-    displayController.upClicked();
+    if(gameGlobals.paused) { return; }
+    gameGlobals.displayController.upClicked();
     sendToServer(MOVE_UP);
 }
 
 function moveDown() {
-    if(paused) { return; }
-    displayController.downClicked();
+    if(gameGlobals.paused) { return; }
+    gameGlobals.displayController.downClicked();
     sendToServer(MOVE_DOWN);
 }
 
@@ -98,10 +94,10 @@ function sendToServer(message) {
 }
 
 function pauseGame() {
-    paused = !paused;
+    gameGlobals.paused = !gameGlobals.paused;
     newFrame();
-    lastFrameTime = 0;
-    if(paused) {
+    gameGlobals.lastFrameTime = 0;
+    if(gameGlobals.paused) {
         document.body.classList.add("paused");
         showInfo("Game paused");
         timer.pause();

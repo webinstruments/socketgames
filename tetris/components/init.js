@@ -38,7 +38,7 @@ function addGrid(scene, fieldHeight, fieldWidth, tileSize) {
             var line = new THREE.Line(lineGeo, lineMat);
             var lineHorizontal = new THREE.Line(lineGeoHorizontal, lineMatHorizontal);
 
-            //var c = new Cube(x * blockController.tileSize, y * blockController.tileSize, 0.1, 0xaaaaaa, 0x000000);
+            //var c = new Cube(x * gameGlobals.blockController.tileSize, y * gameGlobals.blockController.tileSize, 0.1, 0xaaaaaa, 0x000000);
             debugGroup.add(line);
             debugGroup.add(lineHorizontal);
         }
