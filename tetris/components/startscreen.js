@@ -20,7 +20,7 @@ function createForm() {
         //value: 'ws://demos.kaazing.com/echo',
         //value: 'ws://193.171.127.8:8081',
         value: gameGlobals.socketUrl,
-        label: 'Enter echo server',
+        label: 'echo server',
         labelClass: 'label noselect', 
         groupClass: 'formgroup',
         readOnly: true,
@@ -36,7 +36,7 @@ function createForm() {
     });
     gameGlobals.form = new Form({
         formClass: 'form',
-        children: [userInput, serverInput, selection],
+        children: [userInput, selection, serverInput],
         submitText: 'start game!',
         submitClass: 'startButton',
             onSubmit: function(result) {
@@ -51,7 +51,7 @@ function createForm() {
         }
     });
     if(!gameGlobals.connectionTypes.length) {
-        gameGlobals.connectionTypes.push({ value: 0, name: "plase choose" })
+        gameGlobals.connectionTypes.push({ value: 0, name: "please choose" })
         RestService.getConnections(function(data) {
             data.forEach(function(d) {
                 gameGlobals.connectionTypes.push({ value: d.id, name: d.type });

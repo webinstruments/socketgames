@@ -1,25 +1,25 @@
-var CONTROL_PAUSE_TEXT = "▌▌";
-var CONTROL_RESUME_TEXT = "►";
+var CONTROL_PAUSE_TEXT = "◼";
+var CONTROL_RESUME_TEXT = "▶";
 
 function setupOnScreenControls() {
     gameGlobals.pauseButton = new GameButton({ 
         classes: "pause noselect",
         clickColor: "blue", 
         onClick: pauseGame,
-        text: "▌▌"
+        text: CONTROL_PAUSE_TEXT
     });
     document.body.appendChild(gameGlobals.pauseButton.domElement);
     gameGlobals.displayController = new OnScreenController(CONTROL_MODE_ALL, {
-        groupTop: '80%',
+        groupTop: '60%',
         leftButtonClass: "left noselect",
         rightButtonClass: "right noselect",
         upButtonClass: "up noselect",
         downButtonClass: "down noselect",
         clickColor: "red",
-        leftPos: "left:10%;",
-        rightPos: "right:10%;",
-        upPos: "top:0%;left:47%;",
-        downPos: "bottom:10%;left:47%;",
+        leftPos: "bottom:5%;left:5%;",
+        rightPos: "bottom:5%;right:5%;",
+        upPos: "bottom:-6%;right:27.1%;",
+        downPos: "bottom:5%;left:27.1%;",
         leftCB: moveLeft,
         rightCB: moveRight,
         upCB: moveUp,

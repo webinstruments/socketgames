@@ -11,9 +11,9 @@ function OnScreenController(mode, initObject) {
     this.buttonGroup = document.createElement('div');
     this.groupStyles = [
         [ "position", "absolute" ],
-        [ "top", initObject.groupTop ? initObject.groupTop : '80%' ],
+        [ "top", initObject.groupTop ? initObject.groupTop : '60%' ],
         [ "width", "100%" ],
-        [ "height", "20%" ],
+        [ "height", "40%" ],
     ];
     this.leftButton = new GameButton({ 
         classes: initObject.leftButtonClass, 

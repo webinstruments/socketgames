@@ -93,9 +93,10 @@ GameButton.prototype.removeStyle = function(val, fuzzy) {
 }
 
 GameButton.prototype.isDragging = function() {
-    if(this.dragAble) {
+    if(this.dragAble && this.draggingPossible()) {
         this.addClass("dragging");
         this.dragged = true;
+        showInfo("Dragging started");
     }
     clearTimeout(this.dragTimer);
     this.dragTimer = null;
@@ -117,13 +118,14 @@ GameButton.prototype.dragStart = function() {
 GameButton.prototype.dragEnd = function(event) {
     this.clickedOn = null;
     this.dragAble = false;
+    console.log('dragEnd', event);
     if(this.dragged) {
         this.removeClass("dragging");
     }
 }
 
 GameButton.prototype.drag = function(event) {
-    if(this.dragAble && this.clickedOn && Date.now() - this.clickedOn >= 1500) {
+    if(this.dragAble && this.draggingPossible()) {
         var newX = newY = null;
         if(event.type == "touchmove") {
             newX = event.touches[0].clientX - this.startX;
@@ -136,6 +138,10 @@ GameButton.prototype.drag = function(event) {
         var style = "transform:translate3d(" + newX.toFixed(0) + "px," + newY.toFixed(0) + "px,0px) " + this.rotation;
         this.setStyle(style);
     }
+}
+
+GameButton.prototype.draggingPossible = function() {
+    return this.clickedOn && Date.now() - this.clickedOn >= 1500;
 }
 
 GameButton.prototype.getPosition = function() {

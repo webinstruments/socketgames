@@ -1,12 +1,4 @@
 function startGame() {
-    if(gameGlobals.firstStart) {
-        showHelp("TIPP: You can drag the arrow keys!");
-        gameGlobals.firstStart = false;
-        document.body.classList.add('firstStart');
-        setTimeout(function() {
-            document.body.classList.remove('firstStart');
-        }, 5000);
-    }
     document.body.classList.add("noselect");
     isGameOver = false;
     gameGlobals.formDiv.hide();
@@ -15,6 +7,16 @@ function startGame() {
     gameGlobals.blockController.generateBlock();
     gameGlobals.lastFrameTime = 0;
     newFrame();
+    
+    if(gameGlobals.firstStart) {
+        pauseGame();
+        showHelp("TIPP: You can drag the arrow keys! Press start, when you are ready.");
+        gameGlobals.firstStart = false;
+        document.body.classList.add('firstStart');
+        setTimeout(function() {
+            document.body.classList.remove('firstStart');
+        }, 5000);
+    }
 }
 
 function gameOver() {

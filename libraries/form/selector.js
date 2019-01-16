@@ -25,7 +25,7 @@ function Selector(options) {
 
 Selector.prototype.scroll = function() {
     if(this.index < 0) {
-        this.index = 0;
+        this.index = this.values.length - 1;
     }
     this.index = this.index % this.values.length;
     this.selector.setText(this.values[this.index].name);
