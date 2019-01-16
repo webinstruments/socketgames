@@ -1,23 +1,16 @@
-var formDiv;
-var formHeadLine;
-var form;
-var connectionTypes = [];
-var username = null;
-var restService;
-var socketUrl = null;
-var socketServers = [
+var WEBSOCKET_SERVERS = [
     'ws://193.171.127.8:8080/ws',
     'ws://193.171.127.8:8081'
 ];
 
 function createForm() {
-    formDiv = new DivGroup('centered');
-    formHeadLine = new Header('New Game!', 'noselect');
-    socketUrl = socketServers[getRandom(1)];
+    gameGlobals.formDiv = new DivGroup('centered');
+    gameGlobals.formHeadLine = new Header('New Game!', 'noselect');
+    gameGlobals.socketUrl = WEBSOCKET_SERVERS[getRandom(1)];
 
     var userInput = new TextInput({
         name: 'username',
-        value: username || '',
+        value: gameGlobals.username || '',
         label: 'Enter username',
         labelClass: 'label noselect', 
         groupClass: 'formgroup'
@@ -26,7 +19,7 @@ function createForm() {
         name: 'server', 
         //value: 'ws://demos.kaazing.com/echo',
         //value: 'ws://193.171.127.8:8081',
-        value: socketUrl,
+        value: gameGlobals.socketUrl,
         label: 'Enter echo server',
         labelClass: 'label noselect', 
         groupClass: 'formgroup',
@@ -41,7 +34,7 @@ function createForm() {
         groupClass: 'formgroup',
         btnClass: 'selectButton'
     });
-    form = new Form({
+    gameGlobals.form = new Form({
         formClass: 'form',
         children: [userInput, serverInput, selection],
         submitText: 'start game!',
@@ -51,24 +44,24 @@ function createForm() {
                     showError("Please select a connection type");
                     return;
                 }
-                username = result.username;
+                gameGlobals.username = result.username;
                 console.log(result);
-                restService = new RestService(username, result.type, result.server);
+                gameGlobals.restService = new RestService(result.username, result.type, result.server);
                 startGame();
         }
     });
-    if(!connectionTypes.length) {
-        connectionTypes.push({ value: 0, name: "plase choose" })
+    if(!gameGlobals.connectionTypes.length) {
+        gameGlobals.connectionTypes.push({ value: 0, name: "plase choose" })
         RestService.getConnections(function(data) {
             data.forEach(function(d) {
-                connectionTypes.push({ value: d.id, name: d.type });
-                selection.setValues(connectionTypes);
+                gameGlobals.connectionTypes.push({ value: d.id, name: d.type });
+                selection.setValues(gameGlobals.connectionTypes);
             });
         });
     }
-    formDiv.domElement.appendChild(formHeadLine.domElement);
-    formDiv.domElement.appendChild(form.domElement);
-    document.body.appendChild(formDiv.domElement);
-    //form.disable();
-    checkConnection(socketUrl);
+    gameGlobals.formDiv.domElement.appendChild(gameGlobals.formHeadLine.domElement);
+    gameGlobals.formDiv.domElement.appendChild(gameGlobals.form.domElement);
+    document.body.appendChild(gameGlobals.formDiv.domElement);
+    //gameGlobals.form.disable();
+    checkConnection(gameGlobals.socketUrl);
 }

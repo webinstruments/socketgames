@@ -1,12 +1,6 @@
-var textContainer;
-var timer;
-var scoreController;
-var stats;
-var control;
-
 function addControls() {
     var gui = new dat.GUI();
-    control = new function () {
+    gameGlobals.control = new function () {
         this.gameSpeed = BLOCK_VELOCITY;
         this.thresholdTime = BLOCK_THRESHOLDTIME;
         this.block1 = false;
@@ -17,20 +11,20 @@ function addControls() {
         this.block6 = false;
         this.block7 = false;
     };
-    gui.add(control, 'gameSpeed', 0, 8);
-    gui.add(control, 'thresholdTime', 0.5, 20000);
-    gui.add(control, 'block1');
-    gui.add(control, 'block2');
-    gui.add(control, 'block3');
-    gui.add(control, 'block4');
-    gui.add(control, 'block5');
-    gui.add(control, 'block6');
-    gui.add(control, 'block7');
+    gui.add(gameGlobals.control, 'gameSpeed', 0, 8);
+    gui.add(gameGlobals.control, 'thresholdTime', 0.5, 20000);
+    gui.add(gameGlobals.control, 'block1');
+    gui.add(gameGlobals.control, 'block2');
+    gui.add(gameGlobals.control, 'block3');
+    gui.add(gameGlobals.control, 'block4');
+    gui.add(gameGlobals.control, 'block5');
+    gui.add(gameGlobals.control, 'block6');
+    gui.add(gameGlobals.control, 'block7');
     gui.close();
 }
 
 function displayGameInfo() {
-    textContainer = new TextContainer('textContainer', [{
+    gameGlobals.textContainer = new TextContainer('textContainer', [{
         id: 'score',
         label: 'Score: ',
         value: '0'
@@ -48,25 +42,25 @@ function displayGameInfo() {
         value: '0'
     }]);
     
-    document.body.appendChild(textContainer.domElement);
+    document.body.appendChild(gameGlobals.textContainer.domElement);
 }
 
 function initScoreListener() {
-    scoreController = new ScoreController(
-        textContainer.getTextElement('rows'), textContainer.getTextElement('score'));
+    gameGlobals.scoreController = new ScoreController(
+        gameGlobals.textContainer.getTextElement('rows'), gameGlobals.textContainer.getTextElement('score'));
 }
 
 function startTimer(textElement) {
-    timer = new Timer(textElement);
-    timer.start();
+    gameGlobals.timer = new Timer(textElement);
+    gameGlobals.timer.start();
 }
 
 function createStats() {
-    stats = new Stats();
-    stats.setMode(0);
+    gameGlobals.stats = new Stats();
+    gameGlobals.stats.setMode(0);
 
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
-    document.body.appendChild(stats.domElement);
+    gameGlobals.stats.domElement.style.position = 'absolute';
+    gameGlobals.stats.domElement.style.left = '0px';
+    gameGlobals.stats.domElement.style.top = '0px';
+    document.body.appendChild(gameGlobals.stats.domElement);
 }

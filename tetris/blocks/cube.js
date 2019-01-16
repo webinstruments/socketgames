@@ -59,7 +59,7 @@ Cube.prototype.fadeOut = function() {
     this.fadeOutTime -= this.intervalTime;
     if(this.fadeOutTime == 0) {
         this.parent.removeCube(this);
-        clearInterval(timer);
+        clearInterval(this.timer);
     } else {
         this.cube.material.opacity -= this.fadeOutPercent;
         if(this.frame) {

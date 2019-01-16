@@ -90,7 +90,7 @@ function moveDown() {
 }
 
 function sendToServer(message) {
-    socketConnection.send(message, true);
+    gameGlobals.socketConnection.send(message, true);
 }
 
 function pauseGame() {
@@ -100,10 +100,10 @@ function pauseGame() {
     if(gameGlobals.paused) {
         document.body.classList.add("paused");
         showInfo("Game paused");
-        timer.pause();
+        gameGlobals.timer.pause();
     } else {
         document.body.classList.remove("paused");
         showInfo("Game resumed");
-        timer.resume();
+        gameGlobals.timer.resume();
     }
 }

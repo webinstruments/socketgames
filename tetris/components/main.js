@@ -1,9 +1,9 @@
 function startGame() {
     document.body.classList.add("noselect");
     isGameOver = false;
-    formDiv.hide();
-    scoreController.reset();
-    startTimer(textContainer.getTextElement('time'));
+    gameGlobals.formDiv.hide();
+    gameGlobals.scoreController.reset();
+    startTimer(gameGlobals.textContainer.getTextElement('time'));
     gameGlobals.blockController.generateBlock();
     gameGlobals.lastFrameTime = 0;
     newFrame();
@@ -11,12 +11,12 @@ function startGame() {
 
 function gameOver() {
     document.body.classList.remove("noselect");
-    formHeadLine.setText('Game Over!');
+    gameGlobals.formHeadLine.setText('Game Over!');
     isGameOver = true;
     gameGlobals.blockController.init();
-    timer.stop();
-    restService.end(scoreController.getScore());
-    formDiv.show();
+    gameGlobals.timer.stop();
+    gameGlobals.restService.end(gameGlobals.scoreController.getScore());
+    gameGlobals.formDiv.show();
 }
 
 var stepValue = gameGlobals.frameRate / 1000;
@@ -26,8 +26,8 @@ function render(timestamp) {
         gameGlobals.lastFrameTime = timestamp;
         newFrame();
     }
-    BLOCK_VELOCITY = control.gameSpeed;
-    BLOCK_THRESHOLDTIME = control.thresholdTime;
+    BLOCK_VELOCITY = gameGlobals.control.gameSpeed;
+    BLOCK_THRESHOLDTIME = gameGlobals.control.thresholdTime;
     gameGlobals.delta += timestamp - gameGlobals.lastFrameTime;
     gameGlobals.lastFrameTime = timestamp;
     if(gameGlobals.delta / gameGlobals.frameRate >= 60) {
@@ -44,11 +44,11 @@ function render(timestamp) {
         gameGlobals.blockController.update(stepValue);
         gameGlobals.delta -= gameGlobals.frameRate;
     }
-    renderer.clear();
-    renderer.render(gameGlobals.orthoScene, orthoCamera);
-    renderer.clearDepth();
-    renderer.render(gameGlobals.scene, camera);
-    stats.update();
+    gameGlobals.renderer.clear();
+    /*gameGlobals.renderer.render(gameGlobals.orthoScene, gameGlobals.orthoCamera);
+    gameGlobals.renderer.clearDepth();*/
+    gameGlobals.renderer.render(gameGlobals.scene, gameGlobals.camera);
+    gameGlobals.stats.update();
     newFrame();
 }
 

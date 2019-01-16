@@ -47,13 +47,13 @@ BlockController.prototype.newRow = function() {
 
 BlockController.prototype.generateBlock = function() {
     var random = getRandom(6); // debug
-    if(control.block1) { random = 0 }
-    else if(control.block2) { random = 1 }
-    else if(control.block3) { random = 2 }
-    else if(control.block4) { random = 3 }
-    else if(control.block5) { random = 4 }
-    else if(control.block6) { random = 5 }
-    else if(control.block7) { random = 6 }
+    if(gameGlobals.control.block1) { random = 0 }
+    else if(gameGlobals.control.block2) { random = 1 }
+    else if(gameGlobals.control.block3) { random = 2 }
+    else if(gameGlobals.control.block4) { random = 3 }
+    else if(gameGlobals.control.block5) { random = 4 }
+    else if(gameGlobals.control.block6) { random = 5 }
+    else if(gameGlobals.control.block7) { random = 6 }
     console.log('random', random);
     var block = null;
     if(random == 0) {
@@ -125,11 +125,11 @@ BlockController.prototype.getRowTileFromPosition = function(y) {
 
 var BLOCKCONTROLLER_BLOCKS = 0;
 BlockController.prototype.setTile = function(obj) {
-    console.log('block_' + (++BLOCKCONTROLLER_BLOCKS), obj.getPosition().x + ', ' + obj.getPosition().y);
+    //console.log('block_' + (++BLOCKCONTROLLER_BLOCKS), obj.getPosition().x + ', ' + obj.getPosition().y);
     var removedRows = 0;
     var rowsToRemove = [];
-    console.log('before_set');
-    debug(this.tiles);
+    //console.log('before_set');
+    //debug(this.tiles);
     this.blocks.push(this.getActiveBlock());
     for(var i = 0; i < obj.cubes.length; ++i) {
         var pos =  obj.cubes[i].getPosition(this.globalScene);
@@ -150,8 +150,8 @@ BlockController.prototype.setTile = function(obj) {
             ++removedRows;
         }
     }
-    console.log('after_set');
-    debug(this.tiles);
+    //console.log('after_set');
+    //debug(this.tiles);
     if(rowsToRemove.length) {
         this.removeRows(rowsToRemove);
     }
@@ -213,8 +213,8 @@ BlockController.prototype.shiftBlocks = function(rowIndexes) {
     clearTimeout(this.removalTimer);
     this.removalTimer = null;
     this.generateBlock();
-    console.log('after_remove');
-    debug(this.tiles);
+    //console.log('after_remove');
+    //debug(this.tiles);
 }
 
 BlockController.prototype.resize = function(width, height) {

@@ -12,4 +12,24 @@ var gameGlobals = {
     displayController: null,
     released: true,
     paused: false,
+    //hud
+    textContainer: null,
+    timer: null,
+    scoreController: null,
+    stats: null,
+    control: null,
+    //init
+    camera: null,
+    orthoCamera: null,
+    renderer: null,
+    //sockets
+    socketConnection: null,
+    //startscreen
+    formDiv: null,
+    formHeadLine: null,
+    connectionTypes: [],
+    form: null,
+    username: null,
+    restService: null,
+    socketUrl: null,
 }

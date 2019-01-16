@@ -82,10 +82,11 @@
 
         displayGameInfo();
         initScoreListener();
-        var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
-        var maxHeight = getHeightFromDistance(CAM_DISTANCE, camera);
+        var maxWidth = getWidthFromDistance(CAM_DISTANCE, gameGlobals.camera, MAX_WIDTH / window.innerHeight);
+        var maxHeight = getHeightFromDistance(CAM_DISTANCE, gameGlobals.camera);
         gameGlobals.blockController = 
-            new BlockController(gameGlobals.scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS, scoreController.scoreChanged, scoreController);
+            new BlockController(gameGlobals.scene, maxWidth, maxHeight, GAME_COLUMNS, GAME_ROWS, 
+                                gameGlobals.scoreController.scoreChanged, gameGlobals.scoreController);
 
         createStats();
         addControls();
@@ -105,10 +106,10 @@
     }
     
     function resize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        var maxWidth = getWidthFromDistance(CAM_DISTANCE, camera, MAX_WIDTH / window.innerHeight);
-        var maxHeight = getWidthFromDistance(CAM_DISTANCE, camera);
+        gameGlobals.camera.aspect = window.innerWidth / window.innerHeight;
+        gameGlobals.camera.updateProjectionMatrix();
+        var maxWidth = getWidthFromDistance(CAM_DISTANCE, gameGlobals.camera, MAX_WIDTH / window.innerHeight);
+        var maxHeight = getWidthFromDistance(CAM_DISTANCE, gameGlobals.camera);
         gameGlobals.blockController.resize(maxWidth, maxHeight);
     }
 

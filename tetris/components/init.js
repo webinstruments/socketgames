@@ -1,26 +1,22 @@
-var camera;
-var orthoCamera;
-var renderer;
-
 function addPerspectiveCamera(fov, min, max, x, y, z, lookAt) {
-    camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, min, max);
-    camera.position.set(x, y, z);
-    camera.lookAt(lookAt);
+    gameGlobals.camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, min, max);
+    gameGlobals.camera.position.set(x, y, z);
+    gameGlobals.camera.lookAt(lookAt);
 }
 
 function addOrthoCamera(min, max, x, y, z) {
-    orthoCamera = 
+    gameGlobals.orthoCamera = 
         new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, 
                                     window.innerHeight / 2, window.innerHeight / -2, min, max);
-    orthoCamera.position.set(x, y, z);
+    gameGlobals.orthoCamera.position.set(x, y, z);
 }
 
 function initRenderer(color) {
-    renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(color, 1.0);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.autoClear = false;
-    document.body.appendChild(renderer.domElement);
+    gameGlobals.renderer = new THREE.WebGLRenderer();
+    gameGlobals.renderer.setClearColor(color, 1.0);
+    gameGlobals.renderer.setSize(window.innerWidth, window.innerHeight);
+    gameGlobals.renderer.autoClear = false;
+    document.body.appendChild(gameGlobals.renderer.domElement);
 }
 
 function addGrid(scene, fieldHeight, fieldWidth, tileSize) {

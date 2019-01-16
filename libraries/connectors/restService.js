@@ -32,7 +32,7 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
         data: {
             username: username,
             con_type: connectionType,
-            socket_server: socketServer
+            websocket_server: socketServer
         },
         success: function(data) {
             showInfo("Connection to information server successfull");
