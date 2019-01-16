@@ -204,25 +204,31 @@ body.firstStart i {
   0% {
     opacity: 1;
     border-color: #51A351;
+    color: #51A351;
   }
   20% {
     opacity: 1;
     border-color: white;
+    color: black;
   }
   40% {
     opacity: 1;
     border-color: #51A351;
+    color: #51A351;
   }
   60% {
     opacity: 1;
     border-color: white;
+    color: black;
   }
   80% {
     opacity: 1;
     border-color: #51A351;
+    color: #51A351;
   }
   100% {
     opacity: 0.3;
     border-color: white;
+    color: black;
   }
 }
