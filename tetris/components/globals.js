@@ -8,10 +8,12 @@ var gameGlobals = {
     frameRate: 16.6667,
     delta: 0,
     requestId: null,
+    firstStart: true,
     //controls
     displayController: null,
     released: true,
     paused: false,
+    pauseButton: null,
     //hud
     textContainer: null,
     timer: null,
@@ -31,5 +33,5 @@ var gameGlobals = {
     form: null,
     username: null,
     restService: null,
-    socketUrl: null,
+    socketUrl: null
 }

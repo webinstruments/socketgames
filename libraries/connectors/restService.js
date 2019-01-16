@@ -35,7 +35,7 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
             websocket_server: socketServer
         },
         success: function(data) {
-            showInfo("Connection to information server successfull");
+            //showInfo("Connection to information server successfull");
             self.game = {
                 game_id: data[0].game_id,
                 con_id: connectionType

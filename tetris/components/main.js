@@ -1,4 +1,12 @@
 function startGame() {
+    if(gameGlobals.firstStart) {
+        showHelp("TIPP: You can drag the arrow keys!");
+        gameGlobals.firstStart = false;
+        document.body.classList.add('firstStart');
+        setTimeout(function() {
+            document.body.classList.remove('firstStart');
+        }, 5000);
+    }
     document.body.classList.add("noselect");
     isGameOver = false;
     gameGlobals.formDiv.hide();

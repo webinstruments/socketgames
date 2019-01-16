@@ -82,6 +82,11 @@ function showError(message) {
     toastr["error"](message);
 }
 
+function showHelp(message) {
+    initToast();
+    toastr["success"](message);
+}
+
 if(!String.prototype.endsWith) {
     String.prototype.endsWith = function(pattern) {
         var d = this.length - pattern.length;

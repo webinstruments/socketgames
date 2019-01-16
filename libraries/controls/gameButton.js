@@ -9,7 +9,7 @@ function GameButton(options) {
         this.domElement.setAttribute('class', this.classes);
     }
     if(options.text) {
-        this.domElement.innerHTML = options.text;
+        this.setText(options.text)
     }
     if(this.style) {
         this.domElement.setAttribute('style', this.style);
@@ -146,4 +146,8 @@ GameButton.prototype.getPosition = function() {
     var y = rect.top + centerY;
 
     return { x: x, y: y };
+}
+
+GameButton.prototype.setText = function(text) {
+    this.domElement.innerHTML = text;
 }

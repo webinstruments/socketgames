@@ -150,6 +150,10 @@ h2 {
 }
 
 #toast-container {
+  margin-top: 20px;
+}
+
+.toast {
   opacity: 1 !important;
 }
 
@@ -161,6 +165,11 @@ h2 {
       -ms-user-select: none; /* Internet Explorer/Edge */
           user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome and Opera */
+}
+
+i.firstStart {
+  opacity: 0;
+  animation: blinking 1s linear infinite;
 }
 
 .dragging {
@@ -185,4 +194,35 @@ i.pause.dragging {
   -ms-filter: grayscale(70%);
   -o-filter: grayscale(70%);
   filter: grayscale(70%);
+}
+
+body.firstStart i {
+  animation: pulse 5s alternate;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    border-color: #51A351;
+  }
+  20% {
+    opacity: 1;
+    border-color: white;
+  }
+  40% {
+    opacity: 1;
+    border-color: #51A351;
+  }
+  60% {
+    opacity: 1;
+    border-color: white;
+  }
+  80% {
+    opacity: 1;
+    border-color: #51A351;
+  }
+  100% {
+    opacity: 0.3;
+    border-color: white;
+  }
 }

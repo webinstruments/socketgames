@@ -1,11 +1,14 @@
+var CONTROL_PAUSE_TEXT = "▌▌";
+var CONTROL_RESUME_TEXT = "►";
+
 function setupOnScreenControls() {
-    pauseButton = new GameButton({ 
+    gameGlobals.pauseButton = new GameButton({ 
         classes: "pause noselect",
         clickColor: "blue", 
         onClick: pauseGame,
         text: "▌▌"
     });
-    document.body.appendChild(pauseButton.domElement);
+    document.body.appendChild(gameGlobals.pauseButton.domElement);
     gameGlobals.displayController = new OnScreenController(CONTROL_MODE_ALL, {
         groupTop: '80%',
         leftButtonClass: "left noselect",
@@ -99,11 +102,13 @@ function pauseGame() {
     gameGlobals.lastFrameTime = 0;
     if(gameGlobals.paused) {
         document.body.classList.add("paused");
-        showInfo("Game paused");
         gameGlobals.timer.pause();
+        gameGlobals.pauseButton.setText(CONTROL_RESUME_TEXT);
+        showInfo("Game paused");
     } else {
         document.body.classList.remove("paused");
-        showInfo("Game resumed");
         gameGlobals.timer.resume();
+        gameGlobals.pauseButton.setText(CONTROL_PAUSE_TEXT);
+        showInfo("Game resumed");
     }
 }
