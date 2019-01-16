@@ -394,7 +394,7 @@ BlockController.prototype.syncPosition = function(triggerGameOver) {
 }
 
 BlockController.prototype.update = function(deltaTime) {
-    if(this.removalTimer) {
+    if(this.removalTimer || this.isGameOver) {
         return; //new block must be generated first
     }
     var block = this.getActiveBlock();

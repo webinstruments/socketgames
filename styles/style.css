@@ -155,6 +155,9 @@ h2 {
 
 .toast {
   opacity: 1 !important;
+  font-size: x-large;
+  width: 33%!important;
+  text-align: center;
 }
 
 .noselect {
