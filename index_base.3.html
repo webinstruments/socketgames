@@ -16,6 +16,7 @@
     <script src="libraries/toastr.min.js"></script>
     <script src="libraries/connectors/restService.js"></script>
     <link rel="stylesheet" href="libraries/toastr.min.css" />
+    <link rel="stylesheet" href="styles/background.css" />
     <style>
         body {
             margin: 0;
@@ -45,11 +46,12 @@
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
         // create a render, sets the background color and the size
-        renderer = new THREE.WebGLRenderer();
-        renderer.setClearColor(0x000000, 1.0);
+        renderer = new THREE.WebGLRenderer({alpha:true});
+        renderer.setClearAlpha(0);
+        //renderer.setClearColor();
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        var gamedata = [{ game_id: null, roundtrip_time: 12 }, { game_id: null, roundtrip_time: 13 }, { game_id: null, roundtrip_time: 14 }]
+        /*var gamedata = [{ game_id: null, roundtrip_time: 12 }, { game_id: null, roundtrip_time: 13 }, { game_id: null, roundtrip_time: 14 }]
             console.log(JSON.stringify(gamedata));
 
         showInfo("Info");
@@ -59,7 +61,7 @@
             console.log(data);
         });
 
-        restService = new RestService("Das ist ein Test", 1);
+        restService = new RestService("Das ist ein Test", 1);*/
 
         /*$.ajax({ //start new game
             type: "POST",

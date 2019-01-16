@@ -12,8 +12,13 @@ function addOrthoCamera(min, max, x, y, z) {
 }
 
 function initRenderer(color) {
-    gameGlobals.renderer = new THREE.WebGLRenderer();
-    gameGlobals.renderer.setClearColor(color, 1.0);
+    if(color) {
+        gameGlobals.renderer = new THREE.WebGLRenderer();
+        gameGlobals.renderer.setClearColor(color, 1.0);
+    } else {
+        gameGlobals.renderer = new THREE.WebGLRenderer({ alpha: true });
+        gameGlobals.renderer.setClearAlpha(0);
+    }
     gameGlobals.renderer.setSize(window.innerWidth, window.innerHeight);
     gameGlobals.renderer.autoClear = false;
     document.body.appendChild(gameGlobals.renderer.domElement);
@@ -23,7 +28,7 @@ function addGrid(scene, fieldHeight, fieldWidth, tileSize) {
     var debugGroup = new THREE.Object3D();
     for(var x = 0; x < GAME_COLUMNS + 1; ++x) {
         for(var y = 0; y < GAME_ROWS + 1; ++y) {
-            var lineMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 5 });
+            var lineMat = new THREE.LineBasicMaterial({ color: 0xffaa00, linewidth: 1, transparent: true, opacity: 0.1 });
             var lineGeo = new THREE.Geometry();
             var lineMatHorizontal = lineMat.clone();
             var lineGeoHorizontal = lineGeo.clone();
@@ -33,6 +38,8 @@ function addGrid(scene, fieldHeight, fieldWidth, tileSize) {
             lineGeoHorizontal.vertices.push(new THREE.Vector3(fieldWidth, y * tileSize, 0.1));
             var line = new THREE.Line(lineGeo, lineMat);
             var lineHorizontal = new THREE.Line(lineGeoHorizontal, lineMatHorizontal);
+            /*line.computeLineDistances();
+            lineHorizontal.computeLineDistances();*/
 
             //var c = new Cube(x * gameGlobals.blockController.tileSize, y * gameGlobals.blockController.tileSize, 0.1, 0xaaaaaa, 0x000000);
             debugGroup.add(line);

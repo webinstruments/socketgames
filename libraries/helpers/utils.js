@@ -59,7 +59,7 @@ function initToast() {
             "newestOnTop": false,
             "progressBar": false,
             "positionClass": "toast-top-center",
-            "preventDuplicates": false,
+            "preventDuplicates": true,
             "onclick": null,
             "showDuration": "1000",
             "hideDuration": "100",
