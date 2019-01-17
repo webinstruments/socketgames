@@ -1,12 +1,13 @@
-var CONTROL_PAUSE_TEXT = "◼";
-var CONTROL_RESUME_TEXT = "▶";
+var CONTROL_PAUSE_TEXT = "❚❚";
+var CONTROL_RESUME_TEXT = "►";
 
 function setupOnScreenControls() {
     gameGlobals.pauseButton = new GameButton({ 
         classes: "pause noselect",
         clickColor: "blue", 
         onClick: pauseGame,
-        text: CONTROL_PAUSE_TEXT
+        text: CONTROL_PAUSE_TEXT,
+        dragAble: false
     });
     document.body.appendChild(gameGlobals.pauseButton.domElement);
     gameGlobals.displayController = new OnScreenController(CONTROL_MODE_ALL, {

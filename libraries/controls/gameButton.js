@@ -17,25 +17,17 @@ function GameButton(options) {
     if(options.onClick != null) {
         this.domElement.addEventListener('click', this.clicked.bind(this), false);
     }
-    this.domElement.addEventListener('touchstart', this.dragStart.bind(this), false);
-    this.domElement.addEventListener('touchend', this.dragEnd.bind(this), false);
-    this.domElement.addEventListener('touchmove', this.drag.bind(this), false);
-    
-    this.domElement.addEventListener('mousedown', this.dragStart.bind(this), false);
-    this.domElement.addEventListener('mouseup', this.dragEnd.bind(this), false);
-    this.domElement.addEventListener('mousemove', this.drag.bind(this), false);
-
-    this.offsetX = 0;
-    this.offsetY = 0;
-    this.rotation = '';
-    if(options.rotation) {
-        this.rotation = "rotate(" + options.rotation + "deg)";
+    DragAble.call(this, this.domElement, options.rotation, {
+        startCB: this.onDragStart,
+        endCB: this.onDragEnd,
+        moveCB: this.onDrag
+    });
+    if(!options.dragAble) {
+        this.canDrag = false;
     }
-    this.startX = this.startY = this.clickedOn = null;
-    this.dragged = false;
-    this.dragAble = false;
-    this.dragTimer = null;
 }
+
+GameButton.prototype = Object.create(DragAble.prototype);
 
 GameButton.prototype.clicked = function() {
     if(this.dragged) {
@@ -92,67 +84,24 @@ GameButton.prototype.removeStyle = function(val, fuzzy) {
     this.domElement.setAttribute('style', replacedStyle);
 }
 
-GameButton.prototype.isDragging = function() {
-    if(this.dragAble && this.draggingPossible()) {
-        this.addClass("dragging");
-        this.dragged = true;
-        showInfo("Dragging started");
-    }
-    clearTimeout(this.dragTimer);
-    this.dragTimer = null;
-}
-
-GameButton.prototype.dragStart = function() {
-    this.clickedOn = Date.now();
-    if(!this.startX) {
-        var pos = this.getPosition();
-        this.startX = pos.x;
-        this.startY = pos.y;
-    }
-    this.dragAble = true;
-    if(!this.dragTimer) {
-        this.dragTimer = setTimeout(this.isDragging.bind(this), 1500);
-    }
-}
-
-GameButton.prototype.dragEnd = function(event) {
-    this.clickedOn = null;
-    this.dragAble = false;
-    if(this.dragged) {
-        this.removeClass("dragging");
-    }
-}
-
-GameButton.prototype.drag = function(event) {
-    if(this.dragAble && this.draggingPossible()) {
-        var newX = newY = null;
-        if(event.type == "touchmove") {
-            newX = event.touches[0].clientX - this.startX;
-            newY = event.touches[0].clientY - this.startY;
-        } else {
-            newX = event.clientX - this.startX;
-            newY = event.clientY - this.startY;
-        }
-        this.removeStyle("transform", true);
-        var style = "transform:translate3d(" + newX.toFixed(0) + "px," + newY.toFixed(0) + "px,0px) " + this.rotation;
-        this.setStyle(style);
-    }
-}
-
-GameButton.prototype.draggingPossible = function() {
-    return this.clickedOn && Date.now() - this.clickedOn >= 1500;
-}
-
-GameButton.prototype.getPosition = function() {
-    var rect = this.domElement.getBoundingClientRect();
-    var centerX = (rect.right - rect.left) / 2;
-    var x = rect.left + centerX;
-    var centerY = (rect.bottom - rect.top) / 2;
-    var y = rect.top + centerY;
-
-    return { x: x, y: y };
-}
-
 GameButton.prototype.setText = function(text) {
     this.domElement.innerHTML = text;
+}
+
+GameButton.prototype.onDrag = function(x, y) {
+    if(!this.canDrag) { return; }
+    this.removeStyle("transform", true);
+    var style = "transform:translate3d(" + x.toFixed(0) + "px," + y.toFixed(0) + "px,0px) " + this.rotation;
+    this.setStyle(style);
+}
+
+GameButton.prototype.onDragStart = function() {
+    if(!this.canDrag) { return; }
+    this.addClass("dragging");
+    showInfo("Dragging started");
+}
+
+GameButton.prototype.onDragEnd = function() {
+    if(!this.canDrag) { return; }
+    this.removeClass("dragging");
 }

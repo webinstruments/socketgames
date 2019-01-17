@@ -32,6 +32,8 @@ i {
   margin: 100px;
   opacity: 0.2;
   font-size: 20px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* avoid background when tapped */
+  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 i.pause {
@@ -49,6 +51,15 @@ i.pause {
   margin: 0px;
   font-style: normal;
   color: #ffaa00;
+}
+
+body.paused i.pause {
+  top: 33%;
+  font-size: 1600%;
+  margin: auto;
+  right: 0%;
+  width: 100%;
+  text-align: center;
 }
 
 .right {
@@ -223,7 +234,11 @@ i.pause.dragging {
 }
 
 body.firstStart i {
-  animation: pulse 5s alternate;
+  animation: pulse 4s alternate;
+}
+
+body.firstStart i.pause {
+  animation: none;
 }
 
 @keyframes pulse {

@@ -20,28 +20,32 @@ function OnScreenController(mode, initObject) {
         style: initObject.leftPos, 
         clickColor: initObject.clickColor, 
         onClick: initObject.leftCB,
-        rotation: 135
+        rotation: 135,
+        dragAble: true
     });
     this.rightButton = new GameButton({ 
         classes: initObject.rightButtonClass, 
         style: initObject.rightPos, 
         clickColor: initObject.clickColor, 
         onClick: initObject.rightCB,
-        rotation: -45
+        rotation: -45,
+        dragAble: true
     });
     this.upButton = new GameButton({ 
         classes: initObject.upButtonClass, 
         style: initObject.upPos, 
         clickColor: initObject.clickColor, 
         onClick: initObject.upCB,
-        rotation: -135
+        rotation: -135,
+        dragAble: true
     });
     this.downButton = new GameButton({ 
         classes: initObject.downButtonClass, 
         style: initObject.downPos, 
         clickColor: initObject.clickColor, 
         onClick: initObject.downCB,
-        rotation: 45
+        rotation: 45,
+        dragAble: true
     });
     switch(mode) {
         case CONTROL_MODE_ALL:
