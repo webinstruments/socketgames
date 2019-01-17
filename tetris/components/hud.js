@@ -25,12 +25,16 @@ function addControls() {
 
 function displayGameInfo() {
     gameGlobals.textContainer = new TextContainer('textContainer', [{
+        id: 'version',
+        label: 'v',
+        value: gameGlobals.version
+    }, {
         id: 'score',
-        label: 'Score: ',
+        label: 'score: ',
         value: '0'
     }, {
         id: 'delay',
-        label: 'Delay: ',
+        label: 'score: ',
         value: '0'
     }, {
         id: 'rows',
@@ -38,7 +42,7 @@ function displayGameInfo() {
         value: '0'
     }, {
         id: 'time',
-        label: 'Time: ',
+        label: 'score: ',
         value: '0'
     }]);
     

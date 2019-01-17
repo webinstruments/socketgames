@@ -36,6 +36,7 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
         },
         success: function(data) {
             //showInfo("Connection to information server successfull");
+            console.log('received:', data);
             self.game = {
                 game_id: data[0].game_id,
                 con_id: connectionType

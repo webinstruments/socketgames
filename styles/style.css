@@ -10,6 +10,10 @@
   touch-action: manipulation; /* disable double tap on apple devices */
 }
 
+body, html {
+  position: fixed;
+}
+
 body {
   margin: 0;
   overflow: hidden;
