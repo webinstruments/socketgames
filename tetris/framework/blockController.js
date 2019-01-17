@@ -54,7 +54,6 @@ BlockController.prototype.generateBlock = function() {
     else if(gameGlobals.control.block5) { random = 4 }
     else if(gameGlobals.control.block6) { random = 5 }
     else if(gameGlobals.control.block7) { random = 6 }
-    console.log('random', random);
     var block = null;
     if(random == 0) {
         block = new Block1(this.tileSize, this.globalScene);

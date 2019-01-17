@@ -118,7 +118,6 @@ GameButton.prototype.dragStart = function() {
 GameButton.prototype.dragEnd = function(event) {
     this.clickedOn = null;
     this.dragAble = false;
-    console.log('dragEnd', event);
     if(this.dragged) {
         this.removeClass("dragging");
     }
