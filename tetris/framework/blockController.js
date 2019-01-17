@@ -255,7 +255,7 @@ BlockController.prototype.moveLeft = function() {
         var leftObject = findFromArray(this.heights, function(obj) {
             return position.x - obj.x - THETA <= self.tileSize && obj.y > position.y;
         });
-        var left = -this.tileSize / 2;
+        var left = -this.tileSizeHalf;
         var bottom = this.tileSizeTolerance;
         var top = this.tileSize - this.tileSizeTolerance;
         if(!leftObject || (this.checkCollision(left, bottom) && this.checkCollision(left, top))) {
@@ -273,7 +273,7 @@ BlockController.prototype.moveRight = function() {
     if(position.x + block.width - this.width + this.tileSize < THETA) {
         var self = this;
         var rightObject = findFromArray(this.heights, function(obj) {
-            return obj.x - position.x - THETA >= self.tileSize && obj.y > position.y;
+            return obj.x - position.x >= self.tileSize - THETA && obj.y > position.y;
         });
         var right = this.tileSize + this.tileSizeHalf;
         var bottom = this.tileSizeTolerance;
