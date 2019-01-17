@@ -93,7 +93,11 @@
         createStats();
         addControls();
 
-        initRenderer();
+        if(supportsBackground()) {
+            initRenderer().classList.add('background');
+        } else {
+            initRenderer(0x304352);
+        }
         
         var fieldWidth = gameGlobals.blockController.getFieldWidth();
         var fieldHeight = gameGlobals.blockController.getFieldHeight();

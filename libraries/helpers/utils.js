@@ -93,3 +93,11 @@ if(!String.prototype.endsWith) {
         return d >= 0 && this.lastIndexOf(pattern) === d;
       };
 }
+
+function isAndroid() {
+    return navigator.userAgent.toLowerCase().indexOf("android") > -1;
+}
+
+function isFirefox() {
+    return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+}

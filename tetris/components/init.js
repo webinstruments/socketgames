@@ -21,7 +21,7 @@ function initRenderer(color) {
     }
     gameGlobals.renderer.setSize(window.innerWidth, window.innerHeight);
     gameGlobals.renderer.autoClear = false;
-    document.body.appendChild(gameGlobals.renderer.domElement);
+    return document.body.appendChild(gameGlobals.renderer.domElement);
 }
 
 function addGrid(scene, fieldHeight, fieldWidth, tileSize) {
@@ -48,4 +48,8 @@ function addGrid(scene, fieldHeight, fieldWidth, tileSize) {
     }
     debugGroup.name = 'debug';
     scene.add(debugGroup);
+}
+
+function supportsBackground() { //mobile firefox doen't work with animated background
+    return isAndroid() && isFirefox();
 }
