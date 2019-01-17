@@ -31,7 +31,6 @@ Block1.prototype.generate = function(scene) {
     this.cubes.map(function(c) {
         self.group.add(c.cube);
     });
-    scene.add(this.group);
     this.pivot.add(this.group);
 
     this.boundingBox = new THREE.Box3().setFromObject(this.group);

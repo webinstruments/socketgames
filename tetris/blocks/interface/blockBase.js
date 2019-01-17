@@ -87,3 +87,8 @@ BlockBase.prototype.remove = function() {
     this.movePoint.remove();
 }
 
+BlockBase.prototype.alignGroup = function() {
+    //Höhe und Breite werden subtrahiert, da der pivot höher liegt
+    this.group.position.x = -this.boundingBox.min.x - this.width / 2;
+    this.group.position.y = -this.boundingBox.min.y - this.height / 2;
+}
