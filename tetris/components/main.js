@@ -1,4 +1,5 @@
 function startGame() {
+    gameGlobals.stats.show();
     document.body.classList.add("noselect");
     isGameOver = false;
     gameGlobals.formDiv.hide();
@@ -27,6 +28,7 @@ function gameOver() {
     gameGlobals.timer.stop();
     gameGlobals.restService.end(gameGlobals.scoreController.getScore());
     gameGlobals.formDiv.show();
+    gameGlobals.stats.hide();
 }
 
 var stepValue = gameGlobals.frameRate / 1000;

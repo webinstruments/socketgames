@@ -4,7 +4,7 @@ function GameButton(options) {
     this.onClick = options.onClick;
     this.clickColor = options.clickColor;
     this.timer = null;
-    this.domElement = document.createElement('i');
+    this.domElement = document.createElement('div');
     if(this.classes) {
         this.domElement.setAttribute('class', this.classes);
     }

@@ -30,19 +30,19 @@ function displayGameInfo() {
         value: gameGlobals.version
     }, {
         id: 'score',
-        label: 'score: ',
+        label: 'score ',
         value: '0'
     }, {
         id: 'delay',
-        label: 'score: ',
+        label: 'delay ',
         value: '0'
     }, {
         id: 'rows',
-        label: 'rows: ',
+        label: 'rows ',
         value: '0'
     }, {
         id: 'time',
-        label: 'score: ',
+        label: 'time ',
         value: '0'
     }]);
     
@@ -59,7 +59,7 @@ function startTimer(textElement) {
     gameGlobals.timer.start();
 }
 
-function createStats() {
+function createStats(visible) {
     gameGlobals.stats = new Stats();
     gameGlobals.stats.setMode(0);
 
@@ -67,4 +67,13 @@ function createStats() {
     gameGlobals.stats.domElement.style.left = '0px';
     gameGlobals.stats.domElement.style.top = '0px';
     document.body.appendChild(gameGlobals.stats.domElement);
+    gameGlobals.stats.show = function() {
+        this.domElement.style.display = "";
+    }
+    gameGlobals.stats.hide = function() {
+        this.domElement.style.display = "none";
+    }
+    if(!visible) {
+        gameGlobals.stats.hide();
+    }
 }

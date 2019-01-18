@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+<style>
+body {
+  background-color: lightblue;
+    touch-action: manipulation;
+    position: fixed;
+}
+
+div {
+    width: 30%;
+    height: 200px;
+    padding: 90px;
+    touch-action: manipulation;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+}
+
+p {
+    touch-action: manipulation;
+  font-family: verdana;
+  font-size: 20px;
+}
+</style>
+</head>
+<body onclick="clicked()">
+
+<div id="element" style="background-color: red;" onclick="clicked()"><span onclick="clicked()">5</span></div>
+<div style="background-color: yellow;">2</div>
+<div style="background-color: blue;">3</div>
+
+</body>
+<script>
+  function init() {
+    alert("Hallo");
+    document.getElementById('element').addEventListener('touchstart', testTouch);
+  }
+  function test() {
+    const style = getComputedStyle(document.getElementById('element'));
+    //alert(style.touchAction);
+    console.log(style.touchAction);
+  }
+
+  function testTouch(event) {
+    event = event.originalEvent || event;
+    if(event.scale > 1) {
+      alert("Hallo2");
+        event.preventDefault();
+    }
+  }
+
+  function clicked(event) {
+    //alert('asdas');
+    event.preventDefault();
+  }
+  window.onload = init;
+
+</script>
+</html>
