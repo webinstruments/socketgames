@@ -42,7 +42,6 @@ div.pause {
   position: absolute;
   right: 5%;
   top: 10%;
-  font-size: xx-large;
   border: none;
   color: black;
   z-index: 3;
@@ -50,13 +49,11 @@ div.pause {
   cursor: pointer;
   padding: 0px;
   margin: 0px;
-  font-style: normal;
   color: #ffaa00;
 }
 
 body.paused div.pause {
   top: 33%;
-  font-size: 800%;
   margin: auto;
   right: 0%;
   width: 100%;
@@ -121,7 +118,9 @@ body.paused div.pause {
   top:20%;
 }
 
-form input[type=text] {
+form input[type=text] {  
+  border: 0;
+  outline: 0;
   font-family: 'press_startregular';
   display: block;
   height: 2vh;
@@ -129,7 +128,9 @@ form input[type=text] {
   text-align: center;
   background: none;
   color: orange;
-  border: 1px solid orange;
+  border-top: 2px solid #ffaa00;
+  border-left: 2px solid #ffaa00;
+  border-right: 2px solid #ffaa00;
   font-size: 1.5vh;
   padding: 2px;
 }
@@ -142,6 +143,7 @@ input:disabled {
   display: block;
   font-family: 'press_startregular';
   font-size: medium;
+  margin-bottom: 1vh;
 }
 
 .formgroup {
@@ -149,7 +151,7 @@ input:disabled {
 }
 
 input[type=button], input[type=submit] {
-  background-color: Transparent;
+  background-color: transparent;
   background-repeat:no-repeat;
   border: none;
   overflow: hidden;
@@ -188,8 +190,6 @@ h2 {
 
 .toast {
   opacity: 1 !important;
-  font-size: small;
-  width: 70%!important;
   text-align: center;
 }
 

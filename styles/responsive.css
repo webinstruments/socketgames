@@ -7,6 +7,20 @@
     .selectButton {
         padding: 1vw;
     }
+
+    
+    div.pause {
+        font-size: 800%;
+    }
+
+    body.paused div.pause {
+        font-size: 1600%;
+    }
+
+    .toast {
+        font-size: large;
+        width: 30%!important;
+    }
 }
 
 @media only screen and (max-width:1100px) {
@@ -16,5 +30,18 @@
     
     .selectButton {
         padding: 5%;
+    }
+
+    div.pause {
+        font-size: xx-large;
+    }
+
+    body.paused div.pause {
+        font-size: 800%;
+    }
+
+    .toast {
+        font-size: small;
+        width: 80%!important;
     }
 }
