@@ -23,6 +23,11 @@ h2 {
   font-size: large;
 }
 
+div {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* avoid background when tapped */
+  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 div.control {
   position: absolute;
   border: solid white;
@@ -31,8 +36,6 @@ div.control {
   margin: 0px;
   opacity: 0.2;
   font-size: medium;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* avoid background when tapped */
-  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 div.pause {
