@@ -18,9 +18,7 @@ function socketOnOpen() {
     gameGlobals.socketConnection.send(GAME_NAME, false);
     gameGlobals.form.enable();
     if(gameGlobals.disconnected) {
-        gameGlobals.disconnected = false;
-        showInfo("Reconnected");
-        setConnectedText();
+        handleReconnection();
     }
 }
 
@@ -46,4 +44,18 @@ function socketOnError(err) {
 function socketOnClose() {
     gameGlobals.form.setInfoText("Connection Closed");
     gameGlobals.form.disable();
+}
+
+function handleReconnection() {
+    gameGlobals.disconnected = false;
+    showInfo("Reconnected");
+    setConnectedText();
+}
+
+function handleDisconnection() {
+    gameGlobals.disconnected = true;
+    showError("Disconnected from server. Reconnecting...");
+    pauseGame();
+    setDisconnectionText();
+    gameGlobals.socketConnection.connection.reConnect();
 }
