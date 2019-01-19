@@ -19,6 +19,7 @@ function socketOnOpen() {
     gameGlobals.form.enable();
     if(gameGlobals.disconnected) {
         gameGlobals.disconnected = false;
+        showInfo("Reconnected");
         setConnectedText();
     }
 }
