@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Tetris</title>
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
     <link rel="icon" type="image/png" href="../assets/icon/tetris_logo.png" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
@@ -14,11 +15,10 @@
     <div id="logo" class="logo notouch">
         <img height="100%" width="100%" src="../assets/icon/tetris_logo.png" />
     </div>
-    <div id="pausescreen" class="pausedbg notouch">
+    <div id="pausescreen" class="pausedbg notouch" style="display:none;">
         <div style="position:absolute;top:20%;width:100%;">
             <h2>Game paused</h2>
-            <p>Tipp: You can drag the buttons.</p>
-            <span>►</span>
+            <p id="tipp"></p>
         </div>
     </div>
 </body>
@@ -121,8 +121,8 @@
         setupOnScreenControls();
 
         initPause();
-        showLogo();
         hidePause();
+        showLogo();
         
         createForm();
     }

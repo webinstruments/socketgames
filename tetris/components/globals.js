@@ -6,6 +6,7 @@ var gameGlobals = {
     //main
     lastFrameTime: 0,
     frameRate: 16.6667,
+    stepValue: 16.6667 / 1000,
     delta: 0,
     requestId: null,
     firstStart: true,
@@ -20,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.14",
+    version: "1.15",
     //init
     camera: null,
     orthoCamera: null,
@@ -37,5 +38,8 @@ var gameGlobals = {
     socketUrl: null,
     //pausescreen
     logoElement: null,
-    pauseScreen: null
+    pauseScreen: null,
+    tippElement: null,
+    tippFirstStart: "You can drag the buttons as you wish. </br> If you are ready press the ► button.",
+    tippPause: "Tipp: You can drag the buttons."
 }

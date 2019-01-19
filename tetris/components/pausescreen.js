@@ -1,6 +1,7 @@
 function initPause() {
     gameGlobals.logoElement = document.getElementById("logo");
     gameGlobals.pauseScreen = document.getElementById("pausescreen");
+    gameGlobals.tippElement = document.getElementById("tipp");
 }
 
 function showPause() {
@@ -19,4 +20,12 @@ function showLogo() {
 
 function hideLogo() {
     gameGlobals.logoElement.style.display = "none";
+}
+
+function setFirstStartText() {
+    gameGlobals.tippElement.innerHTML = gameGlobals.tippFirstStart;
+}
+
+function setPauseText() {
+    gameGlobals.tippElement.innerHTML = gameGlobals.tippPause;
 }

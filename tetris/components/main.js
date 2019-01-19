@@ -11,6 +11,7 @@ function startGame() {
     
     if(gameGlobals.firstStart) {
         pauseGame();
+        setFirstStartText();
         gameGlobals.firstStart = false;
         document.body.classList.add('firstStart');
         setTimeout(function() {
@@ -30,7 +31,6 @@ function gameOver() {
     gameGlobals.stats.hide();
 }
 
-var stepValue = gameGlobals.frameRate / 1000;
 function render(timestamp) {
     if(gameGlobals.paused) { return; }
     if(gameGlobals.lastFrameTime == 0) {
@@ -52,7 +52,7 @@ function render(timestamp) {
             cancelAnimationFrame(gameGlobals.requestId);
             return;
         }
-        gameGlobals.blockController.update(stepValue);
+        gameGlobals.blockController.update(gameGlobals.stepValue);
         gameGlobals.delta -= gameGlobals.frameRate;
     }
     gameGlobals.renderer.clear();

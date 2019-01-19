@@ -9,7 +9,7 @@ function setupOnScreenControls() {
         text: CONTROL_PAUSE_TEXT,
         dragAble: false
     });
-    document.body.appendChild(gameGlobals.pauseButton.domElement);
+    //document.body.appendChild(gameGlobals.pauseButton.domElement);
     gameGlobals.displayController = new OnScreenController(CONTROL_MODE_ALL, {
         groupTop: '78%',
         leftButtonClass: "left noselect control",
@@ -26,6 +26,9 @@ function setupOnScreenControls() {
         upCB: moveUp,
         downCB: moveDown
     });
+    gameGlobals.displayController.domElement.appendChild(
+        gameGlobals.pauseButton.domElement
+    );
     document.body.appendChild(gameGlobals.displayController.domElement);
 }
   
@@ -99,8 +102,9 @@ function sendToServer(message) {
 
 function pauseGame() {
     gameGlobals.paused = !gameGlobals.paused;
-    newFrame();
     gameGlobals.lastFrameTime = 0;
+    setPauseText();
+    newFrame();
     if(gameGlobals.paused) {
         document.body.classList.add("paused");
         gameGlobals.timer.pause();

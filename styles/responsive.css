@@ -25,13 +25,8 @@
         width: 20%;
     }
 
-    h2 {
+    .textContainer {
         font-size: x-large;
-    }
-
-    #pausescreen p {
-        font-size: large;
-        margin-top: 5vh;
     }
 }
 
@@ -59,14 +54,5 @@
 
     .logo {
         width: 40%;
-    }
-
-    h2 {
-        font-size: large;
-    }
-
-    #pausescreen p {
-        font-size: small;
-        margin-top: 5vh;
     }
 }
