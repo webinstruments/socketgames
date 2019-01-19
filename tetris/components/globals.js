@@ -21,13 +21,14 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.15",
+    version: "1.17",
     //init
     camera: null,
     orthoCamera: null,
     renderer: null,
     //sockets
     socketConnection: null,
+    disconnected: false,
     //startscreen
     formDiv: null,
     formHeadLine: null,
@@ -40,6 +41,8 @@ var gameGlobals = {
     logoElement: null,
     pauseScreen: null,
     tippElement: null,
-    tippFirstStart: "You can drag the buttons as you wish. </br> If you are ready press the ► button.",
-    tippPause: "Tipp: You can drag the buttons."
+    tippFirstStart: "You can drag the buttons as you wish.</br> If you are ready press the ► button.",
+    tippPause: "Tipp: You can drag the buttons.",
+    disconnectionText: "You have been disconnected.</br> Waiting to reconnect...",
+    connectedText: "Reconnected to the server.</br> If you are ready press the ► button."
 }

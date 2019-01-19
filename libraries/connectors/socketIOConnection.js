@@ -28,3 +28,11 @@ SocketIOConnection.prototype.onError = function(err) {
     SocketConnection.prototype.onError.call(this, err);
     this.socket.disconnect();
 }
+
+SocketIOConnection.prototype.isClosed = function() {
+    return this.socket.connected == true;
+}
+
+SocketIOConnection.prototype.reConnect = function() {
+    //empty, socket io handles this.
+}

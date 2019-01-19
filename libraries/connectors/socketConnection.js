@@ -6,7 +6,6 @@ function SocketConnection(url, callbacks, output) {
         this.callbacks.binder = null;
     }
     this.output = output;
-    this.connected = false;
     this.url = url;
     this.delays = [];
     this.delayId = 0;
@@ -14,7 +13,6 @@ function SocketConnection(url, callbacks, output) {
 }
 
 SocketConnection.prototype.onOpen = function() {
-    this.connected = true;
     if(this.callbacks.onOpen) {
         this.callbacks.onOpen.call(this.callbacks.binder);
     }
@@ -43,7 +41,6 @@ SocketConnection.prototype.onMessage = function(msg) {
 }
 
 SocketConnection.prototype.onClose = function() {
-    this.connected = false;
     if(this.callbacks.onClose) {
         this.callbacks.onClose.call(this.callbacks.binder);
     }
@@ -81,6 +78,10 @@ SocketConnection.prototype.connect = function(url) {
     }
 }
 
+SocketConnection.prototype.reConnect = function() {
+    this.connect(this.url);
+}
+
 SocketConnection.prototype.send = function(message, measurement) {
     //Daten werden im internen Format gesendet (richtung~id~)
     if(measurement) {
@@ -89,4 +90,8 @@ SocketConnection.prototype.send = function(message, measurement) {
     } else {
         this.socket.send(message);
     }
+}
+
+SocketConnection.prototype.isClosed = function() {
+    return this.socket.readyState == this.socket.CLOSED;
 }

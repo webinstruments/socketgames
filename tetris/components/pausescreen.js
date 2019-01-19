@@ -29,3 +29,11 @@ function setFirstStartText() {
 function setPauseText() {
     gameGlobals.tippElement.innerHTML = gameGlobals.tippPause;
 }
+
+function setDisconnectionText() {
+    gameGlobals.tippElement.innerHTML = gameGlobals.disconnectionText;
+}
+
+function setConnectedText() {
+    gameGlobals.tippElement.innerHTML = gameGlobals.connectedText;
+}

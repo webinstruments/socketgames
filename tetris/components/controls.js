@@ -97,6 +97,13 @@ function moveDown() {
 }
 
 function sendToServer(message) {
+    if(gameGlobals.socketConnection.connection.isClosed()) {
+        gameGlobals.disconnected = true;
+        showError("Disconnected from server. Reconnecting...");
+        pauseGame();
+        setDisconnectionText();
+        gameGlobals.socketConnection.connection.reConnect();
+    }
     gameGlobals.socketConnection.send(message, true);
 }
 

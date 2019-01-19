@@ -17,12 +17,16 @@ function socketOnOpen() {
     //gameGlobals.form.setInfoText("Connection Successfull");
     gameGlobals.socketConnection.send(GAME_NAME, false);
     gameGlobals.form.enable();
+    if(gameGlobals.disconnected) {
+        gameGlobals.disconnected = false;
+        setConnectedText();
+    }
 }
 
 function socketOnMessage(msg, delay) {
     //console.log(msg);
     moveRemote(msg);
-    if(delay) {
+    if(delay && gameGlobals.restService) {
         gameGlobals.restService.addDelay(delay);
     }
 }
