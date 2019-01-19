@@ -1,7 +1,7 @@
 function initPause() {
     gameGlobals.logoElement = document.getElementById("logo");
     gameGlobals.pauseScreen = document.getElementById("pausescreen");
-    gameGlobals.tippElement = document.getElementById("tipp");
+    gameGlobals.tipElement = document.getElementById("tip");
 }
 
 function showPause() {
@@ -23,17 +23,17 @@ function hideLogo() {
 }
 
 function setFirstStartText() {
-    gameGlobals.tippElement.innerHTML = gameGlobals.tippFirstStart;
+    gameGlobals.tipElement.innerHTML = gameGlobals.tipFirstStart;
 }
 
 function setPauseText() {
-    gameGlobals.tippElement.innerHTML = gameGlobals.tippPause;
+    gameGlobals.tipElement.innerHTML = gameGlobals.tipPause;
 }
 
 function setDisconnectionText() {
-    gameGlobals.tippElement.innerHTML = gameGlobals.disconnectionText;
+    gameGlobals.tipElement.innerHTML = gameGlobals.disconnectionText;
 }
 
 function setConnectedText() {
-    gameGlobals.tippElement.innerHTML = gameGlobals.connectedText;
+    gameGlobals.tipElement.innerHTML = gameGlobals.connectedText;
 }
