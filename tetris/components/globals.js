@@ -41,8 +41,8 @@ var gameGlobals = {
     logoElement: null,
     pauseScreen: null,
     tipElement: null,
-    tipFirstStart: "You can drag the buttons as you wish.</br>If you are ready press the ► button.",
+    tipFirstStart: "You can drag the buttons as you wish.<br/>If you are ready press the ► button.",
     tipPause: "Tip: You can drag the buttons.",
-    disconnectionText: "You have been disconnected.</br>Waiting to reconnect...",
-    connectedText: "Reconnected to the server.</br>If you are ready press the ► button."
+    disconnectionText: "You have been disconnected.<br/>Waiting to reconnect...",
+    connectedText: "Reconnected to the server.<br/>If you are ready press the ► button."
 }
