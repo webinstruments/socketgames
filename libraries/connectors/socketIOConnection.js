@@ -30,7 +30,7 @@ SocketIOConnection.prototype.onError = function(err) {
 }
 
 SocketIOConnection.prototype.isClosed = function() {
-    return this.socket.connected == true;
+    return this.socket.connected == false;
 }
 
 SocketIOConnection.prototype.reConnect = function() {
