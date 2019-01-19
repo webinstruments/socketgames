@@ -11,7 +11,6 @@ function startGame() {
     
     if(gameGlobals.firstStart) {
         pauseGame();
-        showHelp("TIPP: You can drag the arrow keys! Press start, when you are ready.");
         gameGlobals.firstStart = false;
         document.body.classList.add('firstStart');
         setTimeout(function() {

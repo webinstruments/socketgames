@@ -7,7 +7,7 @@ var CONTROL_MODE_ALL = 4;
 function OnScreenController(mode, initObject) {
     this.domElement = document.createElement('div');
     this.domElement.setAttribute('style', 
-        'position:absolute;top:0px;left:0px;opacity:0.9;width:100%;height:100%;z-index:1;');
+        'position:absolute;top:0px;left:0px;opacity:0.9;width:100%;height:100%;z-index:2;');
     this.buttonGroup = document.createElement('div');
     this.groupStyles = [
         [ "position", "absolute" ],

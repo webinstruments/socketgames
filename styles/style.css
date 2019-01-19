@@ -19,8 +19,11 @@ body {
   overflow: hidden;
 }
 
-h2 {
-  font-size: large;
+.logo {
+  position: absolute;
+  right: 0%;
+  z-index: 100;
+  transform: rotate(33deg);
 }
 
 div {
@@ -50,6 +53,17 @@ div.pause {
   padding: 0px;
   margin: 0px;
   color: #ffaa00;
+}
+
+div.pausedbg {
+  font-family: 'press_startregular';
+  position: absolute;
+  background-color: #402A00;
+  z-index: 2;
+  text-align: center;
+  color: #ffaa00;
+  width: 100%;
+  height: 100%;
 }
 
 body.paused div.pause {
@@ -90,11 +104,10 @@ body.paused div.pause {
   font-family: 'press_startregular';
   left: 1%; 
   top: 7.5%; 
-  color: black;  
+  color: #ffaa00;  
   font-size: 1.3vh;
   z-index: 4;
   opacity: 0.8;
-  text-shadow: -1px 0 #ffaa00, 0 1px #ffaa00, 1px 0 #ffaa00, 0 -1px #ffaa00;
 }
 
 .centered {
@@ -107,8 +120,8 @@ body.paused div.pause {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  color: orange;
-  background-color: black;
+  color: #ffaa00;
+  background-color: #402A00;
   z-index: 3;
 }
 
@@ -118,8 +131,7 @@ body.paused div.pause {
   top:20%;
 }
 
-form input[type=text] {  
-  border: 0;
+form input[type=text] {
   outline: 0;
   font-family: 'press_startregular';
   display: block;
@@ -127,12 +139,14 @@ form input[type=text] {
   margin: auto;
   text-align: center;
   background: none;
-  color: orange;
-  border-top: 2px solid #ffaa00;
-  border-left: 2px solid #ffaa00;
-  border-right: 2px solid #ffaa00;
+  color: #ffaa00;
+  border: 1px solid #ffaa00;
+  border-radius: 25px;
+  padding: 5px;
+}
+
+form input[name=server] {
   font-size: 1.5vh;
-  padding: 2px;
 }
 
 input:disabled {
@@ -142,7 +156,7 @@ input:disabled {
 .label {
   display: block;
   font-family: 'press_startregular';
-  font-size: medium;
+  font-size: 1.5vh;
   margin-bottom: 1vh;
 }
 
@@ -156,7 +170,7 @@ input[type=button], input[type=submit] {
   border: none;
   overflow: hidden;
   outline:none;
-  color:orange;
+  color:#ffaa00;
 }
 
 .selectButton {
@@ -169,15 +183,17 @@ input[type=button], input[type=submit] {
   margin-bottom: -20px;
 }
 
-.startButton {
-  color:orange;
+input[type=button].startButton {
   font-family: 'press_startregular';
   margin-top: 20px;
   font-size: x-large;
+  border: 2px solid #ffaa00;
+  border-radius: 25px;
+  padding: 10px;
 }
 
-h2 {
-  color: orangered;
+.centered h2 {
+  color: #E59900;
   font-family: 'press_startregular';
   position: relative;
   text-align: center;
@@ -208,13 +224,13 @@ div.control.firstStart {
   animation: blinking 1s linear infinite;
 }
 
-.dragging {
-  opacity: 0;
-  animation: blinking 1s linear infinite;
+div.control.dragging {
+  opacity: 1!important;
 }
 
 div.pause.dragging {
   opacity: 0;
+  animation: blinking 1s linear infinite;
 }
 
 @keyframes blinking {

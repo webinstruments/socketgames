@@ -42,7 +42,7 @@ DragAble.prototype.dragStart = function() {
     }
     this.dragAble = true;
     if(!this.dragTimer) {
-        this.dragTimer = setTimeout(this.isDragging.bind(this), 1500);
+        this.dragTimer = setTimeout(this.isDragging.bind(this), 500);
     }
 }
 
@@ -77,7 +77,7 @@ DragAble.prototype.disableDrag = function() {
 }
 
 DragAble.prototype.draggingPossible = function() {
-    return this.clickedOn && Date.now() - this.clickedOn >= 1500 && this.canDrag;
+    return this.clickedOn && Date.now() - this.clickedOn >= 500 && this.canDrag;
 }
 
 DragAble.prototype.getPosition = function() {

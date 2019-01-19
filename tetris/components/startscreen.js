@@ -11,7 +11,7 @@ function createForm() {
     var userInput = new TextInput({
         name: 'username',
         value: gameGlobals.username || '',
-        label: 'Enter username',
+        label: 'username',
         labelClass: 'label noselect', 
         groupClass: 'formgroup'
     });
@@ -29,7 +29,7 @@ function createForm() {
     var selection = new Selector({
         name: 'type',
         values: [ { value: -1, name: 'no connection' } ],
-        label: 'Choose type',
+        label: 'connection type',
         labelClass: 'label noselect',
         groupClass: 'formgroup',
         btnClass: 'selectButton'

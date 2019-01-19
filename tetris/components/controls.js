@@ -105,11 +105,11 @@ function pauseGame() {
         document.body.classList.add("paused");
         gameGlobals.timer.pause();
         gameGlobals.pauseButton.setText(CONTROL_RESUME_TEXT);
-        showInfo("Game paused");
+        showPause();
     } else {
         document.body.classList.remove("paused");
         gameGlobals.timer.resume();
         gameGlobals.pauseButton.setText(CONTROL_PAUSE_TEXT);
-        showInfo("Game resumed");
+        hidePause();
     }
 }

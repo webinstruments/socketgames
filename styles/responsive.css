@@ -7,7 +7,6 @@
     .selectButton {
         padding: 1vw;
     }
-
     
     div.pause {
         font-size: 800%;
@@ -20,6 +19,19 @@
     .toast {
         font-size: large;
         width: 30%!important;
+    }
+
+    .logo {
+        width: 20%;
+    }
+
+    h2 {
+        font-size: x-large;
+    }
+
+    #pausescreen p {
+        font-size: large;
+        margin-top: 5vh;
     }
 }
 
@@ -43,5 +55,18 @@
     .toast {
         font-size: small;
         width: 80%!important;
+    }
+
+    .logo {
+        width: 40%;
+    }
+
+    h2 {
+        font-size: large;
+    }
+
+    #pausescreen p {
+        font-size: small;
+        margin-top: 5vh;
     }
 }

@@ -14,7 +14,7 @@ function checkConnection(url) {
 }
 
 function socketOnOpen() {
-    gameGlobals.form.setInfoText("Connection Successfull");
+    //gameGlobals.form.setInfoText("Connection Successfull");
     gameGlobals.socketConnection.send(GAME_NAME, false);
     gameGlobals.form.enable();
 }

@@ -34,5 +34,8 @@ var gameGlobals = {
     form: null,
     username: null,
     restService: null,
-    socketUrl: null
+    socketUrl: null,
+    //pausescreen
+    logoElement: null,
+    pauseScreen: null
 }
