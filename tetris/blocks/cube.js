@@ -7,7 +7,7 @@ function Cube(x, y, length, color, lineColor, parent) {
     this.parent = parent;
     this.id = ++cube_id;
     this.resize(length);
-    this.fadeOutTime = 700;
+    this.fadeOutTime = 800;
     this.intervalTime = 20;
     this.fadeOutPercent = 1 * this.intervalTime / this.fadeOutTime;
     this.timer = null;
