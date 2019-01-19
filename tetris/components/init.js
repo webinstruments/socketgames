@@ -51,5 +51,5 @@ function addGrid(scene, fieldHeight, fieldWidth, tileSize) {
 }
 
 function supportsBackground() { //mobile firefox doen't work with animated background
-    return isAndroid() && isFirefox();
+    return !(isAndroid() && isFirefox());
 }
