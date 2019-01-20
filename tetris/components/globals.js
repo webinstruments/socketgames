@@ -21,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.20",
+    version: "1.21",
     //init
     camera: null,
     orthoCamera: null,
@@ -37,6 +37,8 @@ var gameGlobals = {
     username: null,
     restService: null,
     socketUrl: null,
+    socketConnectionId: null,
+    serverInput: null,
     //pausescreen
     logoElement: null,
     pauseScreen: null,

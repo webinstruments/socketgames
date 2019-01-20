@@ -3,10 +3,31 @@ var WEBSOCKET_SERVERS = [
     'ws://193.171.127.8:8081'
 ];
 
+function reconnectingToServer() {
+    if(gameGlobals.socketConnection.connection.isClosed()) {
+        var id = 1 - gameGlobals.socketConnectionId; //if server is not accessible
+        gameGlobals.socketUrl = WEBSOCKET_SERVERS[id];
+        gameGlobals.serverInput.setText(gameGlobals.socketUrl);
+        checkConnection(gameGlobals.socketUrl);
+    }
+}
+
+function onFormOpen() {
+    gameGlobals.connectionTimer = setInterval(reconnectingToServer, 2000);
+}
+
+function onFormClosed() {
+    clearInterval(gameGlobals.connectionTimer);
+}
+
 function createForm() {
-    gameGlobals.formDiv = new DivGroup('centered');
+    gameGlobals.formDiv = new DivGroup('centered', {
+        onOpen: onFormOpen,
+        onClose: onFormClosed
+    });
     gameGlobals.formHeadLine = new Header('New Game!', 'noselect');
-    gameGlobals.socketUrl = WEBSOCKET_SERVERS[getRandom(1)];
+    gameGlobals.socketConnectionId = getRandom(1);
+    gameGlobals.socketUrl = WEBSOCKET_SERVERS[gameGlobals.socketConnectionId];
 
     var userInput = new TextInput({
         name: 'username',
@@ -15,7 +36,7 @@ function createForm() {
         labelClass: 'label noselect', 
         groupClass: 'formgroup'
     });
-    var serverInput = new TextInput({
+    gameGlobals.serverInput = new TextInput({
         name: 'server', 
         //value: 'ws://demos.kaazing.com/echo',
         //value: 'ws://193.171.127.8:8081',
@@ -36,7 +57,7 @@ function createForm() {
     });
     gameGlobals.form = new Form({
         formClass: 'form',
-        children: [userInput, selection, serverInput],
+        children: [userInput, selection, gameGlobals.serverInput],
         submitText: 'start game!',
         submitClass: 'startButton',
             onSubmit: function(result) {
@@ -64,4 +85,5 @@ function createForm() {
     document.body.appendChild(gameGlobals.formDiv.domElement);
     //gameGlobals.form.disable();
     checkConnection(gameGlobals.socketUrl);
+    setTimeout(onFormOpen, 2000); //else double connecting
 }

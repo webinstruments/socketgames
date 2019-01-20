@@ -1,6 +1,12 @@
-function DivGroup(divClass) {
+function DivGroup(divClass, callbacks) {
     this.domElement = document.createElement('div');
     this.domElement.setAttribute('class', divClass);
+    this.onOpen = null;
+    this.onClose = null;
+    if(callbacks) {
+        this.onOpen = callbacks.onOpen;
+        this.onClose = callbacks.onClose;
+    }
 }
 
 DivGroup.prototype.appendChild = function(domElement) {
@@ -14,6 +20,9 @@ DivGroup.prototype.show = function() {
     } else {
         this.domElement.setAttribute('style', styles);
     }
+    if(this.onOpen) {
+        this.onOpen();
+    }
 }
 
 DivGroup.prototype.hide = function() {
@@ -24,4 +33,7 @@ DivGroup.prototype.hide = function() {
         styles = '';
     }
     this.domElement.setAttribute('style', styles + 'display:none');
+    if(this.onClose) {
+        this.onClose();
+    }
 }
