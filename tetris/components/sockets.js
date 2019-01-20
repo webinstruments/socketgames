@@ -39,7 +39,6 @@ function socketOnError(err) {
     }
     gameGlobals.form.setInfoText(errorMsg);
     gameGlobals.form.disable();
-    gameGlobals.socketConnection.connection.reConnect();
 }
 
 function socketOnClose() {
