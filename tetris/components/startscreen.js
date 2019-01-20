@@ -5,19 +5,22 @@ var WEBSOCKET_SERVERS = [
 
 function reconnectingToServer() {
     if(gameGlobals.socketConnection.connection.isClosed()) {
-        var id = 1 - gameGlobals.socketConnectionId; //if server is not accessible
-        gameGlobals.socketUrl = WEBSOCKET_SERVERS[id];
+        gameGlobals.socketConnectionId = 1 - gameGlobals.socketConnectionId; //if server is not accessible
+        gameGlobals.socketUrl = WEBSOCKET_SERVERS[gameGlobals.socketConnectionId];
         gameGlobals.serverInput.setText(gameGlobals.socketUrl);
         checkConnection(gameGlobals.socketUrl);
     }
 }
 
 function onFormOpen() {
+    gameGlobals.formOpened = true;
     gameGlobals.connectionTimer = setInterval(reconnectingToServer, 2000);
 }
 
 function onFormClosed() {
+    gameGlobals.formOpened = false;
     clearInterval(gameGlobals.connectionTimer);
+    gameGlobals.connectionTimer = null;
 }
 
 function createForm() {
