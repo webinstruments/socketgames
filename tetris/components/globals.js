@@ -21,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.18",
+    version: "1.19",
     //init
     camera: null,
     orthoCamera: null,
@@ -43,6 +43,6 @@ var gameGlobals = {
     tipElement: null,
     tipFirstStart: "You can drag the buttons as you wish.<br/>If you are ready press the ► button.",
     tipPause: "Tip: You can drag the buttons.",
-    disconnectionText: "You have been disconnected.<br/>Waiting to reconnect...",
-    connectedText: "Reconnected to the server.<br/>If you are ready press the ► button."
+    disconnectionText: "You have been disconnected. Trying to reconnect...<br/>If not possible reload the page.",
+    connectedText: "Reconnected with the server.<br/>If you are ready press the ► button."
 }
