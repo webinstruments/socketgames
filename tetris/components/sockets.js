@@ -14,7 +14,7 @@ function checkConnection(url) {
 }
 
 function socketOnOpen() {
-    //gameGlobals.form.setInfoText("Connection Successfull");
+    gameGlobals.form.setInfoText("");
     gameGlobals.socketConnection.send(GAME_NAME, false);
     gameGlobals.form.enable();
     if(gameGlobals.disconnected) {
@@ -35,10 +35,11 @@ function socketOnError(err) {
     if(err) {
         errorMsg += err;
     } else {
-        errorMsg += 'The provided Url is not valid';
+        errorMsg += 'Connection not successfull. Please reload page.';
     }
     gameGlobals.form.setInfoText(errorMsg);
     gameGlobals.form.disable();
+    gameGlobals.socketConnection.connection.reConnect();
 }
 
 function socketOnClose() {
