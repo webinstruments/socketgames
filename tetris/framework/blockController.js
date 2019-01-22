@@ -72,7 +72,8 @@ BlockController.prototype.generateBlock = function() {
         block = new Block5(this.tileSize, this.globalScene);
         block.invert();
     }
-    block.setPosition(0, this.tileSize * this.rows);
+    var blockTiles = Math.floor(block.width / 2 / this.tileSize) * this.tileSize;
+    block.setPosition(this.startPosition - blockTiles, this.tileSize * this.rows);
     this.activeBlock = block;
     this.coarseDetectionY(this.activeBlock);
 }
@@ -226,6 +227,7 @@ BlockController.prototype.resize = function(width, height) {
     this.height = this.getFieldHeight();
     this.width = this.getFieldWidth();
     this.heights = [];
+    this.startPosition = Math.floor(this.columns / 2) * this.tileSize;
     for(var i = 0; i < this.columns; ++i) {
         this.heights[i] = { x: this.tileSize * i, y: 0 };
     }
