@@ -10,6 +10,7 @@ function RestService(username, connectionType, socketServer) {
     }
     this.delays = [];
     this.delaysToRemove = 0;
+    this.connectionTimer = null;
 }
 
 RestService.getConnections = function(dataCallback) {
@@ -37,10 +38,16 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
         success: function(data) {
             //showInfo("Connection to information server successfull");
             console.log('received:', data);
-            self.game = {
-                game_id: data[0].game_id,
-                con_id: connectionType
-            };
+            if(Array.isArray(data) && data.filter(Boolean).length) {
+                self.game = {
+                    game_id: data[0].game_id,
+                    con_id: connectionType
+                };
+                clearInterval(self.connectionTimer);
+            } else {
+                console.warn("no data received");
+                self.connectionTimer = setInterval(self.start.bind(self), 5000, username, connectionType, socketServer);
+            }
         },
         error: function(info, options, error) {
             showError("Connection to information server failed");
