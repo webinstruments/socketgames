@@ -21,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.22",
+    version: "1.23",
     //init
     camera: null,
     orthoCamera: null,
