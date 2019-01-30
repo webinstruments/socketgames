@@ -1,4 +1,4 @@
-var REST_NEWGAME_URL = "http://http://teaching.fh-timing.com:8082/api/game";
+var REST_NEWGAME_URL = "http://teaching.fh-timing.com:8082/api/game";
 var REST_GAMEDATA_URL = "http://teaching.fh-timing.com:8082/api/gamedata";
 var REST_ENDGAME_URL = "http://teaching.fh-timing.com:8082/api/game";
 var REST_CONNECTIONTYPE_URL = "http://teaching.fh-timing.com:8082/api/connectiontypes";
