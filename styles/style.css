@@ -43,11 +43,11 @@ div {
 div.control {
   position: absolute;
   border: solid white;
-  border-width: 0 1vh 1vh 0;
+  border-bottom-color: #ffaa00;
+  border-right-color: #ffaa00;
   padding: 5vh;
   margin: 0px;
   opacity: 0.2;
-  font-size: medium;
   z-index: 2;
 }
 

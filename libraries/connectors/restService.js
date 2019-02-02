@@ -46,7 +46,7 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
                 clearInterval(self.connectionTimer);
             } else {
                 console.warn("no data received");
-                self.connectionTimer = setInterval(self.start.bind(self), 5000, username, connectionType, socketServer);
+                self.connectionTimer = setInterval(self.start.bind(self), 10000, username, connectionType, socketServer);
             }
         },
         error: function(info, options, error) {
@@ -89,6 +89,7 @@ RestService.prototype.end = function(score) {
             game_id: self.game.game_id, score: score 
         },
         success: function(data) {
+            this.game = null;
             showInfo("Game successfully saved");
         },
         error: function(info, options, error) {

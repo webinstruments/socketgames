@@ -19,7 +19,7 @@ function setupOnScreenControls() {
         clickColor: "red",
         leftPos: "left:5%;",
         rightPos: "right:5%;",
-        upPos: "top:11%;right:27.1%;",
+        upPos: "right:27.1%;",
         downPos: "left:27.1%;",
         leftCB: moveLeft,
         rightCB: moveRight,

@@ -28,6 +28,14 @@
     .textContainer {
         font-size: x-large;
     }
+
+    div.control {
+        border-width: 0 1vh 1vh 0;
+    }
+
+    div.up {
+        top:11%;
+    }
 }
 
 @media only screen and (max-width:1100px) {
@@ -54,5 +62,11 @@
 
     .logo {
         width: 40%;
+    }
+
+    div.control {
+        border-width: 0.1vh 1vh 1vh 0.1vh;
+        border-top-style: dotted;
+        border-left-style: dotted;
     }
 }
