@@ -26,7 +26,6 @@ RestService.getConnections = function(dataCallback) {
 }
 
 RestService.prototype.start = function(username, connectionType, socketServer) {
-    showError("test");
     var self = this;
     $.ajax({
         type: "POST",
@@ -49,7 +48,7 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
             } else {
                 console.warn("no data received");
                 if(!self.connectionTimer) {
-                    showError("no data received");
+                    showError("no game id received");
                     self.connectionTimer = setInterval(self.start.bind(self), 10000, username, connectionType, socketServer);
                 }
             }
