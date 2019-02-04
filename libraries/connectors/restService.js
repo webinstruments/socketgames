@@ -46,18 +46,24 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
                 clearInterval(self.connectionTimer);
                 self.connectionTimer = null;
             } else {
+                showError("no game id received");
                 console.warn("no data received");
-                if(!self.connectionTimer) {
-                    showError("no game id received");
-                    self.connectionTimer = setInterval(self.start.bind(self), 10000, username, connectionType, socketServer);
-                }
+                self.startTimer(10000, username, connectionType, socketServer);
             }
         },
         error: function(info, options, error) {
             showError("Connection to information server failed");
             console.warn(error);
+            self.startTimer(10000, username, connectionType, socketServer);
         }
     });
+}
+
+RestService.prototype.startTimer = function(interval, username, connectionType, socketServer) {
+    if(!this.connectionTimer) {
+        interval = !interval ? 10000 : interval;
+        this.connectionTimer = setInterval(this.start.bind(this), interval, username, connectionType, socketServer);
+    }
 }
 
 RestService.prototype.saveData = function() {
