@@ -52,7 +52,7 @@ function createForm() {
     });
     var selection = new Selector({
         name: 'type',
-        values: [ { value: -1, name: 'no connection' } ],
+        values: [ { value: -1, name: 'Please reload page.' } ],
         label: 'connection type',
         labelClass: 'label noselect',
         groupClass: 'formgroup',

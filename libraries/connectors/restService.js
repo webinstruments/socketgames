@@ -19,13 +19,14 @@ RestService.getConnections = function(dataCallback) {
         url: REST_CONNECTIONTYPE_URL,
         success: dataCallback,
         error: function(info, options, error) {
-            showError("Couldn't retrieve connection items");
+            showError("Couldn't retrieve connection items. Reload the page.");
             console.warn(error);
         }
     });
 }
 
 RestService.prototype.start = function(username, connectionType, socketServer) {
+    showError("test");
     var self = this;
     $.ajax({
         type: "POST",
@@ -38,9 +39,9 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
         success: function(data) {
             //showInfo("Connection to information server successfull");
             console.log('received:', data);
-            if(Array.isArray(data) && data.filter(Boolean).length) {
+            if(data && data.game_id) {
                 self.game = {
-                    game_id: data[0].game_id,
+                    game_id: data.game_id,
                     con_id: connectionType
                 };
                 clearInterval(self.connectionTimer);
