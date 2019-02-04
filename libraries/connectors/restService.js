@@ -48,6 +48,7 @@ RestService.prototype.start = function(username, connectionType, socketServer) {
             } else {
                 console.warn("no data received");
                 if(!self.connectionTimer) {
+                    showError("no data received");
                     self.connectionTimer = setInterval(self.start.bind(self), 10000, username, connectionType, socketServer);
                 }
             }
