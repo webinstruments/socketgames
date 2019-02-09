@@ -194,11 +194,10 @@ input[type=button], input[type=submit] {
 
 input[type=button].startButton {
   margin-top: 20px;
-  font-size: x-large;
+  font-size: large;
   border: 2px solid #ffaa00;
   border-radius: 25px;
   padding: 10px;
-  min-width: 15%;
 }
 
 .centered h2 {

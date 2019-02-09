@@ -36,13 +36,18 @@
     div.up {
         top:11%;
     }
+
+    input[type=button].startButton {
+        min-width: 15%;
+    }
     /* scores */
     .scoreTable {
         width:40%;
+        height:60%;
     }
 
-    .scoreTable {
-        height:60%;
+    .scoreButton {
+        min-width: 15%;
     }
 }
 
@@ -77,12 +82,17 @@
         border-top-style: dotted;
         border-left-style: dotted;
     }
+
+    input[type=button].startButton {
+        min-width: 50%;
+    }
     /* scores */
     .scoreTable {
         width:80%;
+        height:66%;
     }
 
-    .scoreTable {
-        height:66%;
+    .scoreButton {
+        min-width: 50%;
     }
 }

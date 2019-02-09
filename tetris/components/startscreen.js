@@ -9,16 +9,24 @@ function reconnectingToServer() {
         gameGlobals.socketUrl = WEBSOCKET_SERVERS[gameGlobals.socketConnectionId];
         gameGlobals.serverInput.setText(gameGlobals.socketUrl);
         checkConnection(gameGlobals.socketUrl);
+    } else {
+        clearConnectionTimer();
     }
 }
 
 function onFormOpen() {
     gameGlobals.formOpened = true;
-    gameGlobals.connectionTimer = setInterval(reconnectingToServer, 2000);
+    if(!gameGlobals.connectionTimer) {
+        gameGlobals.connectionTimer = setInterval(reconnectingToServer, 1000);
+    }
 }
 
 function onFormClosed() {
     gameGlobals.formOpened = false;
+    clearConnectionTimer();
+}
+
+function clearConnectionTimer() {
     clearInterval(gameGlobals.connectionTimer);
     gameGlobals.connectionTimer = null;
 }

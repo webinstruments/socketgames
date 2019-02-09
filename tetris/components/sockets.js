@@ -35,10 +35,9 @@ function socketOnError(err) {
     if(err) {
         errorMsg += err;
     } else {
-        errorMsg += 'Connection not successfull. Please reload page.';
+        errorMsg += 'Connection not successfull. Reconnecting...';
     }
-    if(gameGlobals.formOpened && !gameGlobals.connectionTimer) {
-        onFormClosed();
+    if(gameGlobals.formOpened) {
         onFormOpen();
     }
     gameGlobals.form.setInfoText(errorMsg);
@@ -48,6 +47,9 @@ function socketOnError(err) {
 function socketOnClose() {
     gameGlobals.form.setInfoText("Connection Closed");
     gameGlobals.form.disable();
+    if(gameGlobals.formOpened) {
+        onFormOpen();
+    }
 }
 
 function handleReconnection() {
