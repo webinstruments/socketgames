@@ -47,6 +47,7 @@ function createForm() {
         label: 'echo server',
         labelClass: 'label noselect', 
         groupClass: 'formgroup',
+        inputClass: "noselect",
         readOnly: true,
         onFocusOut: checkConnection
     });
@@ -56,7 +57,8 @@ function createForm() {
         label: 'connection type',
         labelClass: 'label noselect',
         groupClass: 'formgroup',
-        btnClass: 'selectButton'
+        inputClass: "noselect",
+        btnClass: 'selectButton noselect'
     });
     gameGlobals.form = new Form({
         formClass: 'form',

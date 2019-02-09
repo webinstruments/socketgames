@@ -5,7 +5,8 @@ function Selector(options) {
         inputClass: options.selectorClass,
         label: options.label,
         labelClass: options.labelClass,
-        groupClass: options.groupClass
+        groupClass: options.groupClass,
+        inputClass: options.inputClass
     });
     this.selector.input.setAttribute('readonly', '');
     this.selector.input.setAttribute('style', 'display:relative');

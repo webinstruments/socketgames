@@ -1,0 +1,63 @@
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+th {
+  font-weight: bold;
+  font-size: large;
+}
+
+td {
+  min-width: 0;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: medium;
+}
+
+td:nth-child(2) {
+  text-align:center;
+}
+
+td:nth-child(3) {
+  text-align:right;
+}
+
+th, td {
+  padding:1vh;
+  border-bottom:1px solid #ddd;
+}
+
+.scores {
+  display: none;
+  z-index:5;
+  background-color: #304352;
+  height:100%;
+  width:100%;
+  position:absolute;
+}
+
+.scoreTable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.scoreButton {
+  position:absolute;
+  bottom:0px;
+  left:50%;
+  transform:translateX(-50%) translateY(-50%);
+  margin-top:20px;
+  font-size:large;
+  text-align:center;
+  border:2px solid #ffaa00;
+  border-radius:25px;
+  padding:10px;
+  min-width: 15%;
+  z-index:6;
+}

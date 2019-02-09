@@ -15,8 +15,15 @@ body, html {
 }
 
 body {
+  font-family: 'Josefin Sans', sans-serif;
+  color:#ffaa00;
   margin: 0;
   overflow: hidden;
+}
+
+input {
+  font-family: 'Josefin Sans', sans-serif;
+  color:#ffaa00;
 }
 
 h2 {
@@ -56,22 +63,18 @@ div.pause {
   right: 5%;
   top: 10%;
   border: none;
-  color: black;
   z-index: 1;
   opacity: 1;
   cursor: pointer;
   padding: 0px;
   margin: 0px;
-  color: #ffaa00;
 }
 
 div.pausedbg {
-  font-family: 'Josefin Sans', sans-serif;
   position: absolute;
   background-color: #304352;
   z-index: 2;
   text-align: center;
-  color: #ffaa00;
   width: 100%;
   height: 100%;
 }
@@ -111,10 +114,8 @@ body.paused div.pause {
 
 .textContainer {
   position: absolute;
-  font-family: 'Josefin Sans', sans-serif;
   left: 1%; 
-  top: 7.5%; 
-  color: #ffaa00;  
+  top: 7.5%;
   font-size: medium;
   z-index: 4;
   opacity: 0.8;
@@ -136,7 +137,6 @@ body.paused div.pause {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  color: #ffaa00;
   background-color: #304352;
   z-index: 3;
 }
@@ -149,13 +149,11 @@ body.paused div.pause {
 
 form input[type=text] {
   outline: 0;
-  font-family: 'Josefin Sans', sans-serif;
   display: block;
   height: 3vh;
   margin: auto;
   text-align: center;
   background: none;
-  color: #ffaa00;
   border: 1px solid #ffaa00;
   border-radius: 25px;
   padding: 2px;
@@ -168,7 +166,6 @@ input:disabled {
 
 .label {
   display: block;
-  font-family: 'Josefin Sans', sans-serif;
   font-size: 2vh;
   margin-bottom: 1vh;
 }
@@ -183,7 +180,6 @@ input[type=button], input[type=submit] {
   border: none;
   overflow: hidden;
   outline:none;
-  color:#ffaa00;
 }
 
 .selectButton {
@@ -197,17 +193,16 @@ input[type=button], input[type=submit] {
 }
 
 input[type=button].startButton {
-  font-family: 'Josefin Sans', sans-serif;
   margin-top: 20px;
   font-size: x-large;
   border: 2px solid #ffaa00;
   border-radius: 25px;
   padding: 10px;
+  min-width: 15%;
 }
 
 .centered h2 {
   color: #E59900;
-  font-family: 'Josefin Sans', sans-serif;
   position: relative;
   text-align: center;
   top: 20%;

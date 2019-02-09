@@ -2,6 +2,7 @@ var REST_NEWGAME_URL = "http://teaching.fh-timing.com:8082/api/game";
 var REST_GAMEDATA_URL = "http://teaching.fh-timing.com:8082/api/gamedata";
 var REST_ENDGAME_URL = "http://teaching.fh-timing.com:8082/api/game";
 var REST_CONNECTIONTYPE_URL = "http://teaching.fh-timing.com:8082/api/connectiontypes";
+var REST_SCORE_URL = "http://teaching.fh-timing.com:8082/api/ranking";
 
 function RestService(username, connectionType, socketServer) {
     this.game = null;
@@ -14,14 +15,25 @@ function RestService(username, connectionType, socketServer) {
 }
 
 RestService.getConnections = function(dataCallback) {
+    RestService.getCall(REST_CONNECTIONTYPE_URL, dataCallback, function(info, options, error) {
+        showError("Couldn't retrieve connection items. Reload the page.");
+        console.warn(error);
+    });
+}
+
+RestService.getRankings = function(dataCallback) {
+    RestService.getCall(REST_SCORE_URL, dataCallback, function(info, options, error) {
+        showError("Couldn't ranking connection items.");
+        console.warn(error);
+    });
+}
+
+RestService.getCall = function(url, okCallback, errorCallback) {
     $.ajax({
         type: "GET",
-        url: REST_CONNECTIONTYPE_URL,
-        success: dataCallback,
-        error: function(info, options, error) {
-            showError("Couldn't retrieve connection items. Reload the page.");
-            console.warn(error);
-        }
+        url: url,
+        success: okCallback,
+        error: errorCallback
     });
 }
 

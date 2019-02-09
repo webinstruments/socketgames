@@ -8,6 +8,7 @@ function startGame() {
     gameGlobals.blockController.generateBlock();
     gameGlobals.lastFrameTime = 0;
     newFrame();
+    hideScoreButton();
     
     if(gameGlobals.firstStart) {
         pauseGame();
@@ -29,6 +30,7 @@ function gameOver() {
     gameGlobals.restService.end(gameGlobals.scoreController.getScore());
     gameGlobals.formDiv.show();
     gameGlobals.stats.hide();
+    showScoreButton();
 }
 
 function render(timestamp) {
