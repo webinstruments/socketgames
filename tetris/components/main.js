@@ -31,6 +31,7 @@ function gameOver() {
     gameGlobals.formDiv.show();
     gameGlobals.stats.hide();
     showScoreButton();
+    showLogo();
 }
 
 function render(timestamp) {
