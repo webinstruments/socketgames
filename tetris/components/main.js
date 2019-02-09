@@ -9,6 +9,7 @@ function startGame() {
     gameGlobals.lastFrameTime = 0;
     newFrame();
     hideScoreButton();
+    hideLogo();
     
     if(gameGlobals.firstStart) {
         pauseGame();
