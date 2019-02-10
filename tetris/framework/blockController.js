@@ -418,7 +418,7 @@ BlockController.prototype.syncPosition = function(triggerGameOver) {
 
 BlockController.prototype.levelUp = function() {
     this.level++;
-    if(this.velocityMult * BLOCK_TILES_PER_SECOND < BLOCK_MAXIMUM_SPEED) {
+    if((this.velocityMult + 0.1) * BLOCK_TILES_PER_SECOND < BLOCK_MAXIMUM_SPEED) {
         this.velocityMult += 0.1;
     } else {
         this.velocityMult = BLOCK_MAXIMUM_SPEED / BLOCK_TILES_PER_SECOND;
