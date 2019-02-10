@@ -1,7 +1,7 @@
 function addControls() {
     var gui = new dat.GUI();
     gameGlobals.control = new function () {
-        this.gameSpeed = BLOCK_VELOCITY;
+        this.gameSpeed = BLOCK_TILES_PER_SECOND;
         this.thresholdTime = BLOCK_THRESHOLDTIME;
         this.block1 = false;
         this.block2 = false;

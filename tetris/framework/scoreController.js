@@ -16,10 +16,11 @@ ScoreController.prototype.init = function() {
     this.timer = null;
 }
 
-ScoreController.prototype.scoreChanged = function(rows) {
+ScoreController.prototype.scoreChanged = function(rows, multiplier) {
     this.steps = 10;
     this.rows += rows;
-    this.scoreToAdd += BASIC_POINTS * rows;
+    var tempScore = BASIC_POINTS * rows * multiplier;
+    this.scoreToAdd += (tempScore - (tempScore % 10));
     this.scoreChunk = this.scoreToAdd / this.steps;
     this.rowCount.innerHTML = this.rows;
     if(!this.timer) {

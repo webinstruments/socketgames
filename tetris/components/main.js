@@ -41,7 +41,7 @@ function render(timestamp) {
         gameGlobals.lastFrameTime = timestamp;
         newFrame();
     }
-    BLOCK_VELOCITY = gameGlobals.control.gameSpeed;
+    BLOCK_TILES_PER_SECOND = gameGlobals.control.gameSpeed;
     BLOCK_THRESHOLDTIME = gameGlobals.control.thresholdTime;
     gameGlobals.delta += timestamp - gameGlobals.lastFrameTime;
     gameGlobals.lastFrameTime = timestamp;

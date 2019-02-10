@@ -1,6 +1,8 @@
 var BLOCK_THRESHOLDTIME = 1;
-var BLOCK_VELOCITY = 4;
+var BLOCK_TILES_PER_SECOND = 3;
 var BLOCK_MULTIPLICATOR = 3;
+var BLOCK_MAXIMUM_SPEED = 7;
+var BLOCK_MINIMUM_THRESHOLD = 0.5;
 
 function BlockController(globalScene, width, height, columns, rows, scoreChangedCB, scoreBinder) {
     this.globalScene = globalScene;
@@ -26,6 +28,10 @@ BlockController.prototype.init = function() {
     this.heighestValue = 0;
     this.thresholdTime = 0;
     this.velocity = this.tileSize;
+    this.velocityMult = 1;
+    this.rowsRemoved = 0;
+    this.level = 0;
+    this.levelAdd = 0;
     this.moveFastPressed = false;
     var shadowGeo = new THREE.BoxGeometry(this.tileSize, this.tileSize, this.tileSize);
     this.shadowBlock = new WireFrame(shadowGeo, 0xAA0000, 5);
@@ -46,7 +52,7 @@ BlockController.prototype.newRow = function() {
 }
 
 BlockController.prototype.generateBlock = function() {
-    var random = getRandom(6); // debug
+    var random = getRandom(7); // debug
     if(gameGlobals.control.block1) { random = 0 }
     else if(gameGlobals.control.block2) { random = 1 }
     else if(gameGlobals.control.block3) { random = 2 }
@@ -68,12 +74,18 @@ BlockController.prototype.generateBlock = function() {
         block = new Block4(this.tileSize, this.globalScene);
     } else if(random == 5) {
         block = new Block5(this.tileSize, this.globalScene);
-    } else if(random == 6) {
+    } else if(random == 6 || random == 7) {
         block = new Block5(this.tileSize, this.globalScene);
         block.invert();
     }
-    var blockTiles = Math.floor(block.width / 2 / this.tileSize) * this.tileSize;
-    block.setPosition(this.startPosition - blockTiles, this.tileSize * this.rows);
+    if(this.level <= 4) {
+        var blockTiles = Math.floor(block.width / 2 / this.tileSize) * this.tileSize;
+        block.setPosition(this.startPosition - blockTiles, this.tileSize * this.rows);
+    } else {
+        var pos = this.columns - 1 - Math.floor(block.width / this.tileSize);
+        pos = getRandom(pos) * this.tileSize;
+        block.setPosition(pos, this.tileSize * this.rows);
+    }
     this.activeBlock = block;
     this.coarseDetectionY(this.activeBlock);
 }
@@ -153,10 +165,20 @@ BlockController.prototype.setTile = function(obj) {
     //console.log('after_set');
     //debug(this.tiles);
     if(rowsToRemove.length) {
+        this.rowsRemoved += rowsToRemove.length;
+        if(this.rowsRemoved >= 7) {
+            this.rowsRemoved -= 7;
+            this.levelUp();
+        }
         this.removeRows(rowsToRemove);
     }
     if(this.scoreChangedCB && removedRows) {
-        this.scoreChangedCB.call(this.scoreBinder, removedRows);
+        var add = rowsToRemove.length / 10;
+        if(rowsToRemove.length === 4) {
+            add = 0.6;
+        }
+        var multiplier = 0.9 + add + this.levelAdd;
+        this.scoreChangedCB.call(this.scoreBinder, removedRows, multiplier);
     }
 }
 
@@ -394,13 +416,38 @@ BlockController.prototype.syncPosition = function(triggerGameOver) {
     this.positionSynced = true;
 }
 
+BlockController.prototype.levelUp = function() {
+    this.level++;
+    if(this.velocityMult * BLOCK_TILES_PER_SECOND < BLOCK_MAXIMUM_SPEED) {
+        if(this.level == 1) {
+            this.velocityMult += 0.5;
+        } else {
+            this.velocityMult += 0.1;
+        }
+    } else {
+        this.velocityMult = BLOCK_MAXIMUM_SPEED / BLOCK_TILES_PER_SECOND;
+    }
+    if(this.thresholdTime > BLOCK_MINIMUM_THRESHOLD) {
+        this.thresholdTime -= 0.05;
+    } else {
+        this.thresholdTime = BLOCK_MINIMUM_THRESHOLD;
+    }
+    if(this.level % 5 === 0) {
+        if(this.level < 10) {
+            this.levelAdd += 0.1;
+        } else {
+            this.levelAdd += 0.2;
+        }
+    }
+}
+
 BlockController.prototype.update = function(deltaTime) {
     if(this.removalTimer || this.isGameOver) {
         return; //new block must be generated first
     }
     var block = this.getActiveBlock();
     var position = block.getPosition();
-    var offsetY = deltaTime * BLOCK_VELOCITY * this.velocity;
+    var offsetY = deltaTime * this.velocity * BLOCK_TILES_PER_SECOND * this.velocityMult;
     if(position.y < 0) {
         position.y = 0;
     }
