@@ -166,8 +166,8 @@ BlockController.prototype.setTile = function(obj) {
     //debug(this.tiles);
     if(rowsToRemove.length) {
         this.rowsRemoved += rowsToRemove.length;
-        if(this.rowsRemoved >= 7) {
-            this.rowsRemoved -= 7;
+        if(this.rowsRemoved >= 6) {
+            this.rowsRemoved -= 6;
             this.levelUp();
         }
         this.removeRows(rowsToRemove);
