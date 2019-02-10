@@ -420,7 +420,7 @@ BlockController.prototype.levelUp = function() {
     this.level++;
     if(this.velocityMult * BLOCK_TILES_PER_SECOND < BLOCK_MAXIMUM_SPEED) {
         if(this.level == 1) {
-            this.velocityMult += 0.5;
+            this.velocityMult += 0.2;
         } else {
             this.velocityMult += 0.1;
         }
