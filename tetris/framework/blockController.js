@@ -72,13 +72,13 @@ BlockController.prototype.generateBlock = function() {
     } else if(random == 2 || random == 10) {
         block = new Block2(this.tileSize, this.globalScene);
         block.invert();
-    } else if(random == 3 || random == 11) {
+    } else if(random == 3 || random == 11 || random == 14) {
         block = new Block3(this.tileSize, this.globalScene);
     } else if(random == 4 || random == 12) {
         block = new Block4(this.tileSize, this.globalScene);
     } else if(random == 5 || random == 13) {
         block = new Block5(this.tileSize, this.globalScene);
-    } else if(random == 6 || random == 7 || random == 14) {
+    } else if(random == 6 || random == 7) {
         block = new Block5(this.tileSize, this.globalScene);
         block.invert();
     }
