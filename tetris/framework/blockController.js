@@ -4,7 +4,7 @@ var BLOCK_MULTIPLICATOR = 3;
 var BLOCK_MAXIMUM_SPEED = 7;
 var BLOCK_MINIMUM_THRESHOLD = 0.5;
 
-function BlockController(globalScene, width, height, columns, rows, scoreChangedCB, scoreBinder) {
+function BlockController(globalScene, width, height, columns, rows, scoreChangedCB, scoreBinder, stageOutput) {
     this.globalScene = globalScene;
     this.width = width;
     this.height = height;
@@ -17,6 +17,7 @@ function BlockController(globalScene, width, height, columns, rows, scoreChanged
     this.scoreChangedCB = scoreChangedCB;
     this.scoreBinder = scoreBinder;
     this.timeToRemove = 1000;
+    this.levelOutput = stageOutput;
     this.init();
 }
 
@@ -32,6 +33,9 @@ BlockController.prototype.init = function() {
     this.rowsRemoved = 0;
     this.level = 0;
     this.levelAdd = 0;
+    if(this.levelOutput) {
+        this.levelOutput.innerHTML = 0;
+    }
     this.moveFastPressed = false;
     var shadowGeo = new THREE.BoxGeometry(this.tileSize, this.tileSize, this.tileSize);
     this.shadowBlock = new WireFrame(shadowGeo, 0xAA0000, 5);
@@ -436,6 +440,7 @@ BlockController.prototype.levelUp = function() {
             this.levelAdd += 0.2;
         }
     }
+    this.levelOutput.innerHTML = this.level;
 }
 
 BlockController.prototype.update = function(deltaTime) {

@@ -33,6 +33,10 @@ function displayGameInfo() {
         label: 'score ',
         value: '0'
     }, {
+        id: 'stage',
+        label: 'stage ',
+        value: '0'
+    }, {
         id: 'delay',
         label: 'delay ',
         value: '0'
