@@ -56,7 +56,7 @@ BlockController.prototype.newRow = function() {
 }
 
 BlockController.prototype.generateBlock = function() {
-    var random = getRandom(13); // debug
+    var random = getRandom(14); // debug
     if(gameGlobals.control.block1) { random = 0 }
     else if(gameGlobals.control.block2) { random = 1 }
     else if(gameGlobals.control.block3) { random = 2 }
@@ -78,7 +78,7 @@ BlockController.prototype.generateBlock = function() {
         block = new Block4(this.tileSize, this.globalScene);
     } else if(random == 5 || random == 13) {
         block = new Block5(this.tileSize, this.globalScene);
-    } else if(random == 6 || random == 7) {
+    } else if(random == 6 || random == 7 || random == 14) {
         block = new Block5(this.tileSize, this.globalScene);
         block.invert();
     }
