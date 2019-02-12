@@ -7,12 +7,21 @@ function Timer(htmlText) {
 
 Timer.prototype.counter = function() {
     if(!this.paused) {
-        this.text.innerText = ++this.seconds;
+        ++this.seconds;
+        if(this.seconds < 60) {
+            this.text.innerText = this.seconds;
+        } else {
+            this.text.innerText = Timer.toMinutes(this.seconds).toFixed(0) + "m";
+        }
     }
 }
 
 Timer.prototype.pause = function() {
     this.paused = true;
+}
+
+Timer.toMinutes = function(seconds) {
+    return parseInt(Math.floor(seconds / 60));
 }
 
 Timer.prototype.resume = function() {
