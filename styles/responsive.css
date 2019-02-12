@@ -1,7 +1,7 @@
-@media only screen and (min-width: 1100px) {
+@media only screen and (min-width:600px) {
     form input[type=text] {
-        width: 30%;
-        min-width: 300px;
+        width: 40%;
+        min-width: 380px;
     }
 
     .selectButton {
@@ -18,10 +18,11 @@
 
     .toast {
         font-size: large;
-        width: 30%!important;
+        width: 60%!important;
     }
 
     .logo {
+        min-width: 300px;
         width: 20%;
     }
 
@@ -38,20 +39,36 @@
     }
 
     input[type=button].startButton {
-        min-width: 15%;
+        width: 20%;
+        min-width: 200px;
     }
     /* scores */
     .scoreTable {
+        min-width: 400px;
         width:40%;
         height:60%;
     }
 
     .scoreButton {
-        min-width: 15%;
+        width: 20%;
+        min-width: 200px;
     }
 }
 
+/* tablet only */
 @media only screen and (max-width:1100px) {
+    div.up {
+        top:0%;
+    }
+
+    div.control {
+        border-width: 0.3vh 1vh 1vh 0.3vh;
+        border-top-style: dotted;
+        border-left-style: dotted;
+    }
+}
+
+@media only screen and (max-width:600px) {
     form input[type=text] {
         width: 100%;
     }
@@ -77,19 +94,13 @@
         width: 35%;
     }
 
-    div.control {
-        border-width: 0.3vh 1vh 1vh 0.3vh;
-        border-top-style: dotted;
-        border-left-style: dotted;
-    }
-
     input[type=button].startButton {
         min-width: 50%;
     }
     /* scores */
     .scoreTable {
         width:80%;
-        height:66%;
+        height:75%;
     }
 
     .scoreButton {
