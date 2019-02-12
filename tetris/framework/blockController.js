@@ -56,7 +56,7 @@ BlockController.prototype.newRow = function() {
 }
 
 BlockController.prototype.generateBlock = function() {
-    var random = getRandom(7); // debug
+    var random = getRandom(13); // debug
     if(gameGlobals.control.block1) { random = 0 }
     else if(gameGlobals.control.block2) { random = 1 }
     else if(gameGlobals.control.block3) { random = 2 }
@@ -65,18 +65,18 @@ BlockController.prototype.generateBlock = function() {
     else if(gameGlobals.control.block6) { random = 5 }
     else if(gameGlobals.control.block7) { random = 6 }
     var block = null;
-    if(random == 0) {
+    if(random == 0 || random == 8) {
         block = new Block1(this.tileSize, this.globalScene);
-    } else if(random == 1) {
+    } else if(random == 1 || random == 9) {
         block = new Block2(this.tileSize, this.globalScene);
-    } else if(random == 2) { 
+    } else if(random == 2 || random == 10) {
         block = new Block2(this.tileSize, this.globalScene);
         block.invert();
-    } else if(random == 3) {
+    } else if(random == 3 || random == 11) {
         block = new Block3(this.tileSize, this.globalScene);
-    } else if(random == 4) {
+    } else if(random == 4 || random == 12) {
         block = new Block4(this.tileSize, this.globalScene);
-    } else if(random == 5) {
+    } else if(random == 5 || random == 13) {
         block = new Block5(this.tileSize, this.globalScene);
     } else if(random == 6 || random == 7) {
         block = new Block5(this.tileSize, this.globalScene);

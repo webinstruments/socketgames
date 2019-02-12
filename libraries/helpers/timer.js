@@ -11,7 +11,7 @@ Timer.prototype.counter = function() {
         if(this.seconds < 60) {
             this.text.innerText = this.seconds;
         } else {
-            this.text.innerText = Timer.toMinutes(this.seconds).toFixed(0) + "m";
+            this.text.innerText = Timer.toMinutes(this.seconds) + "m";
         }
     }
 }
