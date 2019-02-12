@@ -49,7 +49,7 @@
         height:60%;
     }
 
-    .scoreButton {
+    input[type=button].scoreButton {
         width: 20%;
         min-width: 200px;
     }
@@ -95,6 +95,7 @@
     }
 
     input[type=button].startButton {
+        padding: 5px;
         min-width: 50%;
     }
     /* scores */
@@ -103,7 +104,8 @@
         height:75%;
     }
 
-    .scoreButton {
+    input[type=button].scoreButton {
         min-width: 50%;
+        padding: 5px;
     }
 }

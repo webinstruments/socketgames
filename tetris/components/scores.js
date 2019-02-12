@@ -12,11 +12,11 @@ function toggleScoreBoard() {
     var btn = document.getElementById("scoreButton");
     if(gameGlobals.scoreBoardVisible) {
         container.style.display = "none";
-        btn.innerHTML = "Scores";
+        btn.value = "Scores";
     } else {
         RestService.getRankings(buildScoreBoard);
         container.style.display = "block";
-        btn.innerHTML = "Main menu";
+        btn.value = "Main menu";
     }
     gameGlobals.scoreBoardVisible = !gameGlobals.scoreBoardVisible;
 }

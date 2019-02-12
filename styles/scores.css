@@ -47,7 +47,7 @@ th, td {
   margin: auto;
 }
 
-.scoreButton {
+input[type=button].scoreButton {
   position:absolute;
   bottom:0px;
   left:50%;
@@ -55,7 +55,8 @@ th, td {
   margin-top:20px;
   font-size:large;
   text-align:center;
-  border:2px solid #ffaa00;
+  border:2px solid #ffaa00!important;
+  color:#ffaa00;
   border-radius:25px;
   padding-top:10px;
   padding-bottom:10px;
