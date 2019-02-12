@@ -66,6 +66,14 @@
         border-top-style: dotted;
         border-left-style: dotted;
     }
+
+    div.pause {
+        font-size: xx-large;
+    }
+
+    body.paused div.pause {
+        font-size: 1000%;
+    }
 }
 
 @media only screen and (max-width:600px) {
