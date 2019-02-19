@@ -13,10 +13,12 @@ function toggleScoreBoard() {
     if(gameGlobals.scoreBoardVisible) {
         container.style.display = "none";
         btn.value = "Scores";
+        showAboutButton();
     } else {
         RestService.getRankings(buildScoreBoard);
         container.style.display = "block";
         btn.value = "Main menu";
+        hideAboutButton();
     }
     gameGlobals.scoreBoardVisible = !gameGlobals.scoreBoardVisible;
 }

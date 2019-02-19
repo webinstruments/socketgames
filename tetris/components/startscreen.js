@@ -47,18 +47,6 @@ function createForm() {
         labelClass: 'label noselect', 
         groupClass: 'formgroup'
     });
-    gameGlobals.serverInput = new TextInput({
-        name: 'server', 
-        //value: 'ws://demos.kaazing.com/echo',
-        //value: 'ws://193.171.127.8:8081',
-        value: gameGlobals.socketUrl,
-        label: 'echo server',
-        labelClass: 'label noselect', 
-        groupClass: 'formgroup',
-        inputClass: "noselect",
-        readOnly: true,
-        onFocusOut: checkConnection
-    });
     var selection = new Selector({
         name: 'type',
         values: [ { value: -1, name: 'Please reload page' } ],
@@ -70,9 +58,9 @@ function createForm() {
     });
     gameGlobals.form = new Form({
         formClass: 'form',
-        children: [userInput, selection, gameGlobals.serverInput],
+        children: [userInput, selection],
         submitText: 'start game!',
-        submitClass: 'startButton',
+        submitClass: 'button startButton',
             onSubmit: function(result) {
                 if(result.type == 0) {
                     showError("Please select a connection type");
@@ -80,8 +68,9 @@ function createForm() {
                 }
                 gameGlobals.username = result.username;
                 console.log(result);
-                gameGlobals.restService = new RestService(result.username, result.type, result.server);
+                gameGlobals.restService = new RestService(result.username, result.type, gameGlobals.socketUrl);
                 startGame();
+                hideAboutButton();
         }
     });
     if(!gameGlobals.connectionTypes.length) {

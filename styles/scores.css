@@ -31,8 +31,8 @@ th, td {
 
 .scores {
   display: none;
-  z-index:5;
-  background-color: #304352;
+  z-index:6;
+  background-image: linear-gradient(to bottom right, rgba(120,150,180,1) 0px, #304352 40%);
   height:100%;
   width:100%;
   position:absolute;
@@ -47,19 +47,6 @@ th, td {
   margin: auto;
 }
 
-input[type=button].scoreButton {
-  position:absolute;
-  bottom:0px;
-  left:50%;
-  transform:translateX(-50%) translateY(-50%);
-  margin-top:20px;
-  font-size:large;
-  text-align:center;
-  border:2px solid #ffaa00!important;
-  color:#ffaa00;
-  border-radius:25px;
-  padding-top:10px;
-  padding-bottom:10px;
+#scoreButton {
   z-index:6;
-  cursor: default;
 }

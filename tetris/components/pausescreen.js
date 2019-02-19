@@ -1,5 +1,6 @@
 function initPause() {
     gameGlobals.logoElement = document.getElementById("logo");
+    gameGlobals.fhLogoElement = document.getElementById("fh_logo");
     gameGlobals.pauseScreen = document.getElementById("pausescreen");
     gameGlobals.tipElement = document.getElementById("tip");
 }
@@ -18,8 +19,16 @@ function showLogo() {
     gameGlobals.logoElement.style.display = "";
 }
 
+function showFHLogo() {
+    gameGlobals.fhLogoElement.style.display = "";
+}
+
 function hideLogo() {
     gameGlobals.logoElement.style.display = "none";
+}
+
+function hideFHLogo() {
+    gameGlobals.fhLogoElement.style.display = "none";
 }
 
 function setFirstStartText() {

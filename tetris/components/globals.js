@@ -21,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.42",
+    version: "1.44",
     //init
     camera: null,
     orthoCamera: null,
@@ -38,11 +38,12 @@ var gameGlobals = {
     restService: null,
     socketUrl: null,
     socketConnectionId: null,
-    serverInput: null,
     formOpened: null,
     connectionTimer: null,
     //pausescreen
     logoElement: null,
+    fhLogoElement: null,
+    serverSpan: null,
     pauseScreen: null,
     tipElement: null,
     tipFirstStart: "You can drag the buttons as you wish.<br/>If you are ready press the ► button.",
@@ -50,5 +51,8 @@ var gameGlobals = {
     disconnectionText: "You have been disconnected. Trying to reconnect...<br/>If not possible reload the page.",
     connectedText: "Reconnected with the server.<br/>If you are ready press the ► button.",
     //scores
-    scoreVisible: false
+    scoreVisible: false,
+    //aboutPage
+    aboutPage: null,
+    aboutButton: null,
 }

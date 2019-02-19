@@ -26,6 +26,10 @@
         width: 20%;
     }
 
+    .fh_logo {
+        width: 20%;
+    }
+
     .textContainer {
         font-size: x-large;
     }
@@ -38,7 +42,7 @@
         top:11%;
     }
 
-    input[type=button].startButton {
+    input[type=button].button {
         width: 20%;
         min-width: 200px;
     }
@@ -49,9 +53,10 @@
         height:60%;
     }
 
-    input[type=button].scoreButton {
-        width: 20%;
-        min-width: 200px;
+    #aboutContent {
+        min-width: 400px;
+        width:40%;
+        height:60%;
     }
 }
 
@@ -102,7 +107,11 @@
         width: 35%;
     }
 
-    input[type=button].startButton {
+    .fh_logo {
+        width: 50%;
+    }
+
+    input[type=button].button {
         padding: 5px;
         min-width: 50%;
     }
@@ -112,8 +121,7 @@
         height:75%;
     }
 
-    input[type=button].scoreButton {
-        min-width: 50%;
-        padding: 5px;
+    #aboutContent {
+        width: 80%;
     }
 }

@@ -10,6 +10,7 @@ function startGame() {
     newFrame();
     hideScoreButton();
     hideLogo();
+    hideFHLogo();
     
     if(gameGlobals.firstStart) {
         pauseGame();
@@ -32,7 +33,9 @@ function gameOver() {
     gameGlobals.formDiv.show();
     gameGlobals.stats.hide();
     showScoreButton();
+    showAboutButton();
     showLogo();
+    showFHLogo();
 }
 
 function render(timestamp) {
