@@ -21,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.44",
+    version: "1.45",
     //init
     camera: null,
     orthoCamera: null,
@@ -43,7 +43,6 @@ var gameGlobals = {
     //pausescreen
     logoElement: null,
     fhLogoElement: null,
-    serverSpan: null,
     pauseScreen: null,
     tipElement: null,
     tipFirstStart: "You can drag the buttons as you wish.<br/>If you are ready press the ► button.",
@@ -55,4 +54,6 @@ var gameGlobals = {
     //aboutPage
     aboutPage: null,
     aboutButton: null,
+    serverSpan: null,
+    serverLink: null
 }

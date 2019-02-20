@@ -7,7 +7,7 @@ function reconnectingToServer() {
     if(gameGlobals.socketConnection.connection.isClosed()) {
         gameGlobals.socketConnectionId = 1 - gameGlobals.socketConnectionId; //if server is not accessible
         gameGlobals.socketUrl = WEBSOCKET_SERVERS[gameGlobals.socketConnectionId];
-        gameGlobals.serverInput.setText(gameGlobals.socketUrl);
+        setSocketUrl(gameGlobals.socketUrl);
         checkConnection(gameGlobals.socketUrl);
     } else {
         clearConnectionTimer();

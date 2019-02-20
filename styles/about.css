@@ -22,3 +22,9 @@
     bottom: 60px;
     z-index: 6;
 }
+
+a {
+    color: #ff3311;
+    font-weight: bold;
+    font-size: large;
+}

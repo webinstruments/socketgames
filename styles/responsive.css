@@ -72,6 +72,10 @@
         border-left-style: dotted;
     }
 
+    .fh_logo {
+        width: 35%;
+    }
+
     div.pause {
         font-size: xx-large;
     }

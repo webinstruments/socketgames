@@ -52,13 +52,17 @@
             <h2 style="text-align:center;">Welcome!</h2>
             <p>This game is part of a project to measure the different latencies of websocket implementations.<br>
                 At the beginning of the game you will be connected to a random websocket server.
-                Any input made during the game will be sent to and from this server. The block will be moved after that. 
-                You can help us by entering the right connection type at the start of the game.<br>
-                Your points will be stored in a high score list.</p>
+                Any input made during the game will be sent to and from this server. The block will be moved after that.
+                Each websocket server keeps track of the active sessions and the games can also be controlled remotely. 
+                Your points will be stored in a high score list.<br>
+                You can help us by entering the right connection type at the start of the game.
+                </p>
             <p>We hope you enjoy playing and thank you for your participation in our project.<br>
                 Oh and before I forget, you are connected to the server:
             </p>
-            <p style="text-align: center;" id="serverConnection"></p>
+            <a target="_blank" rel="noopener noreferrer" href="" id="serverLink">
+                <p style="text-align: center;" id="serverConnection"></p>
+            </a>
         </div>
         <input type="button" class="button menuButton noselect" value="Back" onclick="hideAboutPage();"></input>
     </div>

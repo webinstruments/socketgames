@@ -2,11 +2,12 @@ function initAboutPage() {
     gameGlobals.aboutPage = document.getElementById("aboutPage");
     gameGlobals.serverSpan = document.getElementById("serverConnection");
     gameGlobals.aboutButton = document.getElementById("aboutButton");
+    gameGlobals.serverLink = document.getElementById("serverLink");
 }
 
 function showAboutPage() {
     gameGlobals.aboutPage.style.display = "";
-    gameGlobals.serverSpan.innerHTML = gameGlobals.socketUrl;
+    setSocketUrl(gameGlobals.socketUrl);
     hideScoreButton();
     hideAboutButton();
 }
@@ -23,4 +24,10 @@ function showAboutButton() {
 
 function hideAboutButton() {
     gameGlobals.aboutButton.style.display = "none";
+}
+
+function setSocketUrl(socketUrl) {
+    gameGlobals.serverSpan.innerHTML = socketUrl;
+    var refUrl = "http" + socketUrl.replace(new RegExp("ws", "g"), "");
+    serverLink.setAttribute("href", refUrl);
 }
