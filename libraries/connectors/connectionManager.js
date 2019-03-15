@@ -15,8 +15,10 @@ ConnectionManager.prototype.connect = function(url) {
     this.url = url;
     if(url === 'ws://193.171.127.8:8080/ws') {
         this.connection = new SocketConnection(url, this.callbacks, this.output);
-    } else {
+    } else if (url === 'ws://193.171.127.8:8081') {
         this.connection = new SocketIOConnection(url, this.callbacks, this.output);
+    } else if (url === 'http://193.171.127.8:8082/api/echo') {
+        this.connection = new RestConnection(url, this.callbacks, this.output)
     }
 }
 

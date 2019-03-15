@@ -1,6 +1,7 @@
 var WEBSOCKET_SERVERS = [
     'ws://193.171.127.8:8080/ws',
-    'ws://193.171.127.8:8081'
+    'ws://193.171.127.8:8081',
+    'http://193.171.127.8:8082/api/echo'
 ];
 
 function reconnectingToServer() {

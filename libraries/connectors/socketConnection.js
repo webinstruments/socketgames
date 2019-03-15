@@ -1,42 +1,18 @@
-var SOCKET_CONNECTION_SERVER_PREFIX = "server_";
-
 function SocketConnection(url, callbacks, output) {
+    iConnection.call(this, url, callbacks.onMessage, output);
     this.callbacks = callbacks;
     if(!this.callbacks.binder) {
         this.callbacks.binder = null;
     }
-    this.output = output;
     this.url = url;
-    this.delays = [];
-    this.delayId = 0;
     this.connect(url);
 }
+
+SocketConnection.prototype = Object.create(iConnection.prototype);
 
 SocketConnection.prototype.onOpen = function() {
     if(this.callbacks.onOpen) {
         this.callbacks.onOpen.call(this.callbacks.binder);
-    }
-}
-
-SocketConnection.prototype.onMessage = function(msg) {
-    var delay = null;
-    if(msg.indexOf(SOCKET_CONNECTION_SERVER_PREFIX) == 0) {
-        msg = msg.slice(0, SOCKET_CONNECTION_SERVER_PREFIX.length + 1);
-    } else {
-        var msgParts = msg.split('~'); //eigene id filtern
-        msg = msgParts[0];
-        var id = findFromArray(msgParts, function(m) {
-            return !isNaN(m) && isFinite(m);
-        });
-        if(id) {
-            var index = 'id_' + id;
-            delay = Date.now() - this.delays[index];
-            delete this.delays[index];
-            this.output.innerHTML = delay + 'ms';
-        }
-    }
-    if(this.callbacks.onMessage) {
-        this.callbacks.onMessage.call(this.callbacks.binder, msg, delay);
     }
 }
 
@@ -82,14 +58,8 @@ SocketConnection.prototype.reConnect = function() {
     this.connect(this.url);
 }
 
-SocketConnection.prototype.send = function(message, measurement) {
-    //Daten werden im internen Format gesendet (richtung~id~)
-    if(measurement) {
-        this.delays['id_' + this.delayId + ''] = Date.now();
-        this.socket.send(message + '~' + (this.delayId++) + '~');
-    } else {
-        this.socket.send(message);
-    }
+SocketConnection.prototype.sendMessage = function(message) {
+    this.socket.send(message);
 }
 
 SocketConnection.prototype.isClosed = function() {

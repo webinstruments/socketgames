@@ -67,6 +67,14 @@
 
         restService = new RestService("Das ist ein Test", 1);*/
 
+        $.ajax({ //start new game
+            type: "POST",
+            url: "http://193.171.127.8:8082/api/echo",
+            data: { message: 'test1234' }       
+        }).done(function(response) {
+            console.log(response);
+        });
+
         /*$.ajax({ //start new game
             type: "POST",
             url: "http://213.47.38.104:8080/api/game",
