@@ -15,9 +15,3 @@ RestConnection.prototype.sendMessage = function(message) {
         self.onMessage(response);
     });
 }
-
-RestConnection.prototype.connect = function() {
-    if(this.callbacks.onOpen) {
-        this.callbacks.onOpen();
-    }
-}

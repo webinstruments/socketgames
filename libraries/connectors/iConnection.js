@@ -44,6 +44,10 @@ iConnection.prototype.sendMessage = function(message) {
     //to be overriden...
 }
 
+iConnection.prototype.connect = function(url) {
+    //to be overriden...
+}
+
 iConnection.prototype.isClosed = function() {
     return false; //to be overriden...
 }
