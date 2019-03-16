@@ -48,6 +48,10 @@ iConnection.prototype.connect = function(url) {
     //to be overriden...
 }
 
+iConnection.prototype.reConnect = function() {
+    this.connect(this.url);
+}
+
 iConnection.prototype.isClosed = function() {
     return false; //to be overriden...
 }

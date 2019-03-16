@@ -4,7 +4,6 @@ function SocketConnection(url, callbacks, output) {
     if(!this.callbacks.binder) {
         this.callbacks.binder = null;
     }
-    this.url = url;
     this.connect(url);
 }
 
@@ -52,10 +51,6 @@ SocketConnection.prototype.connect = function(url) {
     this.socket.onerror = function(err) {
         self.onError(err.data);
     }
-}
-
-SocketConnection.prototype.reConnect = function() {
-    this.connect(this.url);
 }
 
 SocketConnection.prototype.sendMessage = function(message) {
