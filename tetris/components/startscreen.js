@@ -32,13 +32,16 @@ function clearConnectionTimer() {
     gameGlobals.connectionTimer = null;
 }
 
-function createForm() {
+function createForm(connectionId) {
     gameGlobals.formDiv = new DivGroup('centered', {
         onOpen: onFormOpen,
         onClose: onFormClosed
     });
     gameGlobals.formHeadLine = new Header('New Game!', 'noselect');
     gameGlobals.socketConnectionId = getRandom(1);
+    if(connectionId) {
+        gameGlobals.socketConnectionId = connectionId;
+    }
     gameGlobals.socketUrl = WEBSOCKET_SERVERS[gameGlobals.socketConnectionId];
 
     var userInput = new TextInput({
