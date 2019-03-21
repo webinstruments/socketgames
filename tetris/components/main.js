@@ -52,9 +52,8 @@ function render(timestamp) {
         //game was paused
         console.log('synching');
         gameGlobals.delta = 0;
-        if(gameGlobals.socketConnection.connection.isClosed()) {
-            handleDisconnection();
-        }
+        gameGlobals.socketConnection.isClosed(handleDisconnection);
+        pauseGame();
     }
     while(gameGlobals.delta >= gameGlobals.frameRate) {
         if(gameGlobals.blockController.isGameOver) {

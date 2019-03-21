@@ -4,8 +4,12 @@ var WEBSOCKET_SERVERS = [
     'http://193.171.127.8:8082/api/echo'
 ];
 
-function reconnectingToServer() {
-    if(gameGlobals.socketConnection.connection.isClosed()) {
+function checkIfClosed() {
+    gameGlobals.socketConnection.isClosed(reconnectingToServer);
+}
+
+function reconnectingToServer(disconnected) {
+    if(disconnected) {
         gameGlobals.socketConnectionId = 1 - gameGlobals.socketConnectionId; //if server is not accessible
         gameGlobals.socketUrl = WEBSOCKET_SERVERS[gameGlobals.socketConnectionId];
         setSocketUrl(gameGlobals.socketUrl);
@@ -18,7 +22,7 @@ function reconnectingToServer() {
 function onFormOpen() {
     gameGlobals.formOpened = true;
     if(!gameGlobals.connectionTimer) {
-        gameGlobals.connectionTimer = setInterval(reconnectingToServer, 1000);
+        gameGlobals.connectionTimer = setInterval(checkIfClosed, 1000);
     }
 }
 

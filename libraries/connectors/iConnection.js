@@ -1,11 +1,10 @@
 var SOCKET_CONNECTION_SERVER_PREFIX = "server_";
 
-function iConnection(url, onMessageCB, output) {
+function iConnection(url, onMessageCB) {
     this.url = url;
     this.onMessageCB = onMessageCB;
     this.delays = [];
     this.delayId = 0;
-    this.output = output;
 }
 
 iConnection.prototype.onMessage = function(msg) {
@@ -19,7 +18,6 @@ iConnection.prototype.onMessage = function(msg) {
             var index = 'id_' + msgParts[2];
             delay = Date.now() - this.delays[index];
             delete this.delays[index];
-            this.output.innerHTML = delay + 'ms';
         }
     }
     if(this.onMessageCB) {

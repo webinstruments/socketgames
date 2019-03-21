@@ -2,12 +2,14 @@ var GAME_NAME = 'game_Tetris';
 
 function checkConnection(url) {
     if(!gameGlobals.socketConnection) {
+        gameGlobals.delayOutput = gameGlobals.textContainer.getTextElement('delay');
+        var worker = new Worker('components/connectionWorker.js');
         gameGlobals.socketConnection = new ConnectionManager(url, {
             onOpen: socketOnOpen,
             onMessage: socketOnMessage,
             onError: socketOnError,
             onClose: socketOnClose
-        }, gameGlobals.textContainer.getTextElement('delay'));
+        }, worker);
     } else if(gameGlobals.socketConnection.getUrl() != url) {
         gameGlobals.socketConnection.connect(url);
     }
@@ -23,9 +25,9 @@ function socketOnOpen() {
 }
 
 function socketOnMessage(msg, delay) {
-    //console.log(msg);
     moveRemote(msg);
     if(delay && gameGlobals.restService) {
+        gameGlobals.delayOutput.innerHTML = delay + 'ms';
         gameGlobals.restService.addDelay(delay);
     }
 }
@@ -58,10 +60,11 @@ function handleReconnection() {
     setConnectedText();
 }
 
-function handleDisconnection() {
-    gameGlobals.disconnected = true;
-    showError("Disconnected from server. Reconnecting...");
-    pauseGame();
-    setDisconnectionText();
-    gameGlobals.socketConnection.connection.reConnect();
+function handleDisconnection(disconnected) {
+    if(disconnected) {
+        gameGlobals.disconnected = true;
+        showError("Disconnected from server. Reconnecting...");
+        setDisconnectionText();
+        gameGlobals.socketConnection.reConnect();
+    }
 }

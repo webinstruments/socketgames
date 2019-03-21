@@ -97,9 +97,6 @@ function moveDown() {
 }
 
 function sendToServer(message) {
-    if(gameGlobals.socketConnection.connection.isClosed()) {
-        handleDisconnection();
-    }
     gameGlobals.socketConnection.send(message, true);
 }
 

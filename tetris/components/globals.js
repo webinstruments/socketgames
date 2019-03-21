@@ -21,7 +21,7 @@ var gameGlobals = {
     scoreController: null,
     stats: null,
     control: null,
-    version: "1.47",
+    version: "1.48",
     //init
     camera: null,
     orthoCamera: null,
@@ -29,6 +29,7 @@ var gameGlobals = {
     //sockets
     socketConnection: null,
     disconnected: false,
+    delayOutput: null,
     //startscreen
     formDiv: null,
     formHeadLine: null,
