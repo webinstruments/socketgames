@@ -36,7 +36,7 @@ function clearConnectionTimer() {
     gameGlobals.connectionTimer = null;
 }
 
-function createForm(connectionId) {
+function createForm(connectionId, workerPath) {
     gameGlobals.formDiv = new DivGroup('centered', {
         onOpen: onFormOpen,
         onClose: onFormClosed
@@ -94,6 +94,6 @@ function createForm(connectionId) {
     gameGlobals.formDiv.domElement.appendChild(gameGlobals.form.domElement);
     document.body.appendChild(gameGlobals.formDiv.domElement);
     //gameGlobals.form.disable();
-    checkConnection(gameGlobals.socketUrl);
+    checkConnection(gameGlobals.socketUrl, workerPath);
     setTimeout(onFormOpen, 2000); //else double connecting
 }

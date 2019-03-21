@@ -1,9 +1,9 @@
 var GAME_NAME = 'game_Tetris';
 
-function checkConnection(url) {
+function checkConnection(url, workerPath) {
     if(!gameGlobals.socketConnection) {
         gameGlobals.delayOutput = gameGlobals.textContainer.getTextElement('delay');
-        var worker = new Worker('components/connectionWorker.js');
+        var worker = new Worker(workerPath);
         gameGlobals.socketConnection = new ConnectionManager(url, {
             onOpen: socketOnOpen,
             onMessage: socketOnMessage,

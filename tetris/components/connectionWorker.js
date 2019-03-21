@@ -1,5 +1,7 @@
 importScripts(
+    '../../libraries/fakejQueryDOM.js', //fake DOM Elements for jQuery - else error
     '../../libraries/socket.io_2.0.3.js',
+    '../../libraries/jquery-3.3.1.min.js',
     '../../libraries/connectors/iConnection.js', 
     '../../libraries/connectors/restConnection.js', 
     '../../libraries/connectors/socketConnection.js', 
