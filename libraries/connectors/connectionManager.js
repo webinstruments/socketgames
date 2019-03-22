@@ -12,8 +12,9 @@ var WORKER_MESSAGES = {
 
 function ConnectionManager(url, callbacks, worker) {
     this.callbacks = callbacks;
+    this.closedStackCBs = [];
     this.worker = worker;
-    this.closedStack = [];
+    this.worker.addEventListener('message', this.onWorkerMessage.bind(this), false);
     this.connect(url);
 }
 
@@ -23,13 +24,12 @@ ConnectionManager.prototype.getUrl = function() {
 
 ConnectionManager.prototype.connect = function(url) {
     this.url = url;
-    this.worker.addEventListener('message', this.onWorkerMessage.bind(this), false);
     this.sendWorkerMessage(WORKER_MESSAGES.connect, url);
 }
 
 ConnectionManager.prototype.isClosed = function(callback) {
     this.sendWorkerMessage(WORKER_MESSAGES.status);
-    this.closedStack.push(callback);
+    this.closedStackCBs.push(callback);
 }
 
 ConnectionManager.prototype.reConnect = function() {
@@ -60,8 +60,8 @@ ConnectionManager.prototype.onWorkerMessage = function(event) {
             this.callbacks.onError(data.message);
         break;
         case WORKER_MESSAGES.status:
-            while(this.closedStack.length) {
-                this.closedStack.pop()(data.message);
+            while(this.closedStackCBs.length) {
+                this.closedStackCBs.pop()(data.message);
             }
         break;
     }
