@@ -46,10 +46,10 @@ var gameGlobals = {
     fhLogoElement: null,
     pauseScreen: null,
     tipElement: null,
-    tipFirstStart: "You can drag the buttons as you wish.<br/>If you are ready press the ► button.",
+    tipFirstStart: "You can drag the buttons as you wish.<br>Or you can use the arrow keys of your keyboard.<br>If you are ready press the ► button.",
     tipPause: "Tip: You can drag the buttons.",
     disconnectionText: "You have been disconnected. Trying to reconnect...<br/>If not possible reload the page.",
-    connectedText: "Reconnected with the server.<br/>If you are ready press the ► button.",
+    connectedText: "Reconnected with the server.<br>If you are ready press the ► button.",
     //scores
     scoreVisible: false,
     //aboutPage
