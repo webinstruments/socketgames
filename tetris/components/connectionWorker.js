@@ -34,7 +34,7 @@ self.addEventListener('message', function(event) {
             connection.send(data.message, data.measurement);
         break;
         case WORKER_MESSAGES.status:
-            postFromWorker('status', connection.isClosed());
+            postFromWorker(WORKER_MESSAGES.status, connection.isClosed());
         break;
         case WORKER_MESSAGES.reconnect:
             connection.reConnect();
