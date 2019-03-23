@@ -62,7 +62,7 @@ function onOpen() {
 }
 
 function postFromWorker(type, message, delay) {
-    self.postMessage(JSON.stringify({ 
+    self.postMessage({ 
         type: type, message: message, delay: delay 
-    }));
+    });
 }

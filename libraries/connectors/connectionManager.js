@@ -45,7 +45,7 @@ ConnectionManager.prototype.sendWorkerMessage = function(type, message, measurem
 }
 
 ConnectionManager.prototype.onWorkerMessage = function(event) {
-    var data = JSON.parse(event.data);
+    var data = event.data;
     switch(data.type) {
         case WORKER_MESSAGES.onmessage:
             this.callbacks.onMessage(data.message, data.delay);
