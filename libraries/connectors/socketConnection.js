@@ -1,5 +1,5 @@
-function SocketConnection(url, callbacks, output) {
-    iConnection.call(this, url, callbacks.onMessage, output);
+function SocketConnection(url, callbacks) {
+    iConnection.call(this, url, callbacks.onMessage);
     this.callbacks = callbacks;
     if(!this.callbacks.binder) {
         this.callbacks.binder = null;

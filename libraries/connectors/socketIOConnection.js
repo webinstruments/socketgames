@@ -1,5 +1,5 @@
-function SocketIOConnection(url, callbacks, output) {
-    SocketConnection.call(this, url, callbacks, output);
+function SocketIOConnection(url, callbacks) {
+    SocketConnection.call(this, url, callbacks);
 }
 
 SocketIOConnection.prototype = Object.create(SocketConnection.prototype);

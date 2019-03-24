@@ -1,6 +1,6 @@
-function RestConnection(url, callbacks, output) {
+function RestConnection(url, callbacks) {
     this.callbacks = callbacks;
-    iConnection.call(this, url, callbacks.onMessage, output);
+    iConnection.call(this, url, callbacks.onMessage);
 }
 
 RestConnection.prototype = Object.create(iConnection.prototype);
