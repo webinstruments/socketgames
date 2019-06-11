@@ -28,10 +28,6 @@ SocketConnection.prototype.onError = function(err) {
     }
 }
 
-SocketConnection.prototype.getUrl = function() {
-    return this.url;
-}
-
 SocketConnection.prototype.connect = function(url) {
     this.socket = new WebSocket(url);
     if(!this.socket) {
